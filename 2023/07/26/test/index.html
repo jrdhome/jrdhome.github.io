@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="NumPy 库NumPy 的基本使用函数的导入1import numpy as np  数组的创建将列表或元组转化为数组 1a &#x3D; np.array([1,2,3,4])  使用 arange 在给定区间内创建等差数组 12arange(start, stop, step, dtpye)#生成区间[start,stop)上步长间隔为step的等差数列  使用 linspace 在给定区间内创建间隔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="test">
+<meta property="og:url" content="http://example.com/2023/07/26/test/index.html">
+<meta property="og:site_name" content="5-12 23:30">
+<meta property="og:description" content="NumPy 库NumPy 的基本使用函数的导入1import numpy as np  数组的创建将列表或元组转化为数组 1a &#x3D; np.array([1,2,3,4])  使用 arange 在给定区间内创建等差数组 12arange(start, stop, step, dtpye)#生成区间[start,stop)上步长间隔为step的等差数列  使用 linspace 在给定区间内创建间隔">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2023/07/26/test/test/%E5%9B%BE%E7%89%871.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片2.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片3.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片4.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片5.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片6.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片7.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片8.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片9.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片10.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片11.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片12.png">
+<meta property="og:image" content="c:/Users/86187/blog/source_posts/数学建模Python函数库/图片13.png">
+<meta property="article:published_time" content="2023-07-26T20:38:23.000Z">
+<meta property="article:modified_time" content="2023-07-26T14:53:42.392Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2023/07/26/test/test/%E5%9B%BE%E7%89%871.png">
+  
+  
+  <title>test - 5-12 23:30</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="test">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-07-26 20:38" pubdate>
+        July 26, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      48 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">test</h1>
+            
+            <div class="markdown-body">
+              <h1 id="NumPy-库"><a href="#NumPy-库" class="headerlink" title="NumPy 库"></a>NumPy 库</h1><h2 id="NumPy-的基本使用"><a href="#NumPy-的基本使用" class="headerlink" title="NumPy 的基本使用"></a>NumPy 的基本使用</h2><h3 id="函数的导入"><a href="#函数的导入" class="headerlink" title="函数的导入"></a>函数的导入</h3><figure class="highlight python"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br></code></pre></td></tr></table></figure>
+
+<h3 id="数组的创建"><a href="#数组的创建" class="headerlink" title="数组的创建"></a>数组的创建</h3><p>将列表或元组转化为数组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">a = np.array([<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>])<br></code></pre></td></tr></table></figure>
+
+<p>使用 arange 在给定区间内创建等差数组</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-built_in">arange</span>(start, stop, step, dtpye)<br>#生成区间[start,stop)上步长间隔为step的等差数列<br></code></pre></td></tr></table></figure>
+
+<p>使用 linspace 在给定区间内创建间隔相等的数组</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">linspace(<span class="hljs-literal">start</span>,<span class="hljs-literal">stop</span>,<span class="hljs-attr">num=</span><span class="hljs-number">50</span>,<span class="hljs-attr">endpoint=</span><span class="hljs-literal">True</span>)<br><span class="hljs-comment">#生成区间[start,stop]上间隔相等的num个数据的等差数列，num的默认值为50</span><br></code></pre></td></tr></table></figure>
+
+<p>使用 logspace 在给定区间上生成等比数组</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">logspace</span>(start,stop,num=<span class="hljs-number">50</span>,endpoint=True,base=<span class="hljs-number">10</span>.<span class="hljs-number">0</span>)<br><span class="hljs-comment">#默认生成区间[10^start,10^stop]上的num个数据的等比数组</span><br></code></pre></td></tr></table></figure>
+
+<p>使用ones、zeros、empty、ones_like等系列函数</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">a</span> = np.<span class="hljs-literal">on</span>es(<span class="hljs-number">4</span>, dtype=int)     <span class="hljs-comment">#输出[1, 1, 1, 1]</span><br><span class="hljs-attr">b</span> = np.<span class="hljs-literal">on</span>es((<span class="hljs-number">4</span>,), dtype=int)  <span class="hljs-comment">#同a</span><br><span class="hljs-attr">c</span>= np.<span class="hljs-literal">on</span>es((<span class="hljs-number">4</span>,<span class="hljs-number">1</span>),dtype=int)   <span class="hljs-comment">#输出4行1列的数组</span><br><span class="hljs-attr">d</span> = np.zeros(<span class="hljs-number">4</span>,dtype=int)     <span class="hljs-comment">#输出[0, 0, 0, 0]</span><br><span class="hljs-attr">e</span> = np.empty(<span class="hljs-number">3</span>,dtype=int)     <span class="hljs-comment">#生成3个元素的空数组行向量</span><br><span class="hljs-attr">f</span> = np.eye(<span class="hljs-number">3</span>,dtype=int)       <span class="hljs-comment">#生成3阶单位阵</span><br><span class="hljs-attr">g</span> = np.eye(<span class="hljs-number">3</span>, k=<span class="hljs-number">0</span>)  	<span class="hljs-comment">#生成第k对角线的元素为1，其他元素为0的3阶方阵</span><br><span class="hljs-attr">h</span> = np.zeros_like(a)          <span class="hljs-comment">#生成与a同维数的全0数组</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="数组元素的索引"><a href="#数组元素的索引" class="headerlink" title="数组元素的索引"></a>数组元素的索引</h3><p>​    对于一维数组，无非就记住一个原则：列表名(数组名)[start: end: step],但不包括索引end对应的值。</p>
+<p>​    二维数据列表元素的引用方式为a[i] [j]; array数组元素的引用方式可以为a[i,j]。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">a</span> = np.arange(<span class="hljs-number">16</span>).reshape(<span class="hljs-number">4</span>,<span class="hljs-number">4</span>)  #生成<span class="hljs-number">4</span>行<span class="hljs-number">4</span>列的数组<br><span class="hljs-attribute">b</span> = a[<span class="hljs-number">1</span>][<span class="hljs-number">2</span>]   #输出<span class="hljs-number">6</span><br><span class="hljs-attribute">c</span> = a[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]   #同b<br><span class="hljs-attribute">d</span> = a[<span class="hljs-number">1</span>:<span class="hljs-number">2</span>, <span class="hljs-number">2</span>:<span class="hljs-number">3</span>]  #输出[[<span class="hljs-number">6</span>]]<br><span class="hljs-attribute">x</span> = np.array([<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>])<br><span class="hljs-attribute">print</span>(a[x==<span class="hljs-number">1</span>])  #输出a的第<span class="hljs-number">2</span>、<span class="hljs-number">4</span>行元素<br></code></pre></td></tr></table></figure>
+
+<h3 id="矩阵的合并"><a href="#矩阵的合并" class="headerlink" title="矩阵的合并"></a>矩阵的合并</h3><p>vstack([A,B])     矩阵上下合并</p>
+<p>hstack([A,B])    矩阵左右合并</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">a</span> = np.arange(<span class="hljs-number">16</span>).reshape(<span class="hljs-number">4</span>,<span class="hljs-number">4</span>)  <span class="hljs-comment">#生成4行4列的数组</span><br><span class="hljs-attr">b</span> = np.floor(<span class="hljs-number">5</span>*np.random.random((<span class="hljs-number">2</span>, <span class="hljs-number">4</span>)))	<span class="hljs-comment">#元素小于5</span><br><span class="hljs-attr">c</span> = np.ceil(<span class="hljs-number">6</span>*np.random.random((<span class="hljs-number">4</span>, <span class="hljs-number">2</span>)))		<span class="hljs-comment">#元素不超过6</span><br><span class="hljs-attr">d</span> = np.vstack([a, b])  <span class="hljs-comment">#上下合并矩阵</span><br><span class="hljs-attr">e</span> = np.hstack([a, c])  <span class="hljs-comment">#左右合并矩阵</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="矩阵的分割"><a href="#矩阵的分割" class="headerlink" title="矩阵的分割"></a>矩阵的分割</h3><p>vsplit(a, m)    把a平均分成m个行数组</p>
+<p>hsplit(a, n)    把a平均分成n个列数组。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">a</span> = np<span class="hljs-selector-class">.arange</span>(<span class="hljs-number">16</span>)<span class="hljs-selector-class">.reshape</span>(<span class="hljs-number">4</span>,<span class="hljs-number">4</span>)  #生成<span class="hljs-number">4</span>行<span class="hljs-number">4</span>列的数组<br><span class="hljs-selector-tag">b</span> = np<span class="hljs-selector-class">.vsplit</span>(<span class="hljs-selector-tag">a</span>, <span class="hljs-number">2</span>)             #行分割，平均分成<span class="hljs-number">2</span>分<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;行分割：\n&#x27;</span>,b[<span class="hljs-number">0</span>],<span class="hljs-string">&#x27;\n&#x27;</span>,b[<span class="hljs-number">1</span>])</span></span><br>c = np<span class="hljs-selector-class">.hsplit</span>(<span class="hljs-selector-tag">a</span>, <span class="hljs-number">4</span>)             #列分割，平均分成<span class="hljs-number">4</span>分<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;列分割：\n&#x27;</span>,c[<span class="hljs-number">0</span>],<span class="hljs-string">&#x27;\n&#x27;</span>,c[<span class="hljs-number">1</span>],<span class="hljs-string">&#x27;\n&#x27;</span>,c[<span class="hljs-number">2</span>], <span class="hljs-string">&#x27;\n&#x27;</span>,c[<span class="hljs-number">3</span>])</span></span><br></code></pre></td></tr></table></figure>
+
+<h3 id="矩阵的简单运算"><a href="#矩阵的简单运算" class="headerlink" title="矩阵的简单运算"></a>矩阵的简单运算</h3><ul>
+<li><h4 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h4></li>
+</ul>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs livecodeserver"><span class="hljs-keyword">a</span> = np.array([[<span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">6</span>, <span class="hljs-number">4</span>]])<br>b = <span class="hljs-keyword">a</span>.<span class="hljs-built_in">sum</span>()   <span class="hljs-comment">#使用方法，求矩阵所有元素的和</span><br>c1 = <span class="hljs-built_in">sum</span>(<span class="hljs-keyword">a</span>)   <span class="hljs-comment">#使用内置函数，求矩阵逐列元素的和</span><br>c2 = np.<span class="hljs-built_in">sum</span>(<span class="hljs-keyword">a</span>, axis=<span class="hljs-number">0</span>) <span class="hljs-comment">#使用函数，求矩阵逐列元素的和</span><br>c3 = np.<span class="hljs-built_in">sum</span>(<span class="hljs-keyword">a</span>, axis=<span class="hljs-number">0</span>, keepdims=True)   <span class="hljs-comment">#逐列求和</span><br>print(c2.shape, c3.shape)  <span class="hljs-comment">#c2是(3,)数组，c3是(1,3)数组</span><br><span class="hljs-comment">#当axis=1时，表示逐行</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="逐个元素运算"><a href="#逐个元素运算" class="headerlink" title="逐个元素运算"></a>逐个元素运算</h4></li>
+</ul>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">a</span> = np.array([[<span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">6</span>, <span class="hljs-number">4</span>]])<br><span class="hljs-attr">b</span> = np.array([[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], [<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>]])<br><span class="hljs-attr">c</span> = a / b   <span class="hljs-comment">#两个矩阵对应元素相除</span><br><span class="hljs-attr">d</span> = np.array([<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>])<br><span class="hljs-attr">e</span> = a * d   <span class="hljs-comment">#d先广播成与a同维数的矩阵，再逐个元素相乘</span><br><span class="hljs-attr">f</span> = np.array([[<span class="hljs-number">3</span>],[<span class="hljs-number">2</span>]])<br><span class="hljs-attr">g</span> = a * f   <span class="hljs-comment">#f先广播成与a同维数的矩阵，再逐个元素相乘</span><br><span class="hljs-attr">h</span> = a ** (<span class="hljs-number">1</span>/<span class="hljs-number">2</span>)  <span class="hljs-comment">#a矩阵逐个元素的1/2次幂。</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="矩阵乘法"><a href="#矩阵乘法" class="headerlink" title="矩阵乘法"></a>矩阵乘法</h4></li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">a</span> = np.ones(<span class="hljs-number">4</span>,dtype=int)        #[<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>]<br><span class="hljs-attribute">b</span> = np.arange(<span class="hljs-number">2</span>, <span class="hljs-number">10</span>, <span class="hljs-number">2</span>)    		#[<span class="hljs-number">2</span>,<span class="hljs-number">4</span>,<span class="hljs-number">6</span>,<span class="hljs-number">8</span>]<br><span class="hljs-attribute">c</span> = a @ b  #a作为行向量, b作为列向量 <span class="hljs-number">20</span>.<span class="hljs-number">0</span><br><span class="hljs-attribute">d</span> = np.arange(<span class="hljs-number">16</span>).reshape(<span class="hljs-number">4</span>,<span class="hljs-number">4</span>) <br>		  <span class="hljs-comment">#[[0,1,2,3],[4,5,6,7],[8,9,10,11],[12,13,14,15]</span><br><span class="hljs-attribute">f</span> = a @ d  #a作为行向量 <span class="hljs-meta"> [24 28 32 36]</span><br><span class="hljs-attribute">g</span> = d @ a  #a作为列向量<span class="hljs-meta">	[ 6 22 38 54]</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><h4 id="矩阵代数与线性运算-–-linalg"><a href="#矩阵代数与线性运算-–-linalg" class="headerlink" title="矩阵代数与线性运算 – linalg"></a>矩阵代数与线性运算 – linalg</h4></li>
+</ul>
+<p><img src="test/%E5%9B%BE%E7%89%871.png" srcset="/img/loading.gif" lazyload></p>
+<h5 id="norm-–-求向量或矩阵的范数"><a href="#norm-–-求向量或矩阵的范数" class="headerlink" title="norm – 求向量或矩阵的范数"></a>norm – 求向量或矩阵的范数</h5><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">norm</span><span class="hljs-params">(x, ord=None, axis=None, keepdims=False)</span></span><br><br>x: 表示要度量的向量或矩阵；<br>ord: 表示范数的种类，例如<span class="hljs-number">1</span>范数，<span class="hljs-number">2</span>范数，范数。<br>axis: axis=<span class="hljs-number">1</span>表示按行向量处理，求多个行向量的范数；axis=<span class="hljs-number">0</span>表示按列向量处理，求多个列向量的范数；axis=None表示矩阵范数。<br>keepdims: 是否保持矩阵的二维特性。True表示保持矩阵的二维特性，False则相反。<br><br><span class="hljs-selector-tag">a</span> = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[[0, 3, 4]</span>, <span class="hljs-selector-attr">[1, 6, 4]</span>])<br><span class="hljs-selector-tag">b</span> = np<span class="hljs-selector-class">.linalg</span><span class="hljs-selector-class">.norm</span>(<span class="hljs-selector-tag">a</span>, axis=<span class="hljs-number">1</span>)  #求行向量<span class="hljs-number">2</span>范数<br>c = np<span class="hljs-selector-class">.linalg</span><span class="hljs-selector-class">.norm</span>(<span class="hljs-selector-tag">a</span>, axis=<span class="hljs-number">0</span>)  #求列向量<span class="hljs-number">2</span>范数<br>d = np<span class="hljs-selector-class">.linalg</span><span class="hljs-selector-class">.norm</span>(a)   #求矩阵<span class="hljs-number">2</span>范数<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;行向量2范数为：&#x27;</span>, np.round(b, <span class="hljs-number">4</span>)</span></span>)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;列向量2范数为：&#x27;</span>, np.round(c, <span class="hljs-number">4</span>)</span></span>)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;矩阵2范数为：&#x27;</span>, round(d, <span class="hljs-number">4</span>)</span></span>)<br></code></pre></td></tr></table></figure>
+
+<h5 id="inv-–-求逆矩阵"><a href="#inv-–-求逆矩阵" class="headerlink" title="inv – 求逆矩阵"></a>inv – 求逆矩阵</h5><h5 id="pinv-–-求广义矩阵"><a href="#pinv-–-求广义矩阵" class="headerlink" title="pinv – 求广义矩阵"></a>pinv – 求广义矩阵</h5><h5 id="solve-–-求解线性方程组"><a href="#solve-–-求解线性方程组" class="headerlink" title="solve – 求解线性方程组"></a>solve – 求解线性方程组</h5><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片2.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight stan"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs stan">a = np.<span class="hljs-type">array</span>([[<span class="hljs-number">3</span>, <span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]])<br>b = np.<span class="hljs-type">array</span>([<span class="hljs-number">9</span>, <span class="hljs-number">8</span>])<br>x1 = np.linalg.<span class="hljs-built_in">inv</span>(a) @ b  <span class="hljs-comment">#第一种解法</span><br><span class="hljs-comment">#上面语句中@表示矩阵乘法</span><br>x2 = np.linalg.solve(a, b) <span class="hljs-comment">#第二种解法</span><br><span class="hljs-built_in">print</span>(x1); <span class="hljs-built_in">print</span>(x2)<br>求得x=<span class="hljs-number">2</span>，y=<span class="hljs-number">3</span>。<br></code></pre></td></tr></table></figure>
+
+<h5 id="det-–-求解矩阵的行列式"><a href="#det-–-求解矩阵的行列式" class="headerlink" title="det – 求解矩阵的行列式"></a>det – 求解矩阵的行列式</h5><h5 id="lstsq-–-最小二乘法求解超定线性方程组"><a href="#lstsq-–-最小二乘法求解超定线性方程组" class="headerlink" title="lstsq – 最小二乘法求解超定线性方程组"></a>lstsq – 最小二乘法求解超定线性方程组</h5><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片3.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">a</span> = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[[3, 1]</span>, <span class="hljs-selector-attr">[1, 2]</span>, <span class="hljs-selector-attr">[1, 1]</span>])<br><span class="hljs-selector-tag">b</span> = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[9, 8, 6]</span>)<br>x = np<span class="hljs-selector-class">.linalg</span><span class="hljs-selector-class">.pinv</span>(a) @ <span class="hljs-selector-tag">b</span>  <br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(np.round(x, <span class="hljs-number">4</span>)</span></span>)<br>    求得的最小二乘解为x=<span class="hljs-number">2</span>，y=<span class="hljs-number">3.1667</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs lua">import numpy as np     # 构造一个线性方程组   <br>A = np.array(<span class="hljs-string">[[1, 2], [3, 4], [5, 6]]</span>)   <br>B = np.array(<span class="hljs-string">[[-1], [2], [3]]</span>)     <br># 使用lstsq函数求解线性方程组   <br>x, residuals, rank, s = np.linalg.lstsq(A, B, rcond=None)     <br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;最小二乘解：&quot;</span>, x)<br>#函数返回的结果包括最小二乘解 x、残差平方和 residuals、矩阵的秩 rank 和奇异值 s。<br></code></pre></td></tr></table></figure>
+
+<h5 id="eig-–-求矩阵的特征值和特征向量"><a href="#eig-–-求矩阵的特征值和特征向量" class="headerlink" title="eig – 求矩阵的特征值和特征向量"></a>eig – 求矩阵的特征值和特征向量</h5><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片4.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-tag">a</span> = np<span class="hljs-selector-class">.eye</span>(<span class="hljs-number">4</span>)<br><span class="hljs-selector-tag">b</span> = np<span class="hljs-selector-class">.rot90</span>(a)<br>c, d = np<span class="hljs-selector-class">.linalg</span><span class="hljs-selector-class">.eig</span>(b)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;特征值为：&#x27;</span>, c)</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;特征向量为：\n&#x27;</span>, d)</span></span><br></code></pre></td></tr></table></figure>
+
+<h5 id="eigvals-–-求矩阵的特征值"><a href="#eigvals-–-求矩阵的特征值" class="headerlink" title="eigvals – 求矩阵的特征值"></a>eigvals – 求矩阵的特征值</h5><h5 id="svd-–-矩阵的奇异值分解"><a href="#svd-–-矩阵的奇异值分解" class="headerlink" title="svd – 矩阵的奇异值分解"></a>svd – 矩阵的奇异值分解</h5><h5 id="qr-–-求矩阵的QR分解"><a href="#qr-–-求矩阵的QR分解" class="headerlink" title="qr – 求矩阵的QR分解"></a>qr – 求矩阵的QR分解</h5><h1 id="Pandas库"><a href="#Pandas库" class="headerlink" title="Pandas库"></a>Pandas库</h1><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片5.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="引用Pandas库"><a href="#引用Pandas库" class="headerlink" title="引用Pandas库"></a>引用Pandas库</h2><figure class="highlight elm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs elm"><span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd<br></code></pre></td></tr></table></figure>
+
+<h2 id="生成二维数组"><a href="#生成二维数组" class="headerlink" title="生成二维数组"></a>生成二维数组</h2><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片6.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">dates=pd.date<span class="hljs-constructor">_range(<span class="hljs-params">start</span>=&#x27;20191101&#x27;,<span class="hljs-params">end</span>=&#x27;20191124&#x27;,<span class="hljs-params">freq</span>=&#x27;D&#x27;)</span><br>a1=pd.<span class="hljs-constructor">DataFrame(<span class="hljs-params">np</span>.<span class="hljs-params">random</span>.<span class="hljs-params">randn</span>(24,4)</span>, index=dates, columns=<span class="hljs-built_in">list</span>(&#x27;ABCD&#x27;))<br>a2=pd.<span class="hljs-constructor">DataFrame(<span class="hljs-params">np</span>.<span class="hljs-params">random</span>.<span class="hljs-params">rand</span>(24,4)</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a>读写文件</h2><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片7.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">数据写入文件示例。<br>#程序文件ex2_38_1.py<br>import pandas <span class="hljs-keyword">as</span> pd<br>import numpy <span class="hljs-keyword">as</span> np<br>dates=pd.date<span class="hljs-constructor">_range(<span class="hljs-params">start</span>=&#x27;20191101&#x27;, <span class="hljs-params">end</span>=&#x27;20191124&#x27;, <span class="hljs-params">freq</span>=&#x27;D&#x27;)</span><br>a1=pd.<span class="hljs-constructor">DataFrame(<span class="hljs-params">np</span>.<span class="hljs-params">random</span>.<span class="hljs-params">randn</span>(24,4)</span>, index=dates, columns=<span class="hljs-built_in">list</span>(&#x27;ABCD&#x27;))<br>a2=pd.<span class="hljs-constructor">DataFrame(<span class="hljs-params">np</span>.<span class="hljs-params">random</span>.<span class="hljs-params">randn</span>(24,4)</span>)<br>a1.<span class="hljs-keyword">to</span><span class="hljs-constructor">_excel(&#x27;<span class="hljs-params">data2_38_1</span>.<span class="hljs-params">xlsx</span>&#x27;)</span><br>a2.<span class="hljs-keyword">to</span><span class="hljs-constructor">_csv(&#x27;<span class="hljs-params">data2_38_2</span>.<span class="hljs-params">csv</span>&#x27;)</span><br>f=pd.<span class="hljs-constructor">ExcelWriter(&#x27;<span class="hljs-params">data2_38_3</span>.<span class="hljs-params">xlsx</span>&#x27;)</span>  #创建文件对象<br>a1.<span class="hljs-keyword">to</span><span class="hljs-constructor">_excel(<span class="hljs-params">f</span>,<span class="hljs-string">&quot;Sheet1&quot;</span>)</span>  #把a1写入Excel文件<br>a2.<span class="hljs-keyword">to</span><span class="hljs-constructor">_excel(<span class="hljs-params">f</span>,<span class="hljs-string">&quot;Sheet2&quot;</span>)</span>  #把a2写入另一个表单中<br>f.save<span class="hljs-literal">()</span><br><br>如果写入数据时，不包含行索引，Python程序如下：<br>#程序文件ex2_38_2.py<br>import pandas <span class="hljs-keyword">as</span> pd<br>import numpy <span class="hljs-keyword">as</span> np<br>dates=pd.date<span class="hljs-constructor">_range(<span class="hljs-params">start</span>=&#x27;20191101&#x27;,  <span class="hljs-params">end</span>=&#x27;20191124&#x27;,  <span class="hljs-params">freq</span>=&#x27;D&#x27;)</span><br>a1=pd.<span class="hljs-constructor">DataFrame(<span class="hljs-params">np</span>.<span class="hljs-params">random</span>.<span class="hljs-params">randn</span>(24,4)</span>, index=dates, columns=<span class="hljs-built_in">list</span>(&#x27;ABCD&#x27;))<br>a2=pd.<span class="hljs-constructor">DataFrame(<span class="hljs-params">np</span>.<span class="hljs-params">random</span>.<span class="hljs-params">randn</span>(24,4)</span>)<br>a1.<span class="hljs-keyword">to</span><span class="hljs-constructor">_excel(&#x27;<span class="hljs-params">data2_38_4</span>.<span class="hljs-params">xlsx</span>&#x27;, <span class="hljs-params">index</span>=False)</span>  #不包括行索引<br>a2.<span class="hljs-keyword">to</span><span class="hljs-constructor">_csv(&#x27;<span class="hljs-params">data2_38_5</span>.<span class="hljs-params">csv</span>&#x27;, <span class="hljs-params">index</span>=False)</span>   #不包括行索引<br>f=pd.<span class="hljs-constructor">ExcelWriter(&#x27;<span class="hljs-params">data2_38_6</span>.<span class="hljs-params">xlsx</span>&#x27;)</span>  #创建文件对象<br>a1.<span class="hljs-keyword">to</span><span class="hljs-constructor">_excel(<span class="hljs-params">f</span>,<span class="hljs-string">&quot;Sheet1&quot;</span>, <span class="hljs-params">index</span>=False)</span>  #把a1写入Excel文件<br>a2.<span class="hljs-keyword">to</span><span class="hljs-constructor">_excel(<span class="hljs-params">f</span>,<span class="hljs-string">&quot;Sheet2&quot;</span>, <span class="hljs-params">index</span>=False)</span>  #把a2写入另一个表单中<br>f.save<span class="hljs-literal">()</span><br></code></pre></td></tr></table></figure>
+
+<p>从文件中读入数据示例</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">import pandas <span class="hljs-keyword">as</span> pd<br>a=pd.read<span class="hljs-constructor">_csv(<span class="hljs-string">&quot;data2_38_2.csv&quot;</span>, <span class="hljs-params">usecols</span>=<span class="hljs-params">range</span>(1,5)</span>)<br>b=pd.read<span class="hljs-constructor">_excel(<span class="hljs-string">&quot;data2_38_3.xlsx&quot;</span>, <span class="hljs-string">&quot;Sheet2&quot;</span>, <span class="hljs-params">usecols</span>=<span class="hljs-params">range</span>(1,5)</span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="数据的一些预处理"><a href="#数据的一些预处理" class="headerlink" title="数据的一些预处理"></a>数据的一些预处理</h2><h3 id="DataFrame数据的拆分、合并和分组计算"><a href="#DataFrame数据的拆分、合并和分组计算" class="headerlink" title="DataFrame数据的拆分、合并和分组计算"></a>DataFrame数据的拆分、合并和分组计算</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">d</span>=pd.DataFrame(np.random.randint(<span class="hljs-number">1</span>,<span class="hljs-number">6</span>,(<span class="hljs-number">10</span>,<span class="hljs-number">4</span>)), columns=list(<span class="hljs-string">&quot;ABCD&quot;</span>))<br><span class="hljs-attr">d1</span>=d[:<span class="hljs-number">4</span>]  <span class="hljs-comment">#获取前4行数据</span><br><span class="hljs-attr">d2</span>=d[<span class="hljs-number">4</span>:]  <span class="hljs-comment">#获取第5行以后的数据</span><br><span class="hljs-attr">dd</span>=pd.concat([d1,d2])   <span class="hljs-comment">#数据行合并</span><br><span class="hljs-attr">s1</span>=d.groupby(<span class="hljs-string">&#x27;A&#x27;</span>).mean()      <span class="hljs-comment">#数据分组求均值</span><br><span class="hljs-attr">s2</span>=d.groupby(<span class="hljs-string">&#x27;A&#x27;</span>).apply(sum)  <span class="hljs-comment">#数据分组求和</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="数据的选取与清洗"><a href="#数据的选取与清洗" class="headerlink" title="数据的选取与清洗"></a>数据的选取与清洗</h3><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片8.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs stylus">import pandas as pd<br>import numpy as np<br><span class="hljs-selector-tag">a</span> = pd<span class="hljs-selector-class">.DataFrame</span>(np<span class="hljs-selector-class">.random</span><span class="hljs-selector-class">.randint</span>(<span class="hljs-number">1</span>,<span class="hljs-number">6</span>,(<span class="hljs-number">5</span>,<span class="hljs-number">3</span>)),<br>                 index=<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>]</span>,<br>                 <span class="hljs-attribute">columns</span>=[<span class="hljs-string">&#x27;one&#x27;</span>, <span class="hljs-string">&#x27;two&#x27;</span>, <span class="hljs-string">&#x27;three&#x27;</span>])<br><span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.loc</span><span class="hljs-selector-attr">[<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;one&#x27;</span>]</span> = np<span class="hljs-selector-class">.nan</span>  #修改第<span class="hljs-number">1</span>行第<span class="hljs-number">1</span>列的数据<br><span class="hljs-selector-tag">b</span> = <span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.iloc</span><span class="hljs-selector-attr">[1:3, 0:2]</span><span class="hljs-selector-class">.values</span>  #提取第<span class="hljs-number">2</span>、<span class="hljs-number">3</span>行，第<span class="hljs-number">1</span>、<span class="hljs-number">2</span>列数据<br><span class="hljs-selector-tag">a</span><span class="hljs-selector-attr">[<span class="hljs-string">&#x27;four&#x27;</span>]</span> = <span class="hljs-string">&#x27;bar&#x27;</span>  #增加第<span class="hljs-number">4</span>列数据<br>a2 = <span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.reindex</span>(<span class="hljs-selector-attr">[<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;f&#x27;</span>]</span>)<br>a3 = a2<span class="hljs-selector-class">.dropna</span>()   #删除有不确定值的行<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h1><h2 id="内置函数-–-open"><a href="#内置函数-–-open" class="headerlink" title="内置函数 – open( )"></a>内置函数 – open( )</h2><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片9.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片10.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="文件对象常用方法"><a href="#文件对象常用方法" class="headerlink" title="文件对象常用方法"></a>文件对象常用方法</h2><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片11.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="上下文管理语句"><a href="#上下文管理语句" class="headerlink" title="上下文管理语句"></a>上下文管理语句</h2><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片12.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="SciPy库"><a href="#SciPy库" class="headerlink" title="SciPy库"></a>SciPy库</h1><p><img src="C:\Users\86187\blog\source_posts\数学建模Python函数库\图片13.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="求解非线性方程（组）"><a href="#求解非线性方程（组）" class="headerlink" title="求解非线性方程（组）"></a>求解非线性方程（组）</h2><h2 id="积分"><a href="#积分" class="headerlink" title="积分"></a>积分</h2><h2 id="最小二乘法解非线性方程组"><a href="#最小二乘法解非线性方程组" class="headerlink" title="最小二乘法解非线性方程组"></a>最小二乘法解非线性方程组</h2><h2 id="求列矩阵的最大模特征值级吸引的特征向量"><a href="#求列矩阵的最大模特征值级吸引的特征向量" class="headerlink" title="求列矩阵的最大模特征值级吸引的特征向量"></a>求列矩阵的最大模特征值级吸引的特征向量</h2><h1 id="SymPy-库"><a href="#SymPy-库" class="headerlink" title="SymPy 库"></a>SymPy 库</h1><h2 id="引用SymPy库"><a href="#引用SymPy库" class="headerlink" title="引用SymPy库"></a>引用SymPy库</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">inport sympy <span class="hljs-keyword">as</span> <span class="hljs-keyword">sp</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="Matplotlib-库"><a href="#Matplotlib-库" class="headerlink" title="Matplotlib 库"></a>Matplotlib 库</h1><h2 id="二维绘图"><a href="#二维绘图" class="headerlink" title="二维绘图"></a>二维绘图</h2><h3 id="折线图"><a href="#折线图" class="headerlink" title="折线图"></a>折线图</h3><h2 id="Pandas结合Matplotlib进行数据可视化"><a href="#Pandas结合Matplotlib进行数据可视化" class="headerlink" title="Pandas结合Matplotlib进行数据可视化"></a>Pandas结合Matplotlib进行数据可视化</h2><h3 id="子图"><a href="#子图" class="headerlink" title="子图"></a>子图</h3><h2 id="三维绘图"><a href="#三维绘图" class="headerlink" title="三维绘图"></a>三维绘图</h2><h3 id="三维曲线"><a href="#三维曲线" class="headerlink" title="三维曲线"></a>三维曲线</h3><h3 id="三维曲面图"><a href="#三维曲面图" class="headerlink" title="三维曲面图"></a>三维曲面图</h3><span id="more"></span>
+
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/16/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E6%A8%A1%E5%9E%8B/">
+                        <span class="hidden-mobile">线性代数模型</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
