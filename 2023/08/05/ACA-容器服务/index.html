@@ -1,0 +1,635 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="容器的概念容器技术:有效的将单个操作系统的资源划分到孤立的组中，以便更好的在孤立的组之间平衡有冲突的资源使用需求，这种技术就是容器技术。 容器诞生的背景      容器发展的历史 容器的概念 容器的核心组成##容器的核心技术主要包括：Namespace、Cgroup、rootfs、容器引擎。  容器解决了什么问题##容器技术的出现消除了传统的软件部署当中环境一致性、项目打包、项目部署等问题。  环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACA-容器服务">
+<meta property="og:url" content="http://example.com/2023/08/05/ACA-%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="容器的概念容器技术:有效的将单个操作系统的资源划分到孤立的组中，以便更好的在孤立的组之间平衡有冲突的资源使用需求，这种技术就是容器技术。 容器诞生的背景      容器发展的历史 容器的概念 容器的核心组成##容器的核心技术主要包括：Namespace、Cgroup、rootfs、容器引擎。  容器解决了什么问题##容器技术的出现消除了传统的软件部署当中环境一致性、项目打包、项目部署等问题。  环">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091109103.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091113062.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091114317.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091116508.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091118017.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091121982.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091123702.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091519542.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091520376.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091523468.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091528201.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091530987.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091531351.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091535353.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091536002.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091537705.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091538390.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091539377.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091540711.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091540095.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091543173.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091544904.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091546545.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091548409.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091549176.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091554712.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091555859.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091555366.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091556392.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091557794.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091558195.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091559946.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091603327.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091604227.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091605206.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091605438.png">
+<meta property="og:image" content="c:/Users/86187/AppData/Roaming/Typora/typora-user-images/image-20230809160936214.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091611398.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091611725.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091612683.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091612727.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091613657.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091613954.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091614171.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091614115.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091616479.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091617784.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091618969.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091619240.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091620790.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091621704.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091621216.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091621296.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091625577.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091626196.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091627111.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091629579.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091629519.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091635640.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091635165.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091636677.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091636357.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091636037.png">
+<meta property="article:published_time" content="2023-08-05T22:29:05.000Z">
+<meta property="article:modified_time" content="2023-10-17T15:46:13.481Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="ACA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091109103.png">
+  
+  
+  <title>ACA-容器服务 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ACA-容器服务">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-05 22:29" pubdate>
+        August 5, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      960 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ACA-容器服务</h1>
+            
+            <div class="markdown-body">
+              <h1 id="容器的概念"><a href="#容器的概念" class="headerlink" title="容器的概念"></a>容器的概念</h1><p>容器技术:有效的将单个<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/192?fromModule=lemma_inlink">操作系统</a>的资源划分到孤立的组中，以便更好的在孤立的组之间平衡有冲突的资源使用需求，这种技术就是容器技术。</p>
+<h2 id="容器诞生的背景"><a href="#容器诞生的背景" class="headerlink" title="容器诞生的背景"></a>容器诞生的背景</h2><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091109103.png" srcset="/img/loading.gif" lazyload alt="image-20230809110755673" style="zoom:150%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091113062.png" srcset="/img/loading.gif" lazyload alt="image-20230809111316990" style="zoom:150%;" />
+
+
+
+<h2 id="容器发展的历史"><a href="#容器发展的历史" class="headerlink" title="容器发展的历史"></a>容器发展的历史</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091114317.png" srcset="/img/loading.gif" lazyload alt="image-20230809111421274"></p>
+<h2 id="容器的概念-1"><a href="#容器的概念-1" class="headerlink" title="容器的概念"></a>容器的概念</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091116508.png" srcset="/img/loading.gif" lazyload alt="image-20230809111603466"></p>
+<h3 id="容器的核心组成"><a href="#容器的核心组成" class="headerlink" title="容器的核心组成##"></a>容器的核心组成##</h3><p>容器的核心技术主要包括：Namespace、Cgroup、rootfs、容器引擎。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091118017.png" srcset="/img/loading.gif" lazyload alt="image-20230809111853974"></p>
+<h2 id="容器解决了什么问题"><a href="#容器解决了什么问题" class="headerlink" title="容器解决了什么问题##"></a>容器解决了什么问题##</h2><p>容器技术的出现消除了传统的软件部署当中环境一致性、项目打包、项目部署等问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091121982.png" srcset="/img/loading.gif" lazyload alt="image-20230809112142927"></p>
+<h3 id="环境一致性问题"><a href="#环境一致性问题" class="headerlink" title="环境一致性问题"></a>环境一致性问题</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091123702.png" srcset="/img/loading.gif" lazyload alt="image-20230809112340647"></p>
+<h3 id="项目打包问题"><a href="#项目打包问题" class="headerlink" title="项目打包问题"></a>项目打包问题</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091519542.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="微服务问题"><a href="#微服务问题" class="headerlink" title="微服务问题"></a>微服务问题</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091520376.png" srcset="/img/loading.gif" lazyload alt="image-20230809152035324"></p>
+<h2 id="容器典型产品-——-Docker"><a href="#容器典型产品-——-Docker" class="headerlink" title="容器典型产品 —— Docker"></a>容器典型产品 —— Docker</h2><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091523468.png" srcset="/img/loading.gif" lazyload alt="image-20230809152244075" style="zoom:150%;" />
+
+
+
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><h3 id="容器和虚拟机有什么区别？"><a href="#容器和虚拟机有什么区别？" class="headerlink" title="容器和虚拟机有什么区别？"></a>容器和虚拟机有什么区别？</h3><figure class="highlight"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="Docker介绍"><a href="#Docker介绍" class="headerlink" title="Docker介绍"></a>Docker介绍</h1><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091528201.png" srcset="/img/loading.gif" lazyload alt="image-20230809152804149" style="zoom:50%;" />
+
+
+
+<h2 id="Docker的起源"><a href="#Docker的起源" class="headerlink" title="Docker的起源"></a>Docker的起源</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091530987.png" srcset="/img/loading.gif" lazyload alt="image-20230809153041940"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091531351.png" srcset="/img/loading.gif" lazyload alt="image-20230809153107314"></p>
+<h2 id="Docker的发展"><a href="#Docker的发展" class="headerlink" title="Docker的发展"></a>Docker的发展</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091535353.png" srcset="/img/loading.gif" lazyload alt="image-20230809153508300"></p>
+<h2 id="Docker的架构"><a href="#Docker的架构" class="headerlink" title="Docker的架构##"></a>Docker的架构##</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091536002.png" srcset="/img/loading.gif" lazyload alt="image-20230809153617930"></p>
+<h2 id="Docker的优势"><a href="#Docker的优势" class="headerlink" title="Docker的优势##"></a>Docker的优势##</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091537705.png" srcset="/img/loading.gif" lazyload alt="image-20230809153756650"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091538390.png" srcset="/img/loading.gif" lazyload alt="image-20230809153833292"></p>
+<h3 id="Docker对比传统虚拟机"><a href="#Docker对比传统虚拟机" class="headerlink" title="Docker对比传统虚拟机"></a>Docker对比传统虚拟机</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091539377.png" srcset="/img/loading.gif" lazyload alt="image-20230809153910322"></p>
+<h2 id="Docker的基本概念"><a href="#Docker的基本概念" class="headerlink" title="Docker的基本概念##"></a>Docker的基本概念##</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091540711.png" srcset="/img/loading.gif" lazyload alt="image-20230809154008640"></p>
+<h3 id="Docker镜像"><a href="#Docker镜像" class="headerlink" title="Docker镜像"></a>Docker镜像</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091540095.png" srcset="/img/loading.gif" lazyload alt="image-20230809154034041"></p>
+<h3 id="Docker容器"><a href="#Docker容器" class="headerlink" title="Docker容器"></a>Docker容器</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091543173.png" srcset="/img/loading.gif" lazyload alt="image-20230809154349123"></p>
+<h3 id="Docker仓库"><a href="#Docker仓库" class="headerlink" title="Docker仓库"></a>Docker仓库</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091544904.png" srcset="/img/loading.gif" lazyload alt="image-20230809154446858"></p>
+<h2 id="Docker的应用场景"><a href="#Docker的应用场景" class="headerlink" title="Docker的应用场景"></a>Docker的应用场景</h2><h3 id="Docker-与-DevOps"><a href="#Docker-与-DevOps" class="headerlink" title="Docker 与 DevOps"></a>Docker 与 DevOps</h3><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091546545.png" srcset="/img/loading.gif" lazyload alt="image-20230809154654508" style="zoom:50%;" />
+
+<h3 id="Docker与微服务"><a href="#Docker与微服务" class="headerlink" title="Docker与微服务"></a>Docker与微服务</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091548409.png" srcset="/img/loading.gif" lazyload alt="image-20230809154817366"></p>
+<h3 id="Docker与负载均衡"><a href="#Docker与负载均衡" class="headerlink" title="Docker与负载均衡"></a>Docker与负载均衡</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091549176.png" srcset="/img/loading.gif" lazyload alt="image-20230809154908120"></p>
+<h2 id="思考-1"><a href="#思考-1" class="headerlink" title="思考"></a>思考</h2><h3 id="Docker相对与传统虚拟机有什么优势？"><a href="#Docker相对与传统虚拟机有什么优势？" class="headerlink" title="Docker相对与传统虚拟机有什么优势？"></a>Docker相对与传统虚拟机有什么优势？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h3 id="如何安装Docker容器？"><a href="#如何安装Docker容器？" class="headerlink" title="如何安装Docker容器？"></a>如何安装Docker容器？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h3 id="Docker容器的相关命令有哪些？"><a href="#Docker容器的相关命令有哪些？" class="headerlink" title="Docker容器的相关命令有哪些？"></a>Docker容器的相关命令有哪些？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="容器编排工具"><a href="#容器编排工具" class="headerlink" title="容器编排工具"></a>容器编排工具</h1><h2 id="什么是容器编排"><a href="#什么是容器编排" class="headerlink" title="什么是容器编排"></a>什么是容器编排</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091554712.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091555859.png" srcset="/img/loading.gif" lazyload alt="image-20230809155531798"></p>
+<h2 id="容器编排的作用"><a href="#容器编排的作用" class="headerlink" title="容器编排的作用##"></a>容器编排的作用##</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091555366.png" srcset="/img/loading.gif" lazyload alt="image-20230809155548318"></p>
+<h2 id="容器编排的实例"><a href="#容器编排的实例" class="headerlink" title="容器编排的实例"></a>容器编排的实例</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091556392.png" srcset="/img/loading.gif" lazyload alt="image-20230809155621336"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091557794.png" srcset="/img/loading.gif" lazyload alt="image-20230809155735758"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091558195.png" srcset="/img/loading.gif" lazyload alt="image-20230809155812144"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091559946.png" srcset="/img/loading.gif" lazyload alt="image-20230809155902914"></p>
+<h2 id="思考-2"><a href="#思考-2" class="headerlink" title="思考"></a>思考</h2><h3 id="容器编排的含义合作用？"><a href="#容器编排的含义合作用？" class="headerlink" title="容器编排的含义合作用？"></a>容器编排的含义合作用？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h3 id="如何使用Docker-compose-进行容器编排？"><a href="#如何使用Docker-compose-进行容器编排？" class="headerlink" title="如何使用Docker compose 进行容器编排？"></a>如何使用Docker compose 进行容器编排？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="阿里云容器服务ACK概述"><a href="#阿里云容器服务ACK概述" class="headerlink" title="阿里云容器服务ACK概述"></a>阿里云容器服务ACK概述</h1><h2 id="阿里云ACK概述"><a href="#阿里云ACK概述" class="headerlink" title="阿里云ACK概述"></a>阿里云ACK概述</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091603327.png" srcset="/img/loading.gif" lazyload alt="image-20230809160354290"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091604227.png" srcset="/img/loading.gif" lazyload alt="image-20230809160440181"></p>
+<h2 id="阿里云ACK的功能"><a href="#阿里云ACK的功能" class="headerlink" title="阿里云ACK的功能"></a>阿里云ACK的功能</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091605206.png" srcset="/img/loading.gif" lazyload alt="image-20230809160517145"></p>
+<h2 id="阿里云ACK的产品形态"><a href="#阿里云ACK的产品形态" class="headerlink" title="阿里云ACK的产品形态"></a>阿里云ACK的产品形态</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091605438.png" srcset="/img/loading.gif" lazyload alt="image-20230809160554369"></p>
+<h2 id="思考-3"><a href="#思考-3" class="headerlink" title="思考"></a>思考</h2><h3 id="阿里云ACK的架构组件"><a href="#阿里云ACK的架构组件" class="headerlink" title="阿里云ACK的架构组件##"></a>阿里云ACK的架构组件##</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="阿里云容器服务ACK功能优势"><a href="#阿里云容器服务ACK功能优势" class="headerlink" title="阿里云容器服务ACK功能优势"></a>阿里云容器服务ACK功能优势</h1><h2 id="阿里云ACK与自建Kubernetes的区别"><a href="#阿里云ACK与自建Kubernetes的区别" class="headerlink" title="阿里云ACK与自建Kubernetes的区别"></a>阿里云ACK与自建Kubernetes的区别</h2><p>​    <img src="C:/Users/86187/AppData/Roaming/Typora/typora-user-images/image-20230809160936214.png" srcset="/img/loading.gif" lazyload alt="image-20230809160936214" style="zoom: 200%;" /></p>
+<h2 id="阿里云ACK核心功能"><a href="#阿里云ACK核心功能" class="headerlink" title="阿里云ACK核心功能"></a>阿里云ACK核心功能</h2><h3 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091611398.png" srcset="/img/loading.gif" lazyload alt="image-20230809161110319"></p>
+<h3 id="弹性伸缩"><a href="#弹性伸缩" class="headerlink" title="弹性伸缩"></a>弹性伸缩</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091611725.png" srcset="/img/loading.gif" lazyload alt="image-20230809161140649"></p>
+<h3 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091612683.png" srcset="/img/loading.gif" lazyload alt="image-20230809161220613"></p>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091612727.png" srcset="/img/loading.gif" lazyload alt="image-20230809161241639"></p>
+<h3 id="可观测性体系"><a href="#可观测性体系" class="headerlink" title="可观测性体系"></a>可观测性体系</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091613657.png" srcset="/img/loading.gif" lazyload alt="image-20230809161323602"></p>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091613954.png" srcset="/img/loading.gif" lazyload alt="image-20230809161347883"></p>
+<h2 id="阿里云ACK集群类型"><a href="#阿里云ACK集群类型" class="headerlink" title="阿里云ACK集群类型"></a>阿里云ACK集群类型</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091614171.png" srcset="/img/loading.gif" lazyload alt="image-20230809161423092"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091614115.png" srcset="/img/loading.gif" lazyload alt="image-20230809161443045"></p>
+<p><strong>ACK Pro版 - 可靠性强化集群</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091616479.png" srcset="/img/loading.gif" lazyload alt="image-20230809161637418"></p>
+<p><strong>ACK Pro版 - 安全增强KMS加密</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091617784.png" srcset="/img/loading.gif" lazyload alt="image-20230809161730716"></p>
+<p><strong>ACK Pro版 - 调度算法加强</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091618969.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="阿里云ACK应用场景"><a href="#阿里云ACK应用场景" class="headerlink" title="阿里云ACK应用场景"></a>阿里云ACK应用场景</h2><h3 id="DevOvs"><a href="#DevOvs" class="headerlink" title="DevOvs"></a>DevOvs</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091619240.png" srcset="/img/loading.gif" lazyload alt="image-20230809161955173"></p>
+<h3 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091620790.png" srcset="/img/loading.gif" lazyload alt="image-20230809162031713"></p>
+<h3 id="微服务架构"><a href="#微服务架构" class="headerlink" title="微服务架构"></a>微服务架构</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091621704.png" srcset="/img/loading.gif" lazyload alt="image-20230809162110631"></p>
+<h3 id="混合云"><a href="#混合云" class="headerlink" title="混合云"></a>混合云</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091621216.png" srcset="/img/loading.gif" lazyload alt="image-20230809162130146"></p>
+<h3 id="弹性伸缩-1"><a href="#弹性伸缩-1" class="headerlink" title="弹性伸缩"></a>弹性伸缩</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091621296.png" srcset="/img/loading.gif" lazyload alt="image-20230809162155225"></p>
+<h2 id="思考-4"><a href="#思考-4" class="headerlink" title="思考"></a>思考</h2><h3 id="阿里云ACK有哪些功能优势？"><a href="#阿里云ACK有哪些功能优势？" class="headerlink" title="阿里云ACK有哪些功能优势？"></a>阿里云ACK有哪些功能优势？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h3 id="阿里云ACK有哪几个应用场景？"><a href="#阿里云ACK有哪几个应用场景？" class="headerlink" title="阿里云ACK有哪几个应用场景？"></a>阿里云ACK有哪几个应用场景？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="阿里云容器服务ACK架构方案"><a href="#阿里云容器服务ACK架构方案" class="headerlink" title="阿里云容器服务ACK架构方案"></a>阿里云容器服务ACK架构方案</h1><h2 id="极致弹性的云原生架构解决方案"><a href="#极致弹性的云原生架构解决方案" class="headerlink" title="极致弹性的云原生架构解决方案"></a>极致弹性的云原生架构解决方案</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091625577.png" srcset="/img/loading.gif" lazyload alt="image-20230809162528489"></p>
+<h2 id="ACK集群低成本价高弹性架构"><a href="#ACK集群低成本价高弹性架构" class="headerlink" title="ACK集群低成本价高弹性架构"></a>ACK集群低成本价高弹性架构</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091626196.png" srcset="/img/loading.gif" lazyload alt="image-20230809162619103"></p>
+<h2 id="基于ECI的ACK集群高弹性架构"><a href="#基于ECI的ACK集群高弹性架构" class="headerlink" title="基于ECI的ACK集群高弹性架构"></a>基于ECI的ACK集群高弹性架构</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091627111.png" srcset="/img/loading.gif" lazyload alt="image-20230809162753019"></p>
+<h2 id="容器跨可用区高可用"><a href="#容器跨可用区高可用" class="headerlink" title="容器跨可用区高可用"></a>容器跨可用区高可用</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091629579.png" srcset="/img/loading.gif" lazyload alt="image-20230809162910482"></p>
+<h2 id="混合云部署ACK集群"><a href="#混合云部署ACK集群" class="headerlink" title="混合云部署ACK集群"></a>混合云部署ACK集群</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091629519.png" srcset="/img/loading.gif" lazyload alt="image-20230809162944417"></p>
+<h2 id="思考-5"><a href="#思考-5" class="headerlink" title="思考"></a>思考</h2><h3 id="理解ACK集群基于ECI的ACK集群高弹性架构方案。"><a href="#理解ACK集群基于ECI的ACK集群高弹性架构方案。" class="headerlink" title="理解ACK集群基于ECI的ACK集群高弹性架构方案。##"></a>理解ACK集群基于ECI的ACK集群高弹性架构方案。##</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h3 id="理解ACK跨区域、混合云的架构方案。"><a href="#理解ACK跨区域、混合云的架构方案。" class="headerlink" title="理解ACK跨区域、混合云的架构方案。##"></a>理解ACK跨区域、混合云的架构方案。##</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="阿里云容器服务ACK快速入门"><a href="#阿里云容器服务ACK快速入门" class="headerlink" title="阿里云容器服务ACK快速入门"></a>阿里云容器服务ACK快速入门</h1><h2 id="ACk产品家族"><a href="#ACk产品家族" class="headerlink" title="ACk产品家族"></a>ACk产品家族</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091635640.png" srcset="/img/loading.gif" lazyload alt="image-20230809163528551"></p>
+<h2 id="ACK使用流程"><a href="#ACK使用流程" class="headerlink" title="ACK使用流程"></a>ACK使用流程</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091635165.png" srcset="/img/loading.gif" lazyload alt="image-20230809163544079"></p>
+<h2 id="ACK与原生K8S名词对照"><a href="#ACK与原生K8S名词对照" class="headerlink" title="ACK与原生K8S名词对照"></a>ACK与原生K8S名词对照</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091636677.png" srcset="/img/loading.gif" lazyload alt="image-20230809163605583"></p>
+<h2 id="Kubectl命令常用参数示例"><a href="#Kubectl命令常用参数示例" class="headerlink" title="Kubectl命令常用参数示例"></a>Kubectl命令常用参数示例</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091636357.png" srcset="/img/loading.gif" lazyload alt="image-20230809163630249"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308091636037.png" srcset="/img/loading.gif" lazyload alt="image-20230809163657971"></p>
+<h2 id="思考-6"><a href="#思考-6" class="headerlink" title="思考"></a>思考</h2><h3 id="理解ACK的使用流程？"><a href="#理解ACK的使用流程？" class="headerlink" title="理解ACK的使用流程？"></a>理解ACK的使用流程？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h3 id="如何通过Kubectl使用ACK？"><a href="#如何通过Kubectl使用ACK？" class="headerlink" title="如何通过Kubectl使用ACK？"></a>如何通过Kubectl使用ACK？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ACA/">ACA</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/05/ACA-%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ACA-存储服务</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/05/ACA-%E5%BC%B9%E6%80%A7%E8%AE%A1%E7%AE%97/">
+                        <span class="hidden-mobile">ACA-弹性计算</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
