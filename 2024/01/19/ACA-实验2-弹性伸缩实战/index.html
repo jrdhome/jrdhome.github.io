@@ -1,0 +1,576 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="本实验从零开始构建Serverless 容器服务 ASK，并在容器服务内创建无状态应用，并设置指标弹性伸缩HPA以及定时弹性伸缩CronHPA，使学生能够熟练掌握的容器集群的创建以及设置阿里云弹性容器实例ECI的方法。  1.ACK集群创建     2.ACK集群基本信息 我们可以点击右侧的【详情】查看集群相关参数：  【基本信息】页面主要包括：集群ID、API Server 公网连接端点、API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACA-实验2-弹性伸缩实战">
+<meta property="og:url" content="http://example.com/2024/01/19/ACA-%E5%AE%9E%E9%AA%8C2-%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9%E5%AE%9E%E6%88%98/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="本实验从零开始构建Serverless 容器服务 ASK，并在容器服务内创建无状态应用，并设置指标弹性伸缩HPA以及定时弹性伸缩CronHPA，使学生能够熟练掌握的容器集群的创建以及设置阿里云弹性容器实例ECI的方法。  1.ACK集群创建     2.ACK集群基本信息 我们可以点击右侧的【详情】查看集群相关参数：  【基本信息】页面主要包括：集群ID、API Server 公网连接端点、API">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191648529.png">
+<meta property="og:image" content="c:/Users/86187/AppData/Roaming/Typora/typora-user-images/image-20240119164609251.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191648835.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191648029.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191649399.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_45381f2342154dcf8f711871268e3c73.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_a7c0da374d7b471aa8ced4baedc0eeda.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_3df86d8396ca40e4b12a671d9a067c76.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191651180.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191651289.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191651862.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654936.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654961.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654005.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654107.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654149.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_fcf586070d964d74a03de9c903724648.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_c3c57d9d55ef40ca98cf48689b9c7087.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_173ff424ab2043cdafdd336159897f46.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655563.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_55ca11e645a34b24b21acede5acfe2be.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655098.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655557.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655252.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191657108.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191657141.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191657505.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_87a05cf041e04111bfb574e359b5a050.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_ecda7286815846b689df1331a65382da.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191658246.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191658913.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191658825.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/ovurciethbfzk_a96929a11ba247c98540efd8feca96b9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191659670.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191659613.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/ovurciethbfzk_52f0b6c4a452419082fa144efcf70d5c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191659535.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/ovurciethbfzk_cecbdf32fcbe4e5589840a021bfd6cba.png">
+<meta property="article:published_time" content="2024-01-19T16:26:28.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.348Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="ACA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191648529.png">
+  
+  
+  <title>ACA-实验2-弹性伸缩实战 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ACA-实验2-弹性伸缩实战">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-01-19 16:26" pubdate>
+        January 19, 2024 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      22 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ACA-实验2-弹性伸缩实战</h1>
+            
+            <div class="markdown-body">
+              <p>本实验从零开始<strong>构建Serverless 容器服务 ASK</strong>，并在容器服务内<strong>创建无状态应用</strong>，并<strong>设置指标弹性伸缩HPA</strong>以及定<strong>时弹性伸缩CronHPA</strong>，使学生能够熟练掌握的容器集群的创建以及设置阿里云弹性容器实例ECI的方法。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191648529.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>1.ACK集群创建</strong></p>
+<p><img src="C:/Users/86187/AppData/Roaming/Typora/typora-user-images/image-20240119164609251.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191648835.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191648029.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191649399.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>2.ACK集群基本信息</strong></p>
+<p>我们可以点击右侧的【详情】查看集群相关参数：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_45381f2342154dcf8f711871268e3c73.png" srcset="/img/loading.gif" lazyload></p>
+<p>【基本信息】页面主要包括：集群ID、API Server 公网连接端点、API Server 内网连接端点、Service CIDR、RRSA OIDC 提供商 URL、自定义证书 SAN、测试域名、标签以及资源组：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_a7c0da374d7b471aa8ced4baedc0eeda.png" srcset="/img/loading.gif" lazyload></p>
+<p>【连接信息】页面主要包括：通过 kubectl 连接 Kubernetes 集群的公网访问方式及内网访问方式：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_3df86d8396ca40e4b12a671d9a067c76.png" srcset="/img/loading.gif" lazyload></p>
+<p>【集群资源】页面主要包括：虚拟专有网络 VPC、节点虚拟交换机、安全组、以及API Server 负载均衡（SLB），这些资源是容器服务集群管理的资源，请不要删除或自行修改，以避免导致集群异常，影响集群内应用的正常运行。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191651180.png" srcset="/img/loading.gif" lazyload></p>
+<p>【集群日志】页面主要包括：各时间节点集群产生的日志信息，日志信息可以帮助我们更好的排查集群的故障：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191651289.png" srcset="/img/loading.gif" lazyload></p>
+<p>【集群任务】页面主要包括：任务类型、任务状态、创建时间以及失败原因：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191651862.png" srcset="/img/loading.gif" lazyload></p>
+<p>【注意事项】标准 Serverless 集群无需创建和管理Master节点及 Worker 节点，即可通过控制台或者命令配置容器实例的资源、指定应用容器镜像以及对外服务的方式，直接启动应用程序。使用 Kubernetes 原生标准服务发现组件 CoreDNS，需要在集群部署一组容器用于 DNS 解析。默认采用2个 2C 2Gi 规格的 ECI 实例。Knative 是一款基于 Kubernetes 的 Serverless 框架，其目标是制定云原生、跨平台的Serverless编排标准。</p>
+<p><strong>3.创建无状态应用Deployment</strong></p>
+<p>Deployment意思就是无状态的，用于部署无状态的服务。类似网页访问之类的请求就是无状态的，每次请求都包含了需要的所有信息，每次请求都和上次没有关系。Deployment是最常用的控制器。一般用于管理维护企业内部的无状态的微服务，比如configserver、zuul、springboot。可以管理多个副本的Pod实现无缝迁移、自动扩容缩容、自动灾难恢复、一键回滚等功能。</p>
+<p>点击左侧导航栏【无状态】按钮创建无状态应用，然后点击【使用YAML】创建资源：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654936.png" srcset="/img/loading.gif" lazyload></p>
+<p>点击【创建】即可创建无状态应用：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654961.png" srcset="/img/loading.gif" lazyload></p>
+<p>返回控制台查看应用创建详情：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654005.png" srcset="/img/loading.gif" lazyload></p>
+<p>此时系统根据配置创建了两个无状态应用实例，点击【详情】可以查看基本信息：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654107.png" srcset="/img/loading.gif" lazyload></p>
+<p>基本信息页包含：应用名称、状态、标签、现状详情以及容器的详细信息：    </p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191654149.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_fcf586070d964d74a03de9c903724648.png" srcset="/img/loading.gif" lazyload></p>
+<p>【注意事项】YAML是一个可读性高，用来表达数据序列化的格式。</p>
+<p><strong>4.创建指标弹性伸缩HPA</strong></p>
+<p><strong>指标伸缩（HPA）</strong>：很多场景下，往往需要更多的监测指标来指导集群的扩缩容，如HTTP请求率、Ingress QPS等，但是默认HPA并不支持这些自定义的指标或外部指标，但是Kubernetes提供了External Metrics的机制，为应用提供更加便捷的扩缩机制。</p>
+<p>点击【无状态】选择无状态应用右侧的【更多】，最后点击【弹性伸缩】，进行弹性伸缩的配置：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_c3c57d9d55ef40ca98cf48689b9c7087.png" srcset="/img/loading.gif" lazyload></p>
+<p>点击指标伸缩（HPA）的【创建】去创建弹性伸缩的规则，名称设置为【cpu-demo】点击指标的【添加】按钮添加指标，监控项选择【CPU】阈值设置为【50%】最后点击【确定】：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_173ff424ab2043cdafdd336159897f46.png" srcset="/img/loading.gif" lazyload></p>
+<p>此时指标伸缩（HPA）已经创建成功了，当应用实例的CPU使用率大于50%时系统会根据设定的规则进行弹性伸缩，创建新的应用：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655563.png" srcset="/img/loading.gif" lazyload></p>
+<p>因为指标伸缩对象最多一个，所以我们可以将刚刚创建的【cpu-demo】规则进行删除，创建根据内存监控的弹性伸缩规则，点击【删除】：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_55ca11e645a34b24b21acede5acfe2be.png" srcset="/img/loading.gif" lazyload></p>
+<p>选择【确定】：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655098.png" srcset="/img/loading.gif" lazyload></p>
+<p>点击指标伸缩（HPA）的【创建】去创建弹性伸缩的规则，名称设置为【memory-demo】点击指标的【添加】按钮添加指标，监控项选择【内存使用量】阈值设置为【70%】最后点击【确定】：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655557.png" srcset="/img/loading.gif" lazyload></p>
+<p>此时指标伸缩（HPA）已经创建成功了，当应用实例的内存的使用量大于70%时系统会根据设定的规则进行弹性伸缩，创建新的应用：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191655252.png" srcset="/img/loading.gif" lazyload></p>
+<p>【注意事项】指标伸缩（HPA）对象最多只有一个。</p>
+<p><strong>5.创建定时弹性伸缩CronHPA</strong></p>
+<p>定时伸缩（CronHPA）: 对于应对资源浪费的场景，阿里云服务容器提供kubernetes-cronhpa-controller组件，来实现资源定时扩容。</p>
+<p>点击定时伸缩（CronHPA）的【点击安装】按钮：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191657108.png" srcset="/img/loading.gif" lazyload></p>
+<p>安装成功后点击定时伸缩（CronHPA）的【创建】去创建定时弹性伸缩的规则，名称设置为【cron-hpa】目标副本数设置为【10】，调度周期选择【按小时】然后选择【每1分钟执行一次】，最后点击【确定】，即可创建定时伸缩：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191657141.png" srcset="/img/loading.gif" lazyload></p>
+<p>点击【无状态】回到控制台，一分钟后【刷新页面】可以看到容器组数量变为【10/10】说明我们创建的定时伸缩（CronHPA）规则生效：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191657505.png" srcset="/img/loading.gif" lazyload></p>
+<p>点击【详情】可以查看容器详情：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_87a05cf041e04111bfb574e359b5a050.png" srcset="/img/loading.gif" lazyload></p>
+<p>定时任务创建成功</p>
+<p><strong>6. 访问弹性伸缩应用</strong></p>
+<p>通过设置网络服务即可以访问无状态应用。</p>
+<p>点击控制台左侧【网络】选择【服务】点击右侧【创建】进行服务的创建，名称设置为【web-demo】，类型选择【负载均衡】【公网访问】以及【新建SLB】，在关联处管理我们之前所创建的无状态应用，端口映射第一条规则名称设置为【https-port】服务端口【443】映射容器的443端口，第二条规则名称设置为【http-port】服务端口【80】映射容器的80端口，协议均为TCP，最后点击【创建】即可，完成网络服务创建：</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/wtvjf5x6bk4vq_ecda7286815846b689df1331a65382da.png" srcset="/img/loading.gif" lazyload></p>
+<p>此时我们的【web-demo】服务正在创建中：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191658246.png" srcset="/img/loading.gif" lazyload></p>
+<p>创建成功后点击80端口的公网ip进行访问：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191658913.png" srcset="/img/loading.gif" lazyload></p>
+<p>此时可以成功访问到我们所创建的无状态应用：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191658825.png" srcset="/img/loading.gif" lazyload></p>
+<p>出现上图界面，就表示弹性伸缩应用创建成功并可以公网访问。</p>
+<p><strong>7.解绑NAT网关</strong></p>
+<p><strong>说明：此小节需严谨按照是要步骤操作，否则会对其他实验产生影响，造成资源驻留。</strong></p>
+<p>1.进入集群页面，选择【更多】，点击【删除】。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/ovurciethbfzk_a96929a11ba247c98540efd8feca96b9.png" srcset="/img/loading.gif" lazyload></p>
+<p>2.进入删除页面，根据页面提示点击【保留资源】列表中相应的资源ID。</p>
+<p><strong>保留资源</strong>：警告标识</p>
+<p><strong>资源类型</strong>：API Server 公网访问 EIP</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191659670.png" srcset="/img/loading.gif" lazyload> </p>
+<p>3.进入弹性公网IP界面，点击当前实例ID，进入实例详情页面。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191659613.png" srcset="/img/loading.gif" lazyload></p>
+<p>4.点击右侧的【绑定实例ID】，跳转至NAT网关实例详情界面。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/ovurciethbfzk_52f0b6c4a452419082fa144efcf70d5c.png" srcset="/img/loading.gif" lazyload></p>
+<p>5.选择【绑定的弹性公网IP】选项卡，点击强制解绑。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401191659535.png" srcset="/img/loading.gif" lazyload></p>
+<p>6.点击【刷新】按钮，可以看到，绑定的eip已被解绑。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/ovurciethbfzk_cecbdf32fcbe4e5589840a021bfd6cba.png" srcset="/img/loading.gif" lazyload></p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ACA/">ACA</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/26/Linux-MySQL-%E5%9F%BA%E7%A1%80/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux-MySQL-基础</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/19/ACA-%E5%AE%9E%E9%AA%8C1-%E5%BC%80%E9%80%9AECS/">
+                        <span class="hidden-mobile">ACA-实验1:开通ECS</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

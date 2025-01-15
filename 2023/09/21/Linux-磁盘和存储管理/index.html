@@ -1,0 +1,773 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 磁盘结构1.1 设备文件设备文件：关联至一个设备驱动程序，进而能够跟与之对应硬件设备进行通信 设备号码：  主设备号：标识设备类型 major number 次设备号：表示同一类型下的不同设备 minor number  设备类型：  块设备：block  磁盘 字符设备：char  键盘  磁盘设备的常见设备文件命名： 123&#x2F;dev&#x2F;DEV_FILE&#x2F;dev&#x2F;sdx		#SAS,SATA,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LinuxLinux-磁盘和存储管理">
+<meta property="og:url" content="http://example.com/2023/09/21/Linux-%E7%A3%81%E7%9B%98%E5%92%8C%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 磁盘结构1.1 设备文件设备文件：关联至一个设备驱动程序，进而能够跟与之对应硬件设备进行通信 设备号码：  主设备号：标识设备类型 major number 次设备号：表示同一类型下的不同设备 minor number  设备类型：  块设备：block  磁盘 字符设备：char  键盘  磁盘设备的常见设备文件命名： 123&#x2F;dev&#x2F;DEV_FILE&#x2F;dev&#x2F;sdx		#SAS,SATA,">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-21T20:38:42.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.350Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>LinuxLinux-磁盘和存储管理 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="LinuxLinux-磁盘和存储管理">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-09-21 20:38" pubdate>
+        September 21, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      55 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">LinuxLinux-磁盘和存储管理</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-磁盘结构"><a href="#1-磁盘结构" class="headerlink" title="1 磁盘结构"></a>1 磁盘结构</h1><h2 id="1-1-设备文件"><a href="#1-1-设备文件" class="headerlink" title="1.1 设备文件"></a>1.1 设备文件</h2><p>设备文件：关联至一个设备驱动程序，进而能够跟与之对应硬件设备进行通信</p>
+<p>设备号码：</p>
+<ul>
+<li>主设备号：标识设备类型 major number</li>
+<li>次设备号：表示同一类型下的不同设备 minor number</li>
+</ul>
+<p>设备类型：</p>
+<ul>
+<li>块设备：block  磁盘</li>
+<li>字符设备：char  键盘</li>
+</ul>
+<p>磁盘设备的常见设备文件命名：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></div></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/dev/</span>DEV_FILE<br><span class="hljs-regexp">/dev/</span>sdx		<span class="hljs-comment">#SAS,SATA,SCSI,IDE,USB</span><br><span class="hljs-regexp">/dev/</span>nvme0n<span class="hljs-comment">#	#nvme协议硬盘，如：第一个硬盘：nvme0n1,第二个硬盘：nvme0n2</span><br></code></pre></td></tr></table></figure>
+
+<p>虚拟磁盘（云服务器）：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/dev/</span>vd<br><span class="hljs-regexp">/dev/</span>xvd<br></code></pre></td></tr></table></figure>
+
+<p>不同磁盘标识：a-z，aa，ab…</p>
+<h2 id="1-2-硬盘类型"><a href="#1-2-硬盘类型" class="headerlink" title="1.2 硬盘类型"></a>1.2 硬盘类型</h2><p><strong>硬盘接口类型</strong></p>
+<ul>
+<li>IDE        早期家用</li>
+<li>SCSI      早期服务器</li>
+<li>SATA     家用</li>
+<li>SAS       服务器</li>
+<li>USB</li>
+<li>M.2</li>
+</ul>
+<p>注意：速度不是由单纯的接口类型决定，支持Nvme协议硬盘速度是最快的</p>
+<p><strong>服务器硬盘大小</strong></p>
+<ul>
+<li>LFF：3.5寸</li>
+<li>SFF：2.5寸</li>
+</ul>
+<p>L、S分别是大、小的意思。服务器或盘柜采用sff规格：增大单位密度内的磁盘容量、增强散热、减小功耗。</p>
+<h2 id="1-3-机械硬盘和固态硬盘"><a href="#1-3-机械硬盘和固态硬盘" class="headerlink" title="1.3 机械硬盘和固态硬盘"></a>1.3 机械硬盘和固态硬盘</h2><p>机械硬盘HDD：主要由：盘片,磁头,盘片转轴及控制电 机,磁头控制器,数据转换器,接口,缓存等几个部分组成。</p>
+<p>固态硬盘SSD：用固态电子存储芯片阵列而制成的硬盘,由控制单元和存储单 元(FLASH芯片,DRAM芯片)组成。</p>
+<p><strong>硬盘存储术语CHS</strong></p>
+<ul>
+<li>head：磁头 磁头数=盘面数</li>
+<li>track：磁道 磁道=柱面数      eg.所有的0磁道合称0柱面</li>
+<li><strong>sector：扇区，512bytes</strong>      现在一般以<strong>扇区</strong>为单位，很少关注磁头磁道</li>
+<li>cylinder：柱面 1柱面=512 * sector数/track * head数=512 * 63 * 255 =7.84M</li>
+</ul>
+<p>**区位记录磁盘扇区结构ZBR:**不同磁道存储的扇区数不同</p>
+<p><strong>LBA</strong>：通过转化成CHS格式完成磁盘具体寻址</p>
+<h1 id="2-管理存储"><a href="#2-管理存储" class="headerlink" title="2 管理存储"></a>2 管理存储</h1><ul>
+<li>设备分区</li>
+<li>创建文件系统</li>
+<li>挂载新的文件系统</li>
+</ul>
+<h2 id="2-1-磁盘分区"><a href="#2-1-磁盘分区" class="headerlink" title="2.1 磁盘分区"></a>2.1 磁盘分区</h2><h3 id="2-1-1-目的"><a href="#2-1-1-目的" class="headerlink" title="2.1.1 目的"></a>2.1.1 目的</h3><ul>
+<li>优化I/O性能</li>
+<li>实现磁盘空间配额限制</li>
+<li>提高修复速度</li>
+<li>隔离系统程序</li>
+<li>安装多个OS</li>
+<li>采用不同文件系统</li>
+</ul>
+<h2 id="2-1-2-分区方式"><a href="#2-1-2-分区方式" class="headerlink" title="2.1.2 分区方式"></a>2.1.2 分区方式</h2><p>MBR        GPT</p>
+<p><strong>查看磁盘分区</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">fdisk -l<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-1-2-1-MBR分区"><a href="#2-1-2-1-MBR分区" class="headerlink" title="2.1.2.1 MBR分区"></a>2.1.2.1 MBR分区</h4><p>32位扇区       &lt;2T</p>
+<p>0磁道0扇区：512bytes</p>
+<ul>
+<li>446bytes        boot loader 启动相关</li>
+<li>64bytes          分区表，每16bytes表示一个分区</li>
+<li>2bytes             标识符（位）55aa</li>
+</ul>
+<p>MBR分区：一块硬盘 4个主分区（最多）、也可以 3个主分区+1扩展（N个逻辑分区）</p>
+<h4 id="2-1-2-2-GPT分区"><a href="#2-1-2-2-GPT分区" class="headerlink" title="2.1.2.2 GPT分区"></a>2.1.2.2 GPT分区</h4><p>GUID 支持128个分区，支持8Z</p>
+<p>4个区域：GPT头、分区表、GPT分区、备份区域</p>
+<h3 id="2-1-3-BIOS和UEFI"><a href="#2-1-3-BIOS和UEFI" class="headerlink" title="2.1.3 BIOS和UEFI"></a>2.1.3 BIOS和UEFI</h3><p><strong>BIOS</strong>（基本输入输出系统），系统硬件自检，16位汇编。电脑启动时点F2,开启页面。</p>
+<p><strong>UEFI</strong> 可以看做是BIOS的升级版，32/64位c语言编写。</p>
+<p>一般组合形式：<strong>BIOS+MBR</strong> 或 <strong>UEFI+GPT</strong>  windows只能用以上组合，而Linux还可以使用BIOS+GPT+GRUB</p>
+<h3 id="2-1-4-管理分区"><a href="#2-1-4-管理分区" class="headerlink" title="2.1.4 管理分区"></a>2.1.4 管理分区</h3><p><strong>列出块设备</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">lsblk<br></code></pre></td></tr></table></figure>
+
+<p><strong>创建分区命令</strong></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">fdisk</span>	管理MBR分区<br>gdisk	管理GPT分区<br>parted	高级分区操作，可以是交互或者非交互方式<br></code></pre></td></tr></table></figure>
+
+<p><strong>增加新硬盘，让kernel发现新硬盘</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">echo <span class="hljs-string">&#x27;- - -&#x27;</span> &gt; /sys/<span class="hljs-keyword">class</span>/<span class="hljs-symbol">scsi_host</span>/<span class="hljs-symbol">host0</span>|<span class="hljs-symbol">1</span>|<span class="hljs-symbol">2</span>/<span class="hljs-symbol">scan</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-1-4-1-parted命令"><a href="#2-1-4-1-parted命令" class="headerlink" title="2.1.4.1 parted命令"></a>2.1.4.1 parted命令</h4><p>注意：<strong>操作实时生效</strong></p>
+<p><strong>交互式</strong></p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">parted</span> 文件名<br></code></pre></td></tr></table></figure>
+
+<p><strong>非交互</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile">parted 文件名 <span class="hljs-keyword">cmd</span><br></code></pre></td></tr></table></figure>
+
+<p>e.g.</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#设置分区方式</span><br>parted <span class="hljs-regexp">/dev/</span>sdb mklabel gpt|msdos<br><span class="hljs-comment">#打印硬盘分区情况</span><br>parted <span class="hljs-regexp">/dev/</span>sdb print<br><span class="hljs-comment">#分区</span><br>parted <span class="hljs-regexp">/dev/</span>sdb mkpart primary <span class="hljs-number">1</span> <span class="hljs-number">200</span> （默认单位M）<br><span class="hljs-comment">#删除分区</span><br>parted <span class="hljs-regexp">/dev/</span>sdb rm <span class="hljs-number">1</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-1-4-2-分区工具-fdisk-和-gdisk"><a href="#2-1-4-2-分区工具-fdisk-和-gdisk" class="headerlink" title="2.1.4.2 分区工具 fdisk 和 gdisk"></a>2.1.4.2 分区工具 fdisk 和 gdisk</h4><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css">fdisk -l <span class="hljs-selector-attr">[-u]</span> <span class="hljs-selector-attr">[device...]</span>		查看分区<br>fdisk <span class="hljs-selector-attr">[device...]</span>				管理MBR分区<br>gdisk <span class="hljs-selector-attr">[device...]</span>				GPT分区工具<br></code></pre></td></tr></table></figure>
+
+<p><strong>子命令</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">p</span>	分区列表<br>t	更改分区类型<br>n	创建新分区<br>d	删除分区<br>v	效验分区<br>u	转换单位<br>w	保存并退出<br><span class="hljs-selector-tag">q</span>	不保存并退出<br></code></pre></td></tr></table></figure>
+
+<p><strong>查看内核是否已经识别新的分区</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">cat <span class="hljs-regexp">/proc/</span>partitions<br></code></pre></td></tr></table></figure>
+
+<p><strong>Centos 7,8同步分区表</strong></p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">partprobe</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>Centos6 通知内核重新读取硬盘分区表</strong></p>
+<p>新增分区用</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">partx -a <span class="hljs-regexp">/dev/</span>sda<br></code></pre></td></tr></table></figure>
+
+<p>删除分区用</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">partx</span> -d --nr <span class="hljs-number">6</span>-<span class="hljs-number">8</span> /dev/sda<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-文件系统"><a href="#2-2-文件系统" class="headerlink" title="2.2 文件系统"></a>2.2 文件系统</h2><h3 id="2-2-1文件系统概念"><a href="#2-2-1文件系统概念" class="headerlink" title="2.2.1文件系统概念"></a>2.2.1文件系统概念</h3><p>文件系统是操作系统用于明确存储设备或分区上的文件的方法和数据结构；即在存储设备上组织文件的方法。</p>
+<p>支持的文件系统：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/lib/m</span>odules<span class="hljs-regexp">/`uname -r`/</span>kernel/fs<br></code></pre></td></tr></table></figure>
+
+<p>各种文件系统:<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Comparison_of_file_systems">https://en.wikipedia.org/wiki/Comparison_of_file_systems</a></p>
+<p>帮助：man 5 fs</p>
+<h3 id="2-2-2-文件系统类型"><a href="#2-2-2-文件系统类型" class="headerlink" title="2.2.2 文件系统类型"></a>2.2.2 文件系统类型</h3><p><strong>查看支持的文件系统：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">cat <span class="hljs-regexp">/proc/</span>filesystems<br></code></pre></td></tr></table></figure>
+
+<p><strong>Linux常用文件系统</strong></p>
+<ul>
+<li>ext2</li>
+<li>ext3</li>
+<li><strong>ext4</strong></li>
+<li><strong>xfs</strong></li>
+<li>swap</li>
+<li>iso9660 光盘</li>
+<li>btrfs(Oracle)</li>
+<li>reiserfs</li>
+</ul>
+<p><strong>Windows 常用文件系统</strong></p>
+<ul>
+<li>FAT32</li>
+<li>NTFS</li>
+<li>exFAT</li>
+</ul>
+<p><strong>Unix：</strong></p>
+<ul>
+<li>FFS（fast）</li>
+<li>UFS（unix）</li>
+<li>JFS2</li>
+</ul>
+<p><strong>网络文件系统：</strong></p>
+<ul>
+<li>NFS</li>
+<li>CIFS</li>
+</ul>
+<p><strong>集群文件系统：</strong></p>
+<ul>
+<li>GFS2</li>
+<li>OCFS2（oracle）</li>
+</ul>
+<p><strong>分布式文件系统：</strong></p>
+<ul>
+<li>fastdfs</li>
+<li>ceph</li>
+<li>moosefs</li>
+<li>mogilefs</li>
+<li>glusterfs</li>
+<li>Lustre</li>
+</ul>
+<p><strong>RAW</strong>：裸文件系统，未经处理或未经格式化产生的文件系统</p>
+<h3 id="2-2-3-文件系统选择管理"><a href="#2-2-3-文件系统选择管理" class="headerlink" title="2.2.3 文件系统选择管理"></a>2.2.3 文件系统选择管理</h3><h4 id="2-2-3-1-创建文件系统"><a href="#2-2-3-1-创建文件系统" class="headerlink" title="2.2.3.1 创建文件系统"></a>2.2.3.1 创建文件系统</h4><p>创建文件管理工具</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">mkfs.ext4 <span class="hljs-regexp">/dev/</span>DEVICE			mkfs -t ext4 <span class="hljs-regexp">/dev/</span>DEVICE			<br>mke2fs:	ext系列文件系统专用管理工具<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-2-查看和管理分区信息"><a href="#2-2-3-2-查看和管理分区信息" class="headerlink" title="2.2.3.2 查看和管理分区信息"></a>2.2.3.2 查看和管理分区信息</h4><p>blkid 可以查看块设备属性信息</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">blkid <span class="hljs-selector-attr">[OPTION]</span>...<span class="hljs-selector-attr">[DEVICE]</span><br></code></pre></td></tr></table></figure>
+
+<p>findfs 查找分区</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">findfs [<span class="hljs-keyword">options</span>] LABEL=&lt;label&gt;<br>findfs [<span class="hljs-keyword">options</span>] <span class="hljs-type">UUID</span>=&lt;<span class="hljs-type">uuid</span>&gt;<br></code></pre></td></tr></table></figure>
+
+<p>tune2fs  重新设定ext系列文件系统可调整参数的值</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#查看设备属性信息</span><br>tune2fs -l <span class="hljs-regexp">/dev/</span>DEVICE<br></code></pre></td></tr></table></figure>
+
+<p>dumpe2fs 显示ext文件系统信息，将磁盘块分组管理</p>
+<p>-h    查看超级块信息，不显示分组信息</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">dumpe2fs	<span class="hljs-regexp">/dev/</span>DEVICE<br></code></pre></td></tr></table></figure>
+
+<p>xfs_info 显示挂载或已挂载的xfs文件系统信息</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">xfs_info mountpoint <span class="hljs-string">| devname</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-4-文件系统检测和修复"><a href="#2-2-3-4-文件系统检测和修复" class="headerlink" title="2.2.3.4 文件系统检测和修复"></a>2.2.3.4 文件系统检测和修复</h4><p>2<strong>一定不要在挂载状态下执行命令修复。</strong></p>
+<p>fsck：File System Check</p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs ldif">fsck.FS_TYPE<br>fsck -t FS_TYPE         <span class="hljs-comment">#FS_TYPE 一定要与分区上已经文件类型相同</span><br><span class="hljs-literal">-</span>a 	自动修复<br><span class="hljs-literal">-</span>r	交互式修复错误<br></code></pre></td></tr></table></figure>
+
+<p>e2fsck    ext系列文件专用的检测修复工具</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-y 	自动回答yes</span><br><span class="hljs-deletion">-f	强制修复</span><br><span class="hljs-deletion">-p	自动进行安全的修复文件系统问题</span><br></code></pre></td></tr></table></figure>
+
+<p>xfs_repair    xfs文件系统那专用检测修复工具</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-f	修复文件</span><br><span class="hljs-deletion">-n	只检查</span><br><span class="hljs-deletion">-d	允许修复只读的挂在设备，在单用户下修复/时使用，然后立即reboot</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-挂载"><a href="#2-3-挂载" class="headerlink" title="2.3 挂载"></a>2.3 挂载</h2><p><strong>挂载</strong>    将额外文件系统与根文件系统某现存的目录建立起关联关系，进而使得此目录做为其它文件访问入口的行为</p>
+<p><strong>缺卸</strong>    未解除此关联关系的过程</p>
+<p>挂载点下原有文件在挂载完成后会被临时隐藏，因此，挂载点目录一般为空</p>
+<p>进程正在使用中的设备无法卸载</p>
+<h3 id="2-3-1-挂载文件系统（临时）-mount"><a href="#2-3-1-挂载文件系统（临时）-mount" class="headerlink" title="2.3.1 挂载文件系统（临时） mount"></a>2.3.1 挂载文件系统（临时） mount</h3><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">mount <span class="hljs-selector-attr">[-fnrsvw]</span> <span class="hljs-selector-attr">[-t vfstype]</span> <span class="hljs-selector-attr">[-o options]</span> device mountpoint<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>一个挂载点同一时间只能挂载一个设备</li>
+<li>一个设备可以同时挂载到多个挂载点</li>
+<li>通常挂载点一般是已存在空的目录</li>
+<li>一个挂载点同一时间挂在了多个设备，只能看到最后一个设备的数据，其他设备上的数据将被隐藏</li>
+</ul>
+<h3 id="2-3-2-卸载文件系统-umount"><a href="#2-3-2-卸载文件系统-umount" class="headerlink" title="2.3.2 卸载文件系统 umount"></a>2.3.2 卸载文件系统 umount</h3><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs 1c">umount 设备名<span class="hljs-string">|挂载点</span><br><br><span class="hljs-meta">#查看使用者</span><br>fuser -v 挂载点<br><span class="hljs-meta">#踢掉使用者</span><br>fuser -km 挂载点<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-3-查看挂载情况"><a href="#2-3-3-查看挂载情况" class="headerlink" title="2.3.3 查看挂载情况"></a>2.3.3 查看挂载情况</h3><p>查看挂载</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#通过查看/etc/mtab文件显示已挂载的所有设备</span><br>mount<br><span class="hljs-comment">#查看内核跟踪到的已挂载的所有设备</span><br>cat <span class="hljs-regexp">/proc/m</span>ounts<br></code></pre></td></tr></table></figure>
+
+<p>查看挂载点情况</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">findmnt	挂载点<span class="hljs-string">|设备名</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-4-持久挂载"><a href="#2-3-4-持久挂载" class="headerlink" title="2.3.4 持久挂载"></a>2.3.4 持久挂载</h3><p>将挂载保存到 /etc/fstab 中可以下次开机，自动启用挂载</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">man</span> <span class="hljs-number">5</span> fstab<br></code></pre></td></tr></table></figure>
+
+<p>挂载设备+挂载点+文件系统类型+挂载选项+转储频率+fsck检查的文件系统的顺序</p>
+<p>转储频率：0–不做备份   1–每天转储     2–每隔一天转储</p>
+<p>fsck检查的文件系统的顺序：0–不自检    1–首先自检；一般只有rootfs才用  2–非rootfs使用</p>
+<p>添加新的挂载项，需要执行以下命令生效</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">mount -<span class="hljs-selector-tag">a</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-处理交换文件和分区"><a href="#2-4-处理交换文件和分区" class="headerlink" title="2.4 处理交换文件和分区"></a>2.4 处理交换文件和分区</h2><h3 id="2-4-1-swap-分区"><a href="#2-4-1-swap-分区" class="headerlink" title="2.4.1 swap 分区"></a>2.4.1 swap 分区</h3><p>当内存不足时，用硬盘模拟内存使用，速度很慢。</p>
+<h3 id="2-4-2-交换分区实现过程"><a href="#2-4-2-交换分区实现过程" class="headerlink" title="2.4.2 交换分区实现过程"></a>2.4.2 交换分区实现过程</h3><ol>
+<li>创建交换分区或者文件</li>
+<li>使用 mkswap 写入特殊签名</li>
+<li>在 /etc/fstab 文件中添加适当的条目</li>
+<li>使用swapon -a 激活交换空间</li>
+</ol>
+<h3 id="2-4-3-swap的使用策略"><a href="#2-4-3-swap的使用策略" class="headerlink" title="2.4.3 swap的使用策略"></a>2.4.3 swap的使用策略</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/vm/</span>swappiness 的值决定了当内存占用达到一定的百分比时，会启用swap分区空间<br></code></pre></td></tr></table></figure>
+
+<p>swap的禁用</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs awk">echo <span class="hljs-number">0</span> &gt; <span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/vm/</span>swappiness<br><br>cat <span class="hljs-regexp">/etc/</span>fstab  <span class="hljs-comment">#注释掉swap</span><br><br>swapon -s<br><br>swapoff <span class="hljs-regexp">/dev/</span>device<br><br>free -h<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-5-移动介质"><a href="#2-5-移动介质" class="headerlink" title="2.5 移动介质"></a>2.5 移动介质</h2><h3 id="2-5-1-光盘"><a href="#2-5-1-光盘" class="headerlink" title="2.5.1 光盘"></a>2.5.1 光盘</h3><p>在图形环境下自动启动挂载/run/media/<user>/<label></p>
+<p>手动挂载</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mount <span class="hljs-regexp">/dev/</span>cdrom  <span class="hljs-regexp">/mnt/</span><br></code></pre></td></tr></table></figure>
+
+<p>操作光盘</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">eject</span>		<span class="hljs-comment">#弹出光盘</span><br>eject -t	<span class="hljs-comment">#弹入光盘</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-5-2-USB介质"><a href="#2-5-2-USB介质" class="headerlink" title="2.5.2 USB介质"></a>2.5.2 USB介质</h3><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">lsusb</span>  <span class="hljs-comment">#来自usbutils包</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-6-磁盘常见工具"><a href="#2-6-磁盘常见工具" class="headerlink" title="2.6 磁盘常见工具"></a>2.6 磁盘常见工具</h2><h3 id="2-6-1-查看工具-df"><a href="#2-6-1-查看工具-df" class="headerlink" title="2.6.1 查看工具 df"></a>2.6.1 查看工具 df</h3><figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs prolog">df [<span class="hljs-symbol">OPTION</span>]... [<span class="hljs-symbol">FILE</span>]...<br></code></pre></td></tr></table></figure>
+
+<p>常见选型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">-H	易读，以10为单位<br>-h	易读，以2为单位<br>-T	文件系统类型<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-2-查看某目录总体空间实际占用状态du"><a href="#2-6-2-查看某目录总体空间实际占用状态du" class="headerlink" title="2.6.2 查看某目录总体空间实际占用状态du"></a>2.6.2 查看某目录总体空间实际占用状态du</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">du</span> [OPTION]... DIR<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-3-df与du的区别"><a href="#2-6-3-df与du的区别" class="headerlink" title="2.6.3 df与du的区别"></a><strong>2.6.3 df与du的区别</strong></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">df</span> 查看时文件系统的空间使用，包括元数据和数据；删除文件后，如果此文件正在使用，不会立即释放空间<br><span class="hljs-built_in">du</span> 查看文件数据空间使用，不包括元数据，删除后空间立即释放<br><br>空分区：<span class="hljs-built_in">df</span> &gt; <span class="hljs-built_in">du</span><br>目录内挂载有其他分时的情况：<span class="hljs-built_in">df</span> &lt; <span class="hljs-built_in">du</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-6-3-dd命令"><a href="#2-6-3-dd命令" class="headerlink" title="2.6.3 dd命令"></a>2.6.3 dd命令</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">dd <span class="hljs-keyword">if</span>=<span class="hljs-regexp">/PATH/</span><span class="hljs-keyword">FROM</span><span class="hljs-regexp">/SRC of=/</span>PATH<span class="hljs-regexp">/TO/</span>DEST bs=# <span class="hljs-keyword">count</span>=#<br></code></pre></td></tr></table></figure>
+
+<p>常用选项</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-attribute">if</span>=file 		从所命名文件读取而不是从标准输入 <br><span class="hljs-attribute">of</span>=file 		写到所命名的文件而不是到标准输出 <br><span class="hljs-attribute">ibs</span>=size   		一次读size个byte <br><span class="hljs-attribute">obs</span>=size      	一次写size个byte <br><span class="hljs-attribute">bs</span>=size 		block size, 指定块大小(既是是ibs也是obs) <br><span class="hljs-attribute">cbs</span>=size       	一次转化size个byte <br><span class="hljs-attribute">skip</span>=blocks   	从开头忽略blocks个ibs大小的块 <br><span class="hljs-attribute">seek</span>=blocks   	从开头忽略blocks个obs大小的块 <br><span class="hljs-attribute">count</span>=n         复制n个bs <br><span class="hljs-attribute">conv</span>=conversion[,conversion<span class="hljs-built_in">..</span>.] 用指定的参数转换文件 <br><br><span class="hljs-comment">#conversion 转换参数:  </span><br>ascii 转换 EBCDIC 为 ASCII <br>ebcdic 转换 ASCII 为 EBCDIC <br>lcase 把大写字符转换为小写字符 <br>ucase 把小写字符转换为大写字符 <br>nocreat 不创建输出文件 <br>noerror 出错时不停止 <br>notrunc 不截短输出文件 <br>sync 把每个输入块填充到ibs个字节,不足部分用空(NUL)字符补齐 <br>fdatasync 写完成前,物理写入输出文件<br></code></pre></td></tr></table></figure>
+
+<h1 id="3-RAID"><a href="#3-RAID" class="headerlink" title="3 RAID"></a>3 RAID</h1><p>独立硬盘冗余阵列，磁盘阵列</p>
+<p><strong>功能</strong>：提高IO能力，磁盘并行读写；提高耐用性，磁盘冗余算法实现</p>
+<p><strong>实现方式</strong>：外接式磁盘阵列；内接式RAID；软件RAID</p>
+<p>RAID级别：多块磁盘组织在一起的工作方式有所不同  </p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/RAID">https://zh.wikipedia.org/wiki/RAID</a></p>
+<h2 id="3-1-RAID-0（家庭）"><a href="#3-1-RAID-0（家庭）" class="headerlink" title="3.1 RAID-0（家庭）"></a>3.1 RAID-0（家庭）</h2><p>以chunk为单位，数据均匀放在相同大小的不同硬盘上，并行处理读写速度较快。</p>
+<p>如果一块磁盘损坏，所有数据都丢失。</p>
+<p>磁盘利用率：100%</p>
+<p>最少磁盘数：1+</p>
+<h2 id="3-2-RAID-1"><a href="#3-2-RAID-1" class="headerlink" title="3.2 RAID-1"></a>3.2 RAID-1</h2><p>镜像，磁盘之间相互作为镜像。</p>
+<p>不同磁盘存放相同数据，读取性功能提升，写性能略有下降。</p>
+<p>磁盘利用率：50%</p>
+<p>最小磁盘数：2+</p>
+<h2 id="3-3-RAID-4"><a href="#3-3-RAID-4" class="headerlink" title="3.3 RAID-4"></a>3.3 RAID-4</h2><p>多块磁盘存储数据，一块磁盘作为效验盘。</p>
+<p>多块数据盘异或运算值存于专用效验盘。</p>
+<p>磁盘利用率：(N-1)/N</p>
+<p>最小磁盘数：3+</p>
+<h2 id="3-4-RAID-5（常用）"><a href="#3-4-RAID-5（常用）" class="headerlink" title="3.4 RAID-5（常用）"></a>3.4 RAID-5（常用）</h2><p>多块磁盘以chunk为单位存储数据，相较于 RAID-4 校验位分别存储到不同硬盘中。</p>
+<p>读、写性能提升</p>
+<p>磁盘利用率：(N-1)/N</p>
+<p>最少磁盘数：3+</p>
+<h2 id="3-5-RAID-6"><a href="#3-5-RAID-6" class="headerlink" title="3.5 RAID-6"></a>3.5 RAID-6</h2><p>相较于RAID-5，多了一个校验位。</p>
+<p>读、写性能提升</p>
+<p>磁盘利用率：(N-2)/N</p>
+<p>最少磁盘数：4+</p>
+<h2 id="3-6-RAID-10"><a href="#3-6-RAID-10" class="headerlink" title="3.6 RAID-10"></a>3.6 RAID-10</h2><p>相较于RAID-01，RAID-10安全性更高。</p>
+<p>读、写性能提升</p>
+<p>磁盘利用率：50%</p>
+<p>最少磁盘数：4+</p>
+<h2 id="3-7-RAID-01"><a href="#3-7-RAID-01" class="headerlink" title="3.7 RAID-01"></a>3.7 RAID-01</h2><p>读、写性能提升</p>
+<p>磁盘利用率：50%</p>
+<p>最少磁盘数：4+</p>
+<h2 id="3-8-RAID-50"><a href="#3-8-RAID-50" class="headerlink" title="3.8 RAID-50"></a>3.8 RAID-50</h2><h2 id="3-9-RAID-60"><a href="#3-9-RAID-60" class="headerlink" title="3.9 RAID-60"></a>3.9 RAID-60</h2><h2 id="3-10-其他级别"><a href="#3-10-其他级别" class="headerlink" title="3.10 其他级别"></a>3.10 其他级别</h2><p>JBOB  就是一堆磁盘（家用）</p>
+<p>RAID7</p>
+<p>SHR    群晖公司</p>
+<h2 id="3-11-总结"><a href="#3-11-总结" class="headerlink" title="3.11 总结"></a>3.11 总结</h2><p>磁盘列阵的比较</p>
+<h1 id="4-逻辑卷管理器-LVM"><a href="#4-逻辑卷管理器-LVM" class="headerlink" title="4 逻辑卷管理器 LVM"></a>4 逻辑卷管理器 LVM</h1><ol>
+<li>将设备指定为物理卷</li>
+<li>用一个或多个物理卷来创建一个卷组，物理卷是用固定大小的物理区域来定义的</li>
+<li>在物理卷上创建的逻辑卷，是由物理区域组成</li>
+<li>可以在逻辑卷上创建文件系统并挂载</li>
+</ol>
+<h2 id="4-1-lv管理工具"><a href="#4-1-lv管理工具" class="headerlink" title="4.1 lv管理工具"></a>4.1 lv管理工具</h2><p>显示逻辑卷</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">lvs</span><br><span class="hljs-attribute">Lvdisplay</span><br></code></pre></td></tr></table></figure>
+
+<p>创建逻辑卷</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">lvcreate -L  大小 -<span class="hljs-built_in">n</span>  逻辑卷名  卷组<br></code></pre></td></tr></table></figure>
+
+<p>删除逻辑卷</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">lvremove <span class="hljs-regexp">/dev/</span>VG_NAME/LV_NAME<br></code></pre></td></tr></table></figure>
+
+<p>重设文件系统大小</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css">fsadm <span class="hljs-selector-attr">[options]</span> <span class="hljs-attribute">resize</span> device <span class="hljs-selector-attr">[new_size[BKMGTEP]</span>] <br>resize2fs <span class="hljs-selector-attr">[-f]</span> <span class="hljs-selector-attr">[-F]</span> <span class="hljs-selector-attr">[-M]</span> <span class="hljs-selector-attr">[-P]</span> <span class="hljs-selector-attr">[-p]</span> device <span class="hljs-selector-attr">[new_size]</span> <br>xfs_growfs /mountpoint<br></code></pre></td></tr></table></figure>
+
+<p><strong>范例</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#创建物理卷</span><br>pvcreate   <span class="hljs-regexp">/dev/</span>sda3<br><span class="hljs-comment">#为卷组分配物理卷</span><br>vgcreate vg0 <span class="hljs-regexp">/dev/</span>sda3<br><span class="hljs-comment">#从卷组创建逻辑卷</span><br>lvcreate -L <span class="hljs-number">256</span>M -n data vg0<br><span class="hljs-comment">#设置文件系统</span><br>mkfs.xfs <span class="hljs-regexp">/dev/</span>vg0/data<br><br><span class="hljs-comment">#临时挂载</span><br>mount <span class="hljs-regexp">/dev/</span>vg0<span class="hljs-regexp">/data /m</span>nt/data<br><span class="hljs-comment">#查找磁盘ID</span><br>blkid<br><span class="hljs-comment">#永久挂载</span><br>vim <span class="hljs-regexp">/etc/</span>fstab<br>mount -a<br><br><span class="hljs-comment">#删除卷组</span><br>vgremove 卷组名<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-2-在线扩展逻辑卷"><a href="#4-2-在线扩展逻辑卷" class="headerlink" title="4.2 在线扩展逻辑卷"></a>4.2 在线扩展逻辑卷</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#逻辑卷的空间扩展</span><br>lvextend -L 大小 <span class="hljs-regexp">/dev/</span>VG_NAME/LV_NAME<br><span class="hljs-comment">#文件系统扩展</span><br>resize2fs <span class="hljs-regexp">/dev/</span>VG_NAME/LV_NAME<br>xfs_growfs 挂载点<br><br>lvresize -r -l +<span class="hljs-number">100</span>%free <span class="hljs-regexp">/dev/</span>VG_NAME/LV_NAME<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-3-缩减逻辑卷"><a href="#4-3-缩减逻辑卷" class="headerlink" title="4.3 缩减逻辑卷"></a>4.3 缩减逻辑卷</h2><p><strong>xfs文件系统不支持缩减</strong>      <strong>先备份再缩减</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">umount <span class="hljs-regexp">/dev/</span>VG_NAME/LV_NAME <br>lvreduce -L 大小  -r <span class="hljs-regexp">/dev/</span>VG_NAME/LV_NAME<br>mount <span class="hljs-regexp">/dev/</span>VG_NAME/LV_NAME mountpoint<br></code></pre></td></tr></table></figure>
+
+<h2 id="4-4-快照"><a href="#4-4-快照" class="headerlink" title="4.4 快照"></a>4.4 快照</h2><ul>
+<li>备份速度快</li>
+<li>应用场景是测试环境，不能完全替代备份</li>
+<li>快照后，逻辑卷的修改速度会有一定影响</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#查看LV（逻辑卷）大小</span><br>lvs<br><span class="hljs-comment">#查看VG（挂载点）剩余空间</span><br>vgs<br><span class="hljs-comment">#建立快照</span><br>lvcreate -n 快照名 -s -p r -L <span class="hljs-number">1</span>G 逻辑卷<br><span class="hljs-comment">#查看快照逻辑卷</span><br>lvdisplay<br><br><span class="hljs-comment">#挂载快照,xfs注意要使用-o ro实现只读,防止快照被修改</span><br>mount -o ro,nouuid <span class="hljs-regexp">/dev/</span>vg0<span class="hljs-regexp">/data-snapshot   /m</span>nt/snap<br><br><span class="hljs-comment">#回复快照</span><br>df<br>umount 取消所有挂载<br>lvconvert --merge 快照名<br></code></pre></td></tr></table></figure>
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/28/Linux-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%92%8C%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux-网络协议和管理配置</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/">
+                        <span class="hidden-mobile">数据结构-链表</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

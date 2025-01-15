@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 MySQL 集群 Cluster1.1 MySQL主从复制 读写分离 复制：每个节点都有相同的数据集，向外扩展，基于二进制日志的单向复制 负载均衡读操作 备份 高可用和故障切换 数据分布 MySQL升级     12相关线程：dump Thread      I&#x2F;O Thread     SQL Thread相关二进制文件：二进制日志（Bin Log）   中继日志（Relay Log）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-MySQL-集群与压力测试">
+<meta property="og:url" content="http://example.com/2024/02/08/Linux-MySQL-%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 MySQL 集群 Cluster1.1 MySQL主从复制 读写分离 复制：每个节点都有相同的数据集，向外扩展，基于二进制日志的单向复制 负载均衡读操作 备份 高可用和故障切换 数据分布 MySQL升级     12相关线程：dump Thread      I&#x2F;O Thread     SQL Thread相关二进制文件：二进制日志（Bin Log）   中继日志（Relay Log）">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202402081653567.png">
+<meta property="article:published_time" content="2024-02-08T16:47:55.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.350Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202402081653567.png">
+  
+  
+  <title>Linux-MySQL-集群与压力测试 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-MySQL-集群与压力测试">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-02-08 16:47" pubdate>
+        February 8, 2024 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      47 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-MySQL-集群与压力测试</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-MySQL-集群-Cluster"><a href="#1-MySQL-集群-Cluster" class="headerlink" title="1 MySQL 集群 Cluster"></a>1 MySQL 集群 Cluster</h1><h2 id="1-1-MySQL主从复制"><a href="#1-1-MySQL主从复制" class="headerlink" title="1.1 MySQL主从复制"></a>1.1 MySQL主从复制</h2><ul>
+<li>读写分离</li>
+<li>复制：每个节点都有相同的数据集，向外扩展，基于<strong>二进制日志</strong>的单向复制<ul>
+<li>负载均衡读操作</li>
+<li>备份</li>
+<li>高可用和故障切换</li>
+<li>数据分布</li>
+<li>MySQL升级</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202402081653567.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><pre><code class="hljs mathematica">相关线程：<span class="hljs-variable">dump</span> <span class="hljs-built_in">Thread</span>      <span class="hljs-built_in">I</span><span class="hljs-operator">/</span><span class="hljs-built_in">O</span> <span class="hljs-built_in">Thread</span>     <span class="hljs-variable">SQL</span> <span class="hljs-built_in">Thread</span><br>相关二进制文件：二进制日志（<span class="hljs-variable">Bin</span> <span class="hljs-built_in">Log</span>）   中继日志（<span class="hljs-variable">Relay</span> <span class="hljs-built_in">Log</span>）   区分：<span class="hljs-variable">select</span> <span class="hljs-operator">@@</span><span class="hljs-type">server_id</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>以MySQL8.0为例，新建主从复制</strong></p>
+<p><strong>主节点配置</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@Rocky8 ~]# yum -y install mysql-server<br>[root@Rocky8 ~]# vim /etc/my.cnf<br>[mysqld]<br>server-id=8<br>log-bin=/data/mysql/logbin/mysql-bin<br>[root@Rocky8 ~]# mkdir -p /data/mysql/logbin/<br>[root@Rocky8 ~]# chown -R mysql.mysql /data/mysql/logbin/<br>[root@Rocky8 ~]# systemctl enable --now mysqld<br>[root@Rocky8 ~]# ll /data/mysql/logbin/<br>total 12<br>-rw-r----- 1 mysql mysql 179 Feb  8 17:18 mysql-bin.000001<br>-rw-r----- 1 mysql mysql 156 Feb  8 17:18 mysql-bin.000002<br>-rw-r----- 1 mysql mysql  72 Feb  8 17:18 mysql-bin.index<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">create user repluser@<span class="hljs-string">&#x27;10.1.16.%&#x27;</span> identified by <span class="hljs-string">&#x27;123456&#x27;</span>;</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">grant replication slave on *.* to repluser@<span class="hljs-string">&#x27;10.1.16.%&#x27;</span>;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>从节点配置</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@Rocky8 ~]# yum -y install mysql-server<br>[root@Rocky8 ~]# vim /etc/my.cnf<br>[mysqld]<br>server-id=9<br>read-only<br>log-bin=/data/mysql/logbin/mysql-bin<br>[root@Rocky8 ~]# mkdir -p /data/mysql/logbin/<br>[root@Rocky8 ~]# chown -R mysql.mysql /data/mysql/<br>[root@Rocky8 ~]# systemctl enable --now mysqld<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">使用有复制权限的用户账号连接至主服务器，并启动复制线程</span><br>CHANGE MASTER TO<br>    MASTER_HOST=&#x27;10.1.16.128&#x27;,<br>    MASTER_USER=&#x27;repluser&#x27;,<br>    MASTER_PASSWORD=&#x27;123456&#x27;,<br>    MASTER_PORT=3306,<br>    MASTER_LOG_FILE=&#x27;mysql-bin.000002&#x27;,<br>    MASTER_LOG_POS=156,<br>    MASTER_CONNECT_RETRY=10;<br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">start slave;</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">show slave status\G</span><br>Master_Host: 10.1.16.128<br>                  Master_User: repluser<br>                  Master_Port: 3306<br>                Connect_Retry: 10<br>              Master_Log_File: mysql-bin.000002<br>          Read_Master_Log_Pos: 683<br>               Relay_Log_File: Rocky8-relay-bin.000002<br>                Relay_Log_Pos: 851<br>        Relay_Master_Log_File: mysql-bin.000002<br>         	 Slave_IO_Running: Yes<br>   		    Slave_SQL_Running: Yes<br>   		    Seconds_Behind_Master: 0<br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">show processlist;</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>主服务器非新建时，主服务器运行一段时间后，新增从节点服务器</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash">主节点</span><br>[root@Rocky8 ~]# vim /etc/my.cnf<br>[mysqld]<br>server-id=8<br>log-bin=/mysql/logbin/mysql-bin<br>[root@Rocky8 ~]# mkdir -p /mysql/logbin/<br>[root@Rocky8 ~]# chown -R mysql.mysql /mysql/logbin/<br>[root@Rocky8 ~]#  systemctl enable --now mysqld<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">完全备份已有数据</span><br>[root@Rocky8 ~]# mysqldump -uroot -A -F --single-transaction --source-data=1 &gt; /data/full_bak.sql<br>[root@Rocky8 ~]# scp /data/full_bak.sql 10.1.16.129:<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">从节点</span><br>[root@Rocky8 ~]# vim /etc/my.cnf<br>[mysqld]<br>server-id=9<br>read-only<br>[root@Rocky8 ~]# systemctl enable --now mysqld<br><br>[root@Rocky8 ~]# vim full_bak.sql <br><span class="hljs-meta prompt_"># </span><span class="language-bash">添加一下内容</span><br>CHANGE MASTER TO<br>    MASTER_HOST=&#x27;10.1.16.128&#x27;,<br>    MASTER_USER=&#x27;repluser&#x27;,<br>    MASTER_PASSWORD=&#x27;123456&#x27;,<br>    MASTER_PORT=3306;<br>CHANGE MASTER TO MASTER_LOG_FILE=&#x27;mysql-bin.000003&#x27;, MASTER_LOG_POS=156;<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash"><span class="hljs-built_in">set</span> sql_log_bin = 0;</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash"><span class="hljs-built_in">source</span> full_bak.sql;</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">show slave status\G</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">start slave;</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">show slave status\G</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash">show processlist;</span><br><span class="hljs-meta prompt_">mysql&gt; </span><span class="language-bash"><span class="hljs-built_in">set</span> sql_log_bin=1;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-实现级联复制"><a href="#1-2-实现级联复制" class="headerlink" title="1.2 实现级联复制"></a>1.2 实现级联复制</h2><p><strong>中间节点</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">[mysqld]<br>server-id=18<br>log_bin<br>log_slave_updates    #级联复制中间节点的必选项,MySQL8.0此为默认值,可以不要人为添加,其它版本默认不开启<br>read-only<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-3-实现主主复制"><a href="#1-3-实现主主复制" class="headerlink" title="1.3 实现主主复制"></a>1.3 实现主主复制</h2><p><strong>keepalived</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 冲突解决方案<br><span class="hljs-operator">&gt;</span> stop slave;<br><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">set</span> globle sql_slave_skip_counter<span class="hljs-operator">=</span><span class="hljs-number">1</span>;<br><span class="hljs-operator">&gt;</span> <span class="hljs-keyword">start</span> slave;<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-4-实现半同步复制"><a href="#1-4-实现半同步复制" class="headerlink" title="1.4 实现半同步复制"></a>1.4 实现半同步复制</h2><p>同步复制：数据丢失风险较大</p>
+<p>全同步复制：效率低</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql"># MySQL8<span class="hljs-number">.0</span>的默认值<br>rpl_semi_rsync_master_wait_point<span class="hljs-operator">=</span>after_sync<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs sql">#查看插件文件<br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# rpm <span class="hljs-operator">-</span>ql mysql<span class="hljs-operator">-</span>server <span class="hljs-operator">|</span>grep semisync<br><span class="hljs-operator">/</span>usr<span class="hljs-operator">/</span>lib64<span class="hljs-operator">/</span>mysql<span class="hljs-operator">/</span>plugin<span class="hljs-operator">/</span>semisync_master.so<br><span class="hljs-operator">/</span>usr<span class="hljs-operator">/</span>lib64<span class="hljs-operator">/</span>mysql<span class="hljs-operator">/</span>plugin<span class="hljs-operator">/</span>semisync_slave.so<br><br># 主节点<br>mysql<span class="hljs-operator">&gt;</span> INSTALL PLUGIN rpl_semi_sync_master SONAME <span class="hljs-string">&#x27;semisync_master.so&#x27;</span>; #永久安装插件<br><br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# vim <span class="hljs-operator">/</span>etc<span class="hljs-operator">/</span>my.cnf.d<span class="hljs-operator">/</span>mysql<span class="hljs-operator">-</span>server.cnf<br>[mysqld]<br>server<span class="hljs-operator">-</span>id<span class="hljs-operator">=</span><span class="hljs-number">8</span><br>rpl_semi_sync_master_enabled<span class="hljs-operator">=</span><span class="hljs-keyword">ON</span>     #修改此行,需要先安装semisync_master.so插件后,再重启,否则无法启动<br>rpl_semi_sync_master_timeout<span class="hljs-operator">=</span><span class="hljs-number">3000</span>   #设置<span class="hljs-number">3</span>s内无法同步，也将返回成功信息给客户端<br><br># 从节点<br>mysql<span class="hljs-operator">&gt;</span> INSTALL PLUGIN rpl_semi_sync_slave SONAME <span class="hljs-string">&#x27;semisync_slave.so&#x27;</span>;<br><br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# vim <span class="hljs-operator">/</span>etc<span class="hljs-operator">/</span>my.cnf.d<span class="hljs-operator">/</span>mysql<span class="hljs-operator">-</span>server.cnf<br>[mysqld]<br>server<span class="hljs-operator">-</span>id<span class="hljs-operator">=</span><span class="hljs-number">18</span><br>rpl_semi_sync_slave_enabled<span class="hljs-operator">=</span><span class="hljs-keyword">ON</span> #修改此行,需要先安装semisync_slave.so插件后,再重启,否则无法启动<br><br><br>mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SHOW</span> PLUGINS; #查看插件<br>mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">GLOBAL</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;%semi%&#x27;</span>;<br>mysql<span class="hljs-operator">&gt;</span> <span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">GLOBAL</span> STATUS <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;%semi%&#x27;</span>;<br><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-5-复制过滤器"><a href="#1-5-复制过滤器" class="headerlink" title="1.5 复制过滤器"></a>1.5 复制过滤器</h2><p>第一种：更改主服务器配置</p>
+<p>会禁用二进制，不建议使用</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">binlog<span class="hljs-operator">-</span>do<span class="hljs-operator">-</span>db<span class="hljs-operator">=</span>db1 	#数据库白名单列表，不支持同时指定多个值，如果想实现多个数据库需多行实现<br>binlog<span class="hljs-operator">-</span>ignore<span class="hljs-operator">-</span>db<span class="hljs-operator">=</span> 	#数据库黑名单列表<br></code></pre></td></tr></table></figure>
+
+<p>第二种：更改从节点配置</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">replicate_ignore_db<span class="hljs-operator">=</span> 	#指定复制库黑名单<br>replicate_do_table<span class="hljs-operator">=</span> 	#指定复制表的白名单<br>replicate_ignore_table<span class="hljs-operator">=</span> 	#指定复制表的黑名单<br>replicate_wild_do_table<span class="hljs-operator">=</span> foo<span class="hljs-operator">%</span>.bar<span class="hljs-operator">%</span>  	#支持通配符<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-6-GTID复制"><a href="#1-6-GTID复制" class="headerlink" title="1.6 GTID复制"></a>1.6 GTID复制</h2><p>默认mysql主从复制-复制线程不支持并发</p>
+<p>开启GTID功能可以支持多DUMP线程的并发复制</p>
+<p>5.7以后：</p>
+<p>GTID = server_uuid:transaction_id，在一组复制中，全局唯一</p>
+<p>server_uuid 来源于 /var/lib/mysql/auto.cnf </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">stop slave;<br>reset slave;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 主节点和从节点<br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# vim <span class="hljs-operator">/</span>etc<span class="hljs-operator">/</span>my.cnf<br>gtid_mode<span class="hljs-operator">=</span><span class="hljs-keyword">ON</span><br>enforce_gtid_consistency<br><br># 从节点<br>CHANGE MASTER <span class="hljs-keyword">TO</span> MASTER_HOST<span class="hljs-operator">=</span><span class="hljs-string">&#x27;10.0.0.100&#x27;</span>,<br> MASTER_USER<span class="hljs-operator">=</span><span class="hljs-string">&#x27;repluser&#x27;</span>,<br> MASTER_PASSWORD<span class="hljs-operator">=</span><span class="hljs-string">&#x27;magedu&#x27;</span>,<br> MASTER_PORT<span class="hljs-operator">=</span><span class="hljs-number">3306</span>,<br> MASTER_AUTO_POSITION<span class="hljs-operator">=</span><span class="hljs-number">1</span>;  #使用GTID<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-7-复制的监控和维护"><a href="#1-7-复制的监控和维护" class="headerlink" title="1.7 复制的监控和维护"></a>1.7 复制的监控和维护</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-8-MySQL中间代理服务器"><a href="#1-8-MySQL中间代理服务器" class="headerlink" title="1.8 MySQL中间代理服务器"></a>1.8 MySQL中间代理服务器</h2><p>数据库切分方式：垂直切分、水平切分</p>
+<p><strong>Mycat</strong> 可以看做是抽象的数据库。</p>
+<ul>
+<li>Keepalived+Mycat+Mysql</li>
+<li>Keepalived+LVS+Mycat+Mysql</li>
+<li>Keepalived+Haproxy+Mycat+Mysq</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@Rocky8 ~]# yum -y install java<br><span class="hljs-meta prompt_">#</span><span class="language-bash">确认安装成功</span><br>[root@Rocky8 ~]# java -version<br>openjdk version &quot;1.8.0_201&quot;<br>OpenJDK Runtime Environment (build 1.8.0_201-b09)<br>OpenJDK 64-Bit Server VM (build 25.201-b09, mixed mode)<br><br>[root@Rocky8 ~]# wget http://dl.mycat.org.cn/1.6.7.4/Mycat-server-1.6.7.4-release/Mycat-server-1.6.7.4-release-20200105164103-linux.tar.gz<br>[root@Rocky8 ~]# mkdir /apps<br>[root@Rocky8 ~]# tar xvf Mycat-server-1.6.7.4-release-20200105164103-linux.tar.gz  -C /apps<br>[root@Rocky8 ~]# ls /apps/mycat/<br>bin catlet conf lib logs version.txt<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">配置环境变量</span><br>[root@Rocky8 ~]# vim /etc/profile.d/mycat.sh<br>PATH=/apps/mycat/bin:$PATH<br>[root@Rocky8 ~]# source /etc/profile.d/mycat.sh<br><span class="hljs-meta prompt_">#</span><span class="language-bash">启动</span><br>[root@Rocky8 ~]# mycat start<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看日志，确定成功</span><br>[root@Rocky8 ~]# cat /app/mycat/logs/wrapper.log <br>...省略...<br>INFO   | jvm 1   | 2019/11/01 21:41:02 | MyCAT Server startup successfully. see <br>logs in logs/mycat.log<br><span class="hljs-meta prompt_">#</span><span class="language-bash">连接mycat：</span><br>[root@Rocky8 ~]# mysql -uroot -p123456 -h 127.0.0.1 -P8066<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-6-MySQL高可用"><a href="#1-6-MySQL高可用" class="headerlink" title="1.6 MySQL高可用"></a>1.6 MySQL高可用</h2><p><strong>MHA</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<p><strong>Galera Cluster</strong></p>
+<p>多主特性</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<p><strong>TiDB</strong></p>
+<p>分布式</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h1 id="2-压力测试"><a href="#2-压力测试" class="headerlink" title="2 压力测试"></a>2 压力测试</h1><h2 id="2-1-mysqlslap"><a href="#2-1-mysqlslap" class="headerlink" title="2.1 mysqlslap"></a>2.1 <strong>mysqlslap</strong></h2><span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/02/15/Linux-OpenVPN/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux-OpenVPN</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/04/Linux-MySQL-%E8%BF%9B%E9%98%B6/">
+                        <span class="hidden-mobile">Linux-MySQL-进阶</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

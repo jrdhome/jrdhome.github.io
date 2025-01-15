@@ -1,0 +1,489 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="单链表结点结构 1234567typedef struct LNode&amp;#123;  	ElemType data;    struct LNode *next;&amp;#125;LNode,*LinkList;LNode* 强调一个结点LinkList 强调一个单链表  申请一个结点 1struct LNode* p&#x3D;(struct LNOde*)malloc(sizeof(struct LNode)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构-链表">
+<meta property="og:url" content="http://example.com/2023/09/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="单链表结点结构 1234567typedef struct LNode&amp;#123;  	ElemType data;    struct LNode *next;&amp;#125;LNode,*LinkList;LNode* 强调一个结点LinkList 强调一个单链表  申请一个结点 1struct LNode* p&#x3D;(struct LNOde*)malloc(sizeof(struct LNode)">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-21T18:20:56.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.351Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>数据结构-链表 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="数据结构-链表">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-09-21 18:20" pubdate>
+        September 21, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      38 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数据结构-链表</h1>
+            
+            <div class="markdown-body">
+              <h1 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h1><p><strong>结点结构</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">LNode</span>&#123;</span><br>  	ElemType data;<br>    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">LNode</span> *<span class="hljs-title">next</span>;</span><br>&#125;LNode,*LinkList;<br><br>LNode* 强调一个结点<br>LinkList 强调一个单链表<br></code></pre></td></tr></table></figure>
+
+<p><strong>申请一个结点</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">LNode</span>* <span class="hljs-title">p</span>=</span>(<span class="hljs-keyword">struct</span> LNOde*)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">struct</span> LNode));<br></code></pre></td></tr></table></figure>
+
+<h2 id="单链表的插入"><a href="#单链表的插入" class="headerlink" title="单链表的插入"></a>单链表的插入</h2><h3 id="按位插入-带头结点"><a href="#按位插入-带头结点" class="headerlink" title="按位插入(带头结点)"></a><strong>按位插入(带头结点)</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">bool</span> <span class="hljs-title function_">ListInsert</span><span class="hljs-params">(LinkList &amp;L,<span class="hljs-type">int</span> i,ElemType e)</span>&#123;<br>	<span class="hljs-keyword">if</span>(i&lt;<span class="hljs-number">1</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *p;<br>	<span class="hljs-type">int</span> j=<span class="hljs-number">0</span>;<br>	p=L;<br>	<span class="hljs-keyword">while</span>( p!=<span class="hljs-literal">NULL</span> &amp;&amp; j&lt;i<span class="hljs-number">-1</span>)&#123;<br>		p = p-&gt;next;<br>		j++;<br>	&#125;<br>	<span class="hljs-keyword">if</span>(p==<span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *s=(LNode *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(LNode));<br>	s-&gt;data = e;<br>	s-&gt;next = p-&gt;next;<br>	p-&gt;next = s;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="按位插入-不带头结点"><a href="#按位插入-不带头结点" class="headerlink" title="按位插入(不带头结点)"></a>按位插入(不带头结点)</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">bool</span> <span class="hljs-title function_">ListInsert</span><span class="hljs-params">(LinkList &amp;L,<span class="hljs-type">int</span> i,ElemType e)</span>&#123;<br>	<span class="hljs-keyword">if</span>(i&lt;<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	<span class="hljs-keyword">if</span>(i==<span class="hljs-number">1</span>)&#123;<br>		LNode *s = (LNode *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(LNode));<br>		s-&gt;data = e;<br>        s-&gt;next = L;<br>        L = s;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>	&#125;<br>    LNode *p;<br>    <span class="hljs-type">int</span> j = <span class="hljs-number">1</span>;<br>    p = L;<br>    <span class="hljs-keyword">while</span>(p!=<span class="hljs-literal">NULL</span> &amp;&amp; j&lt;i<span class="hljs-number">-1</span>)&#123;<br>        p = p-&gt;next;<br>        j++;<br>    &#125;<br>    <span class="hljs-keyword">if</span>(p == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    LNode *s = (LNode *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(LNode));<br>    s-&gt;data = e;<br>    s-&gt;next = p-&gt;next;<br>    p-&gt;next = s;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="指定节点的后插操作"><a href="#指定节点的后插操作" class="headerlink" title="指定节点的后插操作"></a><strong>指定节点的后插操作</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">bool</span> <span class="hljs-title function_">InsertNextNode</span><span class="hljs-params">(LNode *p,ElemType e)</span>&#123;<br>	<span class="hljs-keyword">if</span>(p==<span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *s = (LNode *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(LNode));<br>	<span class="hljs-keyword">if</span>(s==<span class="hljs-literal">NULL</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	s-&gt;data = e;<br>	s-&gt;next = p-&gt;next;<br>	p-&gt;next = s;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="指定节点的前插操作"><a href="#指定节点的前插操作" class="headerlink" title="指定节点的前插操作"></a><strong>指定节点的前插操作</strong></h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">bool</span> <span class="hljs-title function_">InserPriorNode</span><span class="hljs-params">(LNode *p,ElemType e)</span>&#123;<br>	<span class="hljs-keyword">if</span>(p==<span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *s = (LNOde *)<span class="hljs-built_in">malloc</span>(<span class="hljs-keyword">sizeof</span>(LNode));<br>	<span class="hljs-keyword">if</span>(s==<span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	s-&gt;data = p-&gt;data;<br>	p-&gt;data = e;<br>	s-&gt;next = p-&gt;next;<br>	p-&gt;next = s;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="单链表的删除"><a href="#单链表的删除" class="headerlink" title="单链表的删除"></a>单链表的删除</h2><h3 id="按位序删除-带头结点"><a href="#按位序删除-带头结点" class="headerlink" title="按位序删除(带头结点)"></a>按位序删除(带头结点)</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">bool</span> <span class="hljs-title function_">ListDelete</span><span class="hljs-params">(LinkList &amp;L,<span class="hljs-type">int</span> i,ElemType &amp;e)</span>&#123;<br>	<span class="hljs-keyword">if</span>(i&lt;<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *p;<br>	<span class="hljs-type">int</span> j = <span class="hljs-number">0</span>;<br>	p = L;<br>	<span class="hljs-keyword">while</span>(p != <span class="hljs-literal">NULL</span> &amp;&amp; j&lt;i<span class="hljs-number">-1</span>)&#123;<br>		p=p-&gt;next;<br>		j++;<br>	&#125;<br>	<span class="hljs-keyword">if</span>(p == <span class="hljs-literal">NULL</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	<span class="hljs-keyword">if</span>(p-&gt;next == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *q = p-&gt;next;<br>	e = q-&gt;data;<br>	p-&gt;next = q-&gt;next;<br>	<span class="hljs-built_in">free</span>(q);<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="按位序删除-不带头结点"><a href="#按位序删除-不带头结点" class="headerlink" title="按位序删除(不带头结点)"></a>按位序删除(不带头结点)</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">bool</span> <span class="hljs-title function_">ListDelete</span><span class="hljs-params">(LinkList &amp;L,<span class="hljs-type">int</span> i,Elemtype &amp;e)</span>&#123;<br>	<span class="hljs-keyword">if</span>(i&lt;<span class="hljs-number">1</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *p;<br>	<span class="hljs-type">int</span> j = <span class="hljs-number">1</span>;<br>	p = L;<br>	<span class="hljs-keyword">while</span>(p != <span class="hljs-literal">NULL</span> &amp;&amp; j&lt;i<span class="hljs-number">-1</span>)&#123;<br>		p=p-&gt;next;<br>		j++;<br>	&#125;<br>	<span class="hljs-keyword">if</span>(p == <span class="hljs-literal">NULL</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	<span class="hljs-keyword">if</span>(p-&gt;next == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *q = p-&gt;next;<br>	e = q-&gt;data;<br>	p-&gt;next = q-&gt;next;<br>	<span class="hljs-built_in">free</span>(q);<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="指定节点删除"><a href="#指定节点删除" class="headerlink" title="指定节点删除"></a>指定节点删除</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">bool</span> <span class="hljs-title function_">DeleteNode</span><span class="hljs-params">(LNode *p)</span>&#123;<br>	<span class="hljs-keyword">if</span>(p==<span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	LNode *q = p-&gt;next;<br>	p-&gt;data = q-&gt;data;<br>	p-&gt;next = q-&gt;next;<br>	<span class="hljs-built_in">free</span>(q);<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="单链表的查找"><a href="#单链表的查找" class="headerlink" title="单链表的查找"></a>单链表的查找</h2><h3 id="按位查找-带头结点"><a href="#按位查找-带头结点" class="headerlink" title="按位查找(带头结点)"></a>按位查找(带头结点)</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs c">LNode* <span class="hljs-title function_">GetElem</span><span class="hljs-params">(LinkList L,<span class="hljs-type">int</span> i)</span>&#123;<br>    <span class="hljs-keyword">if</span>(i&lt;<span class="hljs-number">0</span>)	<span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;<br>	<span class="hljs-type">int</span> j=<span class="hljs-number">1</span>;<br>    LNode *p=L-&gt;next;<br>    <span class="hljs-keyword">if</span>(i==<span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> L;<br>	<span class="hljs-keyword">while</span>(p!=<span class="hljs-literal">NULL</span> &amp;&amp; j&lt;i)&#123;<br>		p=p-&gt;next;<br>		j++;<br>	&#125;<br>	<span class="hljs-keyword">return</span> p;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="按位查找-不带头结点"><a href="#按位查找-不带头结点" class="headerlink" title="按位查找(不带头结点)"></a>按位查找(不带头结点)</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs routeros">LNode* GetElem(LinkList L,int i)&#123;<br>    <span class="hljs-keyword">if</span>(i&lt;0)	return <span class="hljs-literal">NULL</span>;<br>	int <span class="hljs-attribute">j</span>=1;<br>    LNode *<span class="hljs-attribute">p</span>=L;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-attribute">i</span>==0) return L;<br>	<span class="hljs-keyword">while</span>(p!=<span class="hljs-literal">NULL</span> &amp;&amp; j&lt;i)&#123;<br>		<span class="hljs-attribute">p</span>=p-&gt;next;<br>		j++;<br>	&#125;<br>	return p;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="按值查找-带头结点"><a href="#按值查找-带头结点" class="headerlink" title="按值查找(带头结点)"></a>按值查找(带头结点)</h3><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs xl">LNode* LocateElem(LinkList L,ElemTYpe e)&#123;<br>	LN<span class="hljs-function"><span class="hljs-title">ode</span> *p = L-&gt;</span>next;<br>	<span class="hljs-function"><span class="hljs-title">while</span>(p!=NULL &amp;&amp; p-&gt;</span><span class="hljs-keyword">data</span>!=e)&#123;<br>		<span class="hljs-function"><span class="hljs-title">p</span>=p-&gt;</span>next;<br>	&#125;<br>	return p;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="按值查找-不带头结点"><a href="#按值查找-不带头结点" class="headerlink" title="按值查找(不带头结点)"></a>按值查找(不带头结点)</h3><figure class="highlight sas"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sas">LNode<span class="hljs-comment">* LocateElem(LinkList L,ElemType e)&#123;</span><br><span class="hljs-comment">	LNode *p = L;</span><br>	<span class="hljs-keyword">while</span>(p!=<span class="hljs-keyword">NULL</span> <span class="hljs-variable">&amp;&amp;</span> p-&gt;data!=e)&#123;<br>		p=p-&gt;next;<br>	&#125;<br>	<span class="hljs-keyword">return</span> p;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="单链表的长度-带头结点"><a href="#单链表的长度-带头结点" class="headerlink" title="单链表的长度(带头结点)"></a>单链表的长度(带头结点)</h3><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs autoit"><span class="hljs-built_in">int</span> Length(LinkList L)&#123;<br>	<span class="hljs-built_in">int</span> len = <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>	LNode *p = L-&gt;<span class="hljs-keyword">next</span><span class="hljs-comment">;</span><br>	<span class="hljs-keyword">while</span>(p!=<span class="hljs-literal">NULL</span>)&#123;<br>		p = p-&gt;<span class="hljs-keyword">next</span><span class="hljs-comment">;</span><br>		len++<span class="hljs-comment">;</span><br>	&#125;<br>	<span class="hljs-keyword">return</span> len<span class="hljs-comment">;</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="单链表的长度-不带头结点"><a href="#单链表的长度-不带头结点" class="headerlink" title="单链表的长度(不带头结点)"></a>单链表的长度(不带头结点)</h3><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">Length</span><span class="hljs-params">(LinkList L)</span></span>&#123;<br>	<span class="hljs-type">int</span> len = <span class="hljs-number">0</span>;<br>	LNode *p = L;<br>	<span class="hljs-keyword">while</span>(p!=<span class="hljs-literal">NULL</span>)&#123;<br>		p=p-&gt;next;<br>		len++;<br>	&#125;<br>	<span class="hljs-keyword">return</span> len;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="单链表的建立"><a href="#单链表的建立" class="headerlink" title="单链表的建立"></a>单链表的建立</h2><h3 id="尾插法建立单链表-带头结点"><a href="#尾插法建立单链表-带头结点" class="headerlink" title="尾插法建立单链表(带头结点)"></a>尾插法建立单链表(带头结点)</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs routeros">LinkList List_TailInsert(LinkList &amp;L)&#123;  <br>	int x;  <br>	L=(LinkList)malloc(sizeof(LNode)); <br>    L-&gt;next = <span class="hljs-literal">NULL</span>;<br>	LNode *s,*<span class="hljs-attribute">r</span>=L;<br>	scanf(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	<span class="hljs-keyword">while</span>(x!=9999)&#123;<br>		s=(LNode *)malloc(sizeof(LNode));<br>		s-&gt;<span class="hljs-attribute">data</span>=x;  <br>		r-&gt;<span class="hljs-attribute">next</span>=s;  <br>		<span class="hljs-attribute">r</span>=s;<br>		scanf(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	&#125;<br>	r-&gt;<span class="hljs-attribute">next</span>=<span class="hljs-literal">NULL</span>;<br>	return L;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="尾插法建立单链表-不带头结点"><a href="#尾插法建立单链表-不带头结点" class="headerlink" title="尾插法建立单链表(不带头结点)"></a>尾插法建立单链表(不带头结点)</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">LinkList <span class="hljs-title">List_TailInsert</span><span class="hljs-params">(LinkList &amp;L)</span></span>&#123;  <br>	<span class="hljs-type">int</span> x;  <br>	LNode *s,*r=L;<br>	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	<span class="hljs-keyword">while</span> (x != <span class="hljs-number">9999</span>) &#123;<br>		s = (LNode*)<span class="hljs-built_in">malloc</span>(<span class="hljs-built_in">sizeof</span>(LNode));<br>		s-&gt;data = x;<br>		s-&gt;next = <span class="hljs-literal">NULL</span>;<br>		<span class="hljs-keyword">if</span> (L==<span class="hljs-literal">NULL</span>) &#123;<br>			L = s;<br>			r = L;<br>		&#125;<br>		<span class="hljs-keyword">else</span> &#123;<br>			r-&gt;next = s;<br>			r = s;<br>		&#125;<br>		<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	&#125;<br>	r-&gt;next=<span class="hljs-literal">NULL</span>;<br>	<span class="hljs-keyword">return</span> L;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="头插法建立单链表-带头结点"><a href="#头插法建立单链表-带头结点" class="headerlink" title="头插法建立单链表(带头结点)"></a>头插法建立单链表(带头结点)</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-function">LinkList <span class="hljs-title">List_HeadInsert</span><span class="hljs-params">(LinkList &amp;L)</span></span>&#123;<br>	<span class="hljs-type">int</span> x;<br>	L=(LinkList)<span class="hljs-built_in">malloc</span>(<span class="hljs-built_in">sizeof</span>(LNode));  <br>	L-&gt;next = <span class="hljs-literal">NULL</span>;<br>	LNode *s;<br>	<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	<span class="hljs-keyword">while</span>(x!=<span class="hljs-number">9999</span>)&#123;<br>		s=(LNode*)<span class="hljs-built_in">malloc</span>(<span class="hljs-built_in">sizeof</span>(LNode));<br>		s-&gt;data=x;  <br>		s-&gt;next=L-&gt;next;<br>		L-&gt;next=s;<br>		<span class="hljs-built_in">scanf</span>(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	&#125;<br>	<span class="hljs-keyword">return</span> L;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="头插法建立单链表-不带头结点"><a href="#头插法建立单链表-不带头结点" class="headerlink" title="头插法建立单链表(不带头结点)"></a>头插法建立单链表(不带头结点)</h3><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs xl">LinkList List_HeadInsert(LinkList &amp;L)&#123;<br>	int x;<br>	LNode *s;<br>	scanf(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	<span class="hljs-keyword">while</span>(x!=<span class="hljs-number">9999</span>)&#123;<br>		s = (LNode*)malloc(sizeof(LNode));<br>		<span class="hljs-function"><span class="hljs-title">s</span>-&gt;</span><span class="hljs-keyword">data</span> = x;<br>		<span class="hljs-function"><span class="hljs-title">s</span>-&gt;</span>next = NULL;<br>		<span class="hljs-keyword">if</span> (L==NULL) &#123;<br>			L = s;<br>		&#125;<br>		<span class="hljs-keyword">else</span> &#123;<br>			<span class="hljs-function"><span class="hljs-title">s</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">next</span> = L-&gt;</span>next;<br>			L-&gt;next = s;<br>            <span class="hljs-function"><span class="hljs-title">s</span>-&gt;</span><span class="hljs-function"><span class="hljs-title">data</span> = L-&gt;</span><span class="hljs-keyword">data</span>;<br>            L-&gt;<span class="hljs-keyword">data</span> = x;<br>		&#125;<br>		scanf(<span class="hljs-string">&quot;%d&quot;</span>,&amp;x);<br>	&#125;<br>	return L;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/21/Linux-%E7%A3%81%E7%9B%98%E5%92%8C%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LinuxLinux-磁盘和存储管理</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/12/Linux-DNS%E6%9C%8D%E5%8A%A1%E5%8E%9F%E7%90%86%E5%92%8C%E4%BA%92%E8%81%94%E7%BD%91%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C/">
+                        <span class="hidden-mobile">Linux-DNS服务原理和互联网域名注册</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

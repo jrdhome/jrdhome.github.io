@@ -1,0 +1,694 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实验概述  实验开始后，系统会自动去创建一台Linux ECS。且ECS实例已经部署了OSS python SDK。用户可以使用OSS Python SDK来访问OSS服务，包括上传文件，下载文件，查看文件列表等。默认这些程序是写在一个脚本文件里，通过Python程序可以执行。OSS上传方式大致可以分为两类：简单上传和分块上传。本实验通过OSS的Python SDK，使用简单上传的方式实现小文件的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clouder-使用云储存OSS的API上传和下载文件">
+<meta property="og:url" content="http://example.com/2023/08/04/Clouder-%E4%BD%BF%E7%94%A8%E4%BA%91%E5%82%A8%E5%AD%98OSS%E7%9A%84API%E4%B8%8A%E4%BC%A0%E5%92%8C%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="实验概述  实验开始后，系统会自动去创建一台Linux ECS。且ECS实例已经部署了OSS python SDK。用户可以使用OSS Python SDK来访问OSS服务，包括上传文件，下载文件，查看文件列表等。默认这些程序是写在一个脚本文件里，通过Python程序可以执行。OSS上传方式大致可以分为两类：简单上传和分块上传。本实验通过OSS的Python SDK，使用简单上传的方式实现小文件的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/afd734bef0c04ce6a192b8fe68acdb86/sections/f2da4e55518942deba29a1313363030d/content/images/course-afd734bef0c04ce6a192b8fe68acdb86-section-f2da4e55518942deba29a1313363030d-content-image-1471917948577-3Uppe2">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/afd734bef0c04ce6a192b8fe68acdb86/sections/f2da4e55518942deba29a1313363030d/content/images/course-afd734bef0c04ce6a192b8fe68acdb86-section-f2da4e55518942deba29a1313363030d-content-image-1471918081495-Gnzgjc">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/afd734bef0c04ce6a192b8fe68acdb86/sections/f2da4e55518942deba29a1313363030d/content/images/course-afd734bef0c04ce6a192b8fe68acdb86-section-f2da4e55518942deba29a1313363030d-content-image-1471918231345-ddwSNY">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651656.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651703.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/469116e7c85c4f4b8a9b41042526da5e.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/37d75fe4ad54452d9ff8795cb47ea0d0.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651911.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651937.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/a82a7afa50654902aec6bfb8f9be3af8.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/261cbea8fd3140939eadaca06399f9c2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651689.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651282.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/f7df218412e24bdd9852ca8f8ec7dce9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651516.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/6b62ccea04f24e3dbbebab6b91dddf21.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651222.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651608.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/aa02ed6267e745059a8e1b3248c78aba.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651918.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651979.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651571.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651907.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/189acc897c5a4782b853071e6b422f86.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651339.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651736.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/6a6738f5cef949e7999e51ea2d31235d.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/35968af55bc446c3b210f50d0600ed12.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651672.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651728.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/9238c4ae3e134eefbc355cfcf3ddaabf.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651410.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651855.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651246.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651360.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/3aa7c78f622f43cba9fbbef2d3f8a090.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651280.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/f614c75c7eb348658d1929c6e53b034f.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651718.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651256.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/15491e96e39147ed9d6f4a4790e0890f.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651615.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/186536c60b6b4732960c11478a1190ce.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651079.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651513.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651802.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651832.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651307.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651328.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651992.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/d1ee510b778a420cb315e19f34a27d2c.png">
+<meta property="article:published_time" content="2023-08-04T16:44:26.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.349Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="Clouder">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://edu.aliyun.com/lab/files/courses/afd734bef0c04ce6a192b8fe68acdb86/sections/f2da4e55518942deba29a1313363030d/content/images/course-afd734bef0c04ce6a192b8fe68acdb86-section-f2da4e55518942deba29a1313363030d-content-image-1471917948577-3Uppe2">
+  
+  
+  <title>Clouder-使用云储存OSS的API上传和下载文件 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Clouder-使用云储存OSS的API上传和下载文件">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-04 16:44" pubdate>
+        August 4, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      67 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clouder-使用云储存OSS的API上传和下载文件</h1>
+            
+            <div class="markdown-body">
+              <p><strong>实验概述</strong></p>
+<p> 实验开始后，系统会自动去创建一台Linux ECS。且ECS实例已经部署了OSS python SDK。用户可以使用OSS Python SDK来访问OSS服务，包括上传文件，下载文件，查看文件列表等。默认这些程序是写在一个脚本文件里，通过Python程序可以执行。OSS上传方式大致可以分为两类：简单上传和分块上传。本实验通过OSS的Python SDK，使用简单上传的方式实现小文件的上传和下载；最后指导您实现如何去删除OSS Bucket。 </p>
+<p><strong>实验目标</strong></p>
+<p> 完成此实验后，可以掌握的能力有：</p>
+<p>\1. 使用OSS python SDK来调用OSS API </p>
+<p>\2. 掌握OSS简单上传的方式</p>
+<p>\3. 掌握OSS分块上传的方式</p>
+<p>\4. 使用OSS python SDK快速删除OSS Object</p>
+<p><strong>学前建议</strong></p>
+<p>\1. 了解Linux的基本命令操作；</p>
+<p>\2. 了解Python语言的基本使用方法；</p>
+<h1 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h1><p>阿里云对象存储（Object Storage Service，简称OSS），是阿里云对外提供的海量、安全、低成本、高可靠的云存储服务。使用 OSS，您可以通过网络随时存储和调用包括文本、图片、音频和视频等在内的各种结构化或非结构化数据文件。以下的术语为OSS相关的基本概念：</p>
+<ul>
+<li>Bucket，是一个用户用来管理所存储Object的存储空间。 每个用户可以拥有多个Bucket。Bucket的名称在OSS的范围内必须是全局唯一的，一旦创建之后无法修改名称。Bucket内部的Object数目是没有限制的。</li>
+<li>Object，是OSS存储数据的基本单元，称为OSS的对象，也被称为OSS的文件。根据不同的上传方式，Object的大小限制是不一样的。Object由元信息（Object Meta），用户数据（Data）和文件名（Key）组成。Object由一个在Bucket内部唯一的Key来标示。Object操作在OSS上具有原子性，操作要么成功要么失败，不会存在有中间状态的Object。OSS保证用户一旦上传完成之后读到的Object是完整的，OSS不会返回给用户一个只上传成功了部分的Object。分片上传最大支持48.8TB的Object，其他的上传方式最大支持5GB。</li>
+<li>Region，表示OSS的数据中心所在的区域，物理位置。 一旦指定之后就不允许更改，该Bucket下所有的Object都存储在对应的数据中心。</li>
+<li>Endpoint，表示OSS对外服务的访问域名。OSS以HTTP REST API的形式对外提供服务，当访问不同的Region的时候，需要不同的域名。</li>
+</ul>
+<p>​    用户可以通过调用API，在任何应用、任何时间、任何地点上传和下载数据，也可以通过阿里云Web控制台对数据进行简单的管理。目前阿里云OSS支持如下几种语言版本的SDK调用API：Python SDK，Java SDK，Android SDK，iOS SDK，JavaScript SDK，.NET SDK，PHP SDK，Ruby SDK，C SDK，Go SDK，Media-C SDK。本实验中主要介绍如何使用Python SDK调用OSS API实现文件的简单上传，下载和删除等操作。</p>
+<p>​    OSS作为对象存储提供商，常用的使用场景如下：</p>
+<ul>
+<li>适用于图片、音视频、日志等海量文件的存储，支持各种终端设备，Web网站程序和移动应用直接向OSS写入或读取数据，支持 <strong>流式写入</strong> 和 <strong>文件写入</strong> 两种方式。</li>
+</ul>
+<p><img src="https://edu.aliyun.com/lab/files/courses/afd734bef0c04ce6a192b8fe68acdb86/sections/f2da4e55518942deba29a1313363030d/content/images/course-afd734bef0c04ce6a192b8fe68acdb86-section-f2da4e55518942deba29a1313363030d-content-image-1471917948577-3Uppe2" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>开发者不仅可以直接使用OSS，利用BGP带宽，实现超低延时的数据直接下载；OSS也可以配合阿里云CDN加速服务，为图片、音视频、移动应用更新分发，提供最佳体验等场景。</li>
+</ul>
+<p><img src="https://edu.aliyun.com/lab/files/courses/afd734bef0c04ce6a192b8fe68acdb86/sections/f2da4e55518942deba29a1313363030d/content/images/course-afd734bef0c04ce6a192b8fe68acdb86-section-f2da4e55518942deba29a1313363030d-content-image-1471918081495-Gnzgjc" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ul>
+<li>上传文件到OSS后，可以配合媒体转码服务(MTS)，图片处理服务（IMG）进行云端的数据处理。</li>
+</ul>
+<p><img src="https://edu.aliyun.com/lab/files/courses/afd734bef0c04ce6a192b8fe68acdb86/sections/f2da4e55518942deba29a1313363030d/content/images/course-afd734bef0c04ce6a192b8fe68acdb86-section-f2da4e55518942deba29a1313363030d-content-image-1471918231345-ddwSNY" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="查看OSS环境"><a href="#查看OSS环境" class="headerlink" title="查看OSS环境"></a>查看OSS环境</h1><p>1.首先，查看本次实验提供的OSS存储环境。请通过云中沙箱 <strong>实验资源</strong> 提供的方式，请复制左侧的子用户名称 和 子用户密码，打开桌面上的Chromium浏览器。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651656.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在跳转的阿里云RAM登录界面，输入本次实验分配的 <strong>子用户名称</strong> 和 <strong>子用户密码</strong>。完成后，点击 <strong>登录</strong> ，访问阿里云管理控制台。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651703.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/469116e7c85c4f4b8a9b41042526da5e.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>2.进入控制台后在左侧导航栏中找到<strong>对象存储OSS，</strong>进入OSS管理控制台。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/37d75fe4ad54452d9ff8795cb47ea0d0.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.在OSS管理控制台的概览页面，点击Bucket列表，找到并点击与 <strong>实验资源</strong> 提供的 <strong>Bucket名称</strong> 一致的Bucket名，例如 <strong>lab-oss-897hd21</strong> ，进入Bucket的管理页面。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651911.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4.在 <strong>文件管理</strong> 页面中，进入 <strong>实验资源</strong> 分配的 <strong>Object 路径</strong> ，例如 <strong>S01099/u-xxxx</strong> ，查看到当前 OSS 的 Object 所在的路径 <strong>暂无数据</strong> 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651937.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/a82a7afa50654902aec6bfb8f9be3af8.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/261cbea8fd3140939eadaca06399f9c2.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="调用OSS-API上传小文件"><a href="#调用OSS-API上传小文件" class="headerlink" title="调用OSS API上传小文件"></a>调用OSS API上传小文件</h1><p>\1. OSS上传方式分为两类：简单上传和分块上传；其中，简单上传由于不支持断点续传，适合用于上传小文件；而分块上传支持断点续传，适合上传比较大的文件，一般超过100MB 的文件都推荐使用分块上传。 本小节中，使用OSS Python SDK 调用 OSS API，将用户本地的小文件上传到本次实验分配的 <strong>Object路径</strong> 中。 </p>
+<p>2.首先，远程登录到 <strong>OSS Python环境</strong> 的ECS服务器，请使用本实验提供的ECS服务器的 <strong>外网地址</strong> ，<strong>用户名</strong> 和 <strong>密码</strong> 。</p>
+<p><strong>说明：</strong>远程登录Linux系统ECS实例的详细步骤，请参考云中沙箱 <a target="_blank" rel="noopener" href="https://edu.aliyun.com/lab/help?menuId=2-0&docName=doc-remote-connect"><strong>帮助文档</strong></a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651689.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.登录到 ECS 服务器后，在使用 OSS API 进行文件上传和下载之前，用户需配置阿里云账号的 AccessKeyID， AccessKeySecret 和 Endpoint 信息（均可从 <strong>实验资源</strong> 获取），以便于通过 OSS 的权限验证。在 ECS 命令行中，使用命令 <strong>cd aliyun-lab</strong>  进入 aliyun-lab 目录。然后，使用命令 <strong>vim configure.json</strong> ，configure.json文件用于提供调用 OSS API 时所需的公共参数。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651282.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>按 <strong>i</strong> 键进入编辑状态，修改文件中如下的参数信息，完成后，键入 <strong>esc</strong> 退出编辑状态，并输入vim的编辑命令 <strong>:wq</strong> ，保存且退出。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><pre><code class="hljs abnf">id－参数值为本实验中，实验资源 分配的AK ID<span class="hljs-comment">;</span><br> <br>secret－参数值为本实验中，实验资源 分配的AK Secret<span class="hljs-comment">;</span><br> <br>endpoint－参数值为本实验中，实验资源 的“地域”对应的“外网Endpoint”数值。比如：提供的“地域”为“华东 <span class="hljs-number">1</span>(杭州)”，则选择“华东 <span class="hljs-number">1</span>(杭州)”的“外网Endpoint”。<br></code></pre></td></tr></table></figure>
+
+<p>OSS 地域与外网 Endpoint 的对应关系如下表：</p>
+<table>
+<thead>
+<tr>
+<th><strong>地域</strong></th>
+<th><strong>外网Endpoint</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>华东 1 (杭州)</td>
+<td>oss-cn-hangzhou.aliyuncs.com</td>
+</tr>
+<tr>
+<td>华东 2 (上海)</td>
+<td>oss-cn-shanghai.aliyuncs.com</td>
+</tr>
+<tr>
+<td>华北 1 (青岛)</td>
+<td>oss-cn-qingdao.aliyuncs.com</td>
+</tr>
+<tr>
+<td>华北 2 (北京)</td>
+<td>oss-cn-beijing.aliyuncs.com</td>
+</tr>
+<tr>
+<td>华南 1 (深圳)</td>
+<td>oss-cn-shenzhen.aliyuncs.com</td>
+</tr>
+</tbody></table>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/f7df218412e24bdd9852ca8f8ec7dce9.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4.完成 OSS 的基本配置信息后，在 aliyun-lab 路径下，执行命令 <strong>vim object_upload.py</strong> ，修改脚本文件 object_upload.py 。此脚本通过调用 OSS API，上传本地文件 <strong>(__file_name：本地文件路径)</strong> 到 bucket 中，并重命名 object <strong>(__object_name：Bucket中Object名称)。</strong></p>
+<p>在代码的 <strong>#调用OSS API的put_object()上传文件</strong> 下方，添加如下的代码，完成修改后，保存脚本并退出编辑页面。</p>
+<p>注意：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><span class="hljs-keyword">with</span> <span class="hljs-keyword">open</span>(__file_name,&#x27;rb&#x27;) <span class="hljs-keyword">as</span> fileobj:<br> <br>             bucket.put<span class="hljs-constructor">_object(<span class="hljs-params">__object_name</span>,<span class="hljs-params">fileobj</span>)</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651516.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>5.执行如下命令，运行脚本程序。将本地文件 <strong>lab.txt</strong> 上传到本实验分配 OSS bucket 的 Object 路径下，并重命名为 <strong>lab_object.txt</strong> 。</p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ceylon">python <span class="hljs-keyword">object</span><span class="hljs-number">_u</span>pload.py &lt;oss bucket名称&gt; lab.txt &lt;oss <span class="hljs-keyword">object</span>路径&gt;/lab<span class="hljs-number">_</span><span class="hljs-keyword">object</span>.txt<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：请删除 &lt;oss bucket名称&gt;，并修改为实验资源分配的OSS <strong>Bucket名称</strong> ；删除 <strong>&lt;oss object 路径&gt;</strong> ，并修改为实验资源分配的OSS <strong>Object路径</strong>。若没有使用本实验提供的Bucket 或 Object 路径，可能会导致未知错误。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/6b62ccea04f24e3dbbebab6b91dddf21.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>6.输入命令 cat lab.txt ，查看上传到OSS指定路径的文件内容：<strong>Hello first object!</strong> 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651222.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>7.返回 OSS 管理控制台，并进入 实验资源 分配的 Bucket 和该 Bucket 的Object 路径下，点击右上角的 ，刷新 Object 管理页面。此时，在 Object 径下，查看到通过Python SDK上传的文件 <strong>lab_object.txt</strong> 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651608.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="调用OSS-API下载小文件"><a href="#调用OSS-API下载小文件" class="headerlink" title="调用OSS API下载小文件"></a>调用OSS API下载小文件</h1><p>1.在真实的工作环境中，存储在 OSS 环境下的文件资源，可能由于业务需求，需要下载到本地，进行审计等。本小节将介绍如何将 OSS 中的对象文件通过 API 下载到本地服务器。</p>
+<p>2.返回 ECS 服务器访问终端，在 ECS 的 aliyun-lab 目录下，执行命令 vim object_download.py ，修改脚本文件object_download.py 。此脚本通过调用 OSS API，下载 OSS的 bucket 中名称为__object_name 的 object 到本地，并重命名为 __local_name 。在代码的 <strong>#调用OSS API的get_object_to_file()下载object</strong> 下方。添加如下的代码，完成修改后，保存脚本。</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">bucket.get<span class="hljs-constructor">_object_to_file(<span class="hljs-params">__object_name</span>,<span class="hljs-params">__local_name</span>)</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/aa02ed6267e745059a8e1b3248c78aba.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.执行如下命令，将 OSS 存储的文件 <strong>lab_object.txt</strong> 下载到本地,并重命名为 <strong>lab_local.txt</strong> 。下载成功后，执行命令 ls ，列出当前目录下所有的文件，可以看到文件lab_local.txt 已经保存在当前目录下。请注意替换 <strong>&lt;oss bucket 名称&gt;</strong> 和 <strong>&lt;oss object路径&gt;</strong> 为 <strong>实验资源</strong> 提供的信息。</p>
+<figure class="highlight bnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bnf">python object_download.py <span class="hljs-attribute">&lt;oss bucket 名称&gt;</span> <span class="hljs-attribute">&lt;ossobject路径&gt;</span>/lab_object.txt lab_local.txt<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651918.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4.执行命令 cat lab_local.txt 和 cat lab.txt ，分别查看原文件与下载后的文件，对比两个文件中的内容，可以发现两个文件中的内容一致，证明 object 下载并成功保存到本地。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651979.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="调用OSS-API删除Object"><a href="#调用OSS-API删除Object" class="headerlink" title="调用OSS API删除Object"></a>调用OSS API删除Object</h1><p>1.在真实的生产环境中，由于 OSS 主要用于存储对象文件等。因此，为了避免大量的垃圾文件存在，建议用户对垃圾资源进行清理，这样不仅可以节约资源也可以节约用户在存储服务中的开销。本小节中，用户将体验如何通过调用OSS API，清理垃圾 Object 资源。</p>
+<p>2.返回ECS服务器访问终端界面，然后，执行 vim object_delete.py ，修改脚本文件object_delete.py 。此脚本通过调用 OSS API ，删除 OSS Bucket 中的 object。在代码的 <strong>#调用OSS APIbatch_delete_objects()，批量删除objects</strong> 下方。添加如下的代码，完成修改后，保存脚本。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">result</span> <span class="hljs-operator">=</span>bucket.batch_delete_objects([__object_name])<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651571.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>  执行命令 python object_delete.py &lt;Bucket 名称&gt; &lt;Object路径&gt;/lab_object.txt 。删除 bucket 中的指定路径的 object 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651907.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.此时，浏览器返回OSS管理控制台的 <strong>Object管理</strong> 页面，并点击右上角的 <strong>刷新</strong> ，将会看到本次实验提供的 OSS 环境中，没有任何 Object 数据。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/189acc897c5a4782b853071e6b422f86.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>至此，完成本实验的全部操作，下一章中将对 OSS 的基础操作进行补充说明。</p>
+<h1 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h1><h2 id="创建OSS-Bucket"><a href="#创建OSS-Bucket" class="headerlink" title="创建OSS Bucket"></a>创建OSS Bucket</h2><p>1.在真实的生产工作环境中，用户在上传或者管理 OSS 中的存储文件之前，首先需要在 OSS 中创建一个 Bucket，也就是 OSS 的存储空间。</p>
+<p>2.在 ECS 服务器访问终端界面中，执行命令： cd aliyun-lab/ ，进入aliyun-lab/ 目录下。输入命令：vim bucket_create.py ，修改脚本文件 bucket_create.py 。修改创建 bucket 的 python 脚本。用户可以使用此脚本调用OSS 创建Bucket的 API。在代码的 <strong>#调用OSS API的create_bucket()创建bucket</strong> 下方。添加如下的代码，完成修改后，保存并退出。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">result</span> <span class="hljs-operator">=</span>bucket.create_bucket()<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：确保插入的代码，与上下文中非注释的代码缩进一致。否则运行脚本时会报错。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651339.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>执行命令：pythonbucket_create.py lab ，其中 <strong>lab</strong> 为用户自定义的 bucket 名称，运行脚本程序，创建一个新的bucket <strong>lab-xxxx</strong> 。</p>
+<p><strong>注意</strong>：创建的新bucket名称为：&lt;用户输入的自定义bucket名称&gt;－&lt; Access Key ID信息&gt;。这是由于 OSS bucket 全局唯一，避免bucket名称已存在而导致创建错误,此脚本会自动将 Access KeyID 信息，作为 bucket 名称的后缀。输入 bucket 名称时，必须符合如下的 Bucket 命名规则，否则，无法成功创建 bucket。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651736.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.访问OSS控制台，可以在页面中看到新建的 bucket。同时，在右侧的页面中显示当前 bucket 里面还没有保存任何数据。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/6a6738f5cef949e7999e51ea2d31235d.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4.用户不仅可以通过如上的执行脚本的方式创建 Bucket ，也可以通过管理控制台新建 Bucket 。在阿里云 OSS 管理控制台，点击 Bucket 栏右侧的 <strong>新建</strong> ，弹出 Bucket 创建对话框。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/35968af55bc446c3b210f50d0600ed12.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在弹出的对话框中，输入如下参数信息，完成后，点击确定。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-keyword">BucketName：aliyunlab004</span><br><span class="hljs-keyword"></span>地域：华东<span class="hljs-number">2</span><br>同城冗余存储：关闭<br>版本控制：不开通<br>读写权限：私有<br>服务端加密方式：无<br>实时日志查询：不开通<br>定时备份：不开通<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651672.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651728.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><strong>注意</strong>：请遵循 Bucket 的命名规则，且 Bucket 名称全局唯一。</p>
+<h2 id="使用OSS管理控制台上传文件"><a href="#使用OSS管理控制台上传文件" class="headerlink" title="使用OSS管理控制台上传文件"></a>使用OSS管理控制台上传文件</h2><p>复制链接至浏览器中下载</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-symbol">https:</span>//university-labfileapp.oss-cn-hangzhou.aliyuncs.com/<span class="hljs-variable">%E4</span><span class="hljs-variable">%BD</span><span class="hljs-variable">%BF</span><span class="hljs-variable">%E7</span><span class="hljs-variable">%94</span><span class="hljs-variable">%A8</span><span class="hljs-variable">%E4</span><span class="hljs-variable">%BA</span><span class="hljs-variable">%91</span><span class="hljs-variable">%E5</span><span class="hljs-variable">%AD</span><span class="hljs-variable">%98</span><span class="hljs-variable">%E5</span><span class="hljs-variable">%82</span><span class="hljs-variable">%A8OSS</span><span class="hljs-variable">%E7</span><span class="hljs-variable">%9</span>A<span class="hljs-variable">%84</span>API<span class="hljs-variable">%E4</span><span class="hljs-variable">%B8</span><span class="hljs-variable">%8</span>A<span class="hljs-variable">%E4</span><span class="hljs-variable">%BC</span><span class="hljs-variable">%A0</span><span class="hljs-variable">%E5</span><span class="hljs-variable">%92</span><span class="hljs-variable">%8</span>C<span class="hljs-variable">%E4</span><span class="hljs-variable">%B8</span><span class="hljs-variable">%8</span>B<span class="hljs-variable">%E8</span><span class="hljs-variable">%BD</span><span class="hljs-variable">%BD</span><span class="hljs-variable">%E6</span><span class="hljs-variable">%96</span><span class="hljs-variable">%87</span><span class="hljs-variable">%E4</span><span class="hljs-variable">%BB</span><span class="hljs-variable">%B6</span>/<span class="hljs-variable">%E9</span><span class="hljs-variable">%BB</span><span class="hljs-variable">%91</span><span class="hljs-variable">%E7</span><span class="hljs-variable">%8</span>C<span class="hljs-variable">%AB.jpg</span><br></code></pre></td></tr></table></figure>
+
+<p>1.用户不仅可以通过 OSS API 上传本地文件到 OSS 服务指定 Bucket，也可以通过管理控制台上传本地文件到 OSS 指定 Bucket 的目录下。</p>
+<p>2.首先，访问OSS管理控制台。点击页面顶部导航栏的 <strong>产品与服务</strong>，然后，搜索<strong>对象存储OSS，点击</strong>进入OSS管理页面。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/9238c4ae3e134eefbc355cfcf3ddaabf.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.在 OSS 管理控制台的概览页面中，点击与 <strong>实验资源</strong> 分配的 <strong>Bucket名称</strong> 相同的 Bucket。例如：实验资源分配的 OSS <strong>Bucket名称</strong> 为 <strong>lab-oss-897hd21</strong> ，则点击 <strong>lab-oss-897hd21</strong> ，找到左侧页面的 <strong>文件管理</strong> ，在文件管理页面找到实验文件夹 <strong>S01099</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651410.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651855.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在 S01121 的文件夹中，点击云中沙箱分配的 <strong>二级Object路径</strong> ，也就是，若用户分配的 <strong>Object路径</strong> 为 <strong>S01099/u-xxx</strong> ，则点击 <strong>u-xxx</strong> ,进入 S01099/u-xxx Object 路径中。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651246.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651360.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在 Object 管理的列表中，用户可以在第一行中，查看到当前 Object 路径。此时，<strong>实验资源</strong> 分配的 Object 路径下，没有任何数据。点击 <strong>上传文件</strong> ，弹出上传文件的对话框，选择上传文件的本地路径。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/3aa7c78f622f43cba9fbbef2d3f8a090.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>点击<strong>扫描文件</strong>，进入本地上传文件路径，然后，选中文件，并点击打开。将本地文件上传到 OSS 管理控制台。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651280.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>说明：点击本节左上角的附件部分，就可以下载本节中使用的图片黑猫.jpg 。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/f614c75c7eb348658d1929c6e53b034f.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>可以在控制台看到名称为黑猫的.jpg的文件已经上传，点击上传文件</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651718.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>点击上传后，可在任务列表中看到上传记录。</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651256.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4.上传成功后，可以在 <strong>文件管理</strong> 页面看到该图片。</p>
+<p><strong>注意</strong>：在网络不稳定或者上传文件较大的情况下，建议学员使用OSS 断点续传的方式，具体实现方式，请参考自助实验 <a target="_blank" rel="noopener" href="https://edu.cloudcare.cn/courses/a342a99294ed4efcb7301495d777bd98/detail"> </a><a target="_blank" rel="noopener" href="https://edu.cloudcare.cn/courses/a342a99294ed4efcb7301495d777bd98/detail">SL006 </a><a target="_blank" rel="noopener" href="https://edu.cloudcare.cn/courses/a342a99294ed4efcb7301495d777bd98/detail">使用OSS处理大文件之断点续传</a> 。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/15491e96e39147ed9d6f4a4790e0890f.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="使用OSS管理控制台查看Object文件"><a href="#使用OSS管理控制台查看Object文件" class="headerlink" title="使用OSS管理控制台查看Object文件"></a>使用OSS管理控制台查看Object文件</h2><p>1.完成上传后，用户可以在 OSS 管理控制台查看上传的图片信息。点击<strong>黑猫.jpg</strong> ，页面右侧弹出预览页面，用户可以查看到上传的图片信息。 若希望其他用户在某个时间段，可以查看图片信息。点击 <strong>黑猫.jpg</strong> 右侧的 <strong>复制url ,</strong> 默认链接的有效时间为3600秒，用户可以自定义有效时间。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651615.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/186536c60b6b4732960c11478a1190ce.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>2.在浏览器中，打开一个空白页面，并将 <strong>Object地址</strong> 粘贴到地址栏，就可以下载该图片。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651079.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="使用OSS管理控制台删除Object文件"><a href="#使用OSS管理控制台删除Object文件" class="headerlink" title="使用OSS管理控制台删除Object文件"></a>使用OSS管理控制台删除Object文件</h2><p>1.用户不仅可以通过调用 OSS API 删除文件，也可以通过 OSS管理控制台删除 OSS Bucket 中存储的文件。</p>
+<p>2.返回OSS管理控制台，在<strong>Object管理</strong>页面，点击<strong>黑猫.jpg</strong>右侧的<strong>更多</strong>，选择<strong>彻底删除</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651513.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>在弹出的提示对话框中，点击 <strong>确定</strong>，则删除 <strong>黑猫.jpg</strong> 文件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651802.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.此时，Object路径下，没有 <strong>黑猫.jpg</strong> 文件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651832.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="删除OSS-Bucket"><a href="#删除OSS-Bucket" class="headerlink" title="删除OSS Bucket"></a>删除OSS Bucket</h2><p>1.由于一个阿里云账号最多仅能创建 30 个 Bucket，因此，在真实的生产环境中，若某个 Bucket 不再使用，强烈建议用户删除此 Bucket。但是，在删除此 Bucket 前，请务必清空 Bucket 中的所有 Object 以及 <strong>碎片</strong>。若 Bucket 不为空，则无法删除 Bucket。本小节将介绍如何通过调用 OSS API 删除一个空的 OSS Bucket。</p>
+<p><strong>说明：</strong>本实验仅提供删除的Python脚本文件，但不提供实验环境。</p>
+<p>2.在 ECS 服务器访问终端界面中，执行命令：cd aliyun-lab/ ，进入aliyun-lab/目录下，输入命令：vim bucket_delete.py ，修改脚本文件bucket_delete.py 。修改删除bucket的python 脚本。用户可以使用此脚本调用 OSS 删除Bucket的 API。在代码的 <strong>#调用delete_bucket()删除bucket</strong> 下方。添加如下的代码，完成修改后，保存脚本。</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode">bucket.delete_bucket<span class="hljs-comment">()</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651307.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3.执行命令 python bucket_delete.py &lt;Bucket 名称&gt; ，例如，某空 Bucket 名为 <strong>lab-xxxx</strong> 。运行结束，提示成功删除 bucket 。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651328.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4.访问阿里云 OSS 管理控制台，并在 <strong>概览</strong> 页面中，没有上一小节中创建的 Bucket，证明 Bucket 已删除。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651992.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>5.用户不仅可以通过调用 API 删除 Bucket，也可以在阿里云 OSS 管理控制台直接删除 Bucket。点击对应的bucket进入bucket控制台界面，左侧的基础设置。</p>
+<p>滑动界面到最下方，可以看到删除bucket，点击删除bucket。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/d1ee510b778a420cb315e19f34a27d2c.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在弹出删除提示对话框中，点击 <strong>确定</strong> ，删除 Bucket。</p>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>  <strong>问：</strong>在第 2 章第 3 小节 <strong>调用OSS API上传小文件</strong> 中，执行 python bucket_create.py lab 报错。</p>
+<p>  答：请检查 configure.json 文件，其中的 <strong>id</strong> ， <strong>secret</strong> 参数值必须为 <strong>实验资源</strong> 提供的 <strong>AK ID</strong> 和 <strong>AK Secret</strong> ；参数 <strong>endpoint</strong> 使用的 <strong>地域</strong> 必须与 <strong>实验资源</strong> 提供的 <strong>地域</strong> 相同。若如上配置信息正确，仍旧报错。请发送报错的截图给云中沙箱客服(架构云:培训)，届时，会有沙箱的工作人员为您解答问题。</p>
+<p><strong>说明：我们会不定期整理并更新用户的常见问题，供学员参考和学习。</strong></p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Clouder/">Clouder</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%BD%BF%E7%94%A8%E5%88%9D%E4%BD%93%E9%AA%8C/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Clouder-负载均衡使用初体验</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E4%BA%91%E5%82%A8%E5%AD%98OSS%E4%BD%BF%E7%94%A8%E5%88%9D%E4%BD%93%E9%AA%8C/">
+                        <span class="hidden-mobile">Clouder-云储存OSS使用初体验</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

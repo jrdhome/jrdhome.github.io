@@ -1,0 +1,678 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="线性规划模型标准型规划问题  方法一：scipy库求解12345678from scipy import optimizeimport numpy as np#求解函数res &#x3D; optimize.linprog(c,A,b,Aeq,beq,LB,UB,X0,OPTIONS)#目标函数最小值print(res.fun)#最优解print(rres.x)   c：目标函数的系数向量。 A：约束条件的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数学建模-数学规划类基本问题">
+<meta property="og:url" content="http://example.com/2023/07/30/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-%E6%95%B0%E5%AD%A6%E8%A7%84%E5%88%92%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="线性规划模型标准型规划问题  方法一：scipy库求解12345678from scipy import optimizeimport numpy as np#求解函数res &#x3D; optimize.linprog(c,A,b,Aeq,beq,LB,UB,X0,OPTIONS)#目标函数最小值print(res.fun)#最优解print(rres.x)   c：目标函数的系数向量。 A：约束条件的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301721957.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301724006.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301745181.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311336775.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311441376.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311428663.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311533306.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311534896.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311517522.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311544349.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311545151.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311546557.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311546836.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311556782.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311558739.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311558538.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311623598.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311623088.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311624814.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311624343.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311646934.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311646497.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311646517.png">
+<meta property="article:published_time" content="2023-07-30T17:03:09.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.351Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="数学建模">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301721957.png">
+  
+  
+  <title>数学建模-数学规划类基本问题 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="数学建模-数学规划类基本问题">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-07-30 17:03" pubdate>
+        July 30, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      49 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">数学建模-数学规划类基本问题</h1>
+            
+            <div class="markdown-body">
+              <h1 id="线性规划模型"><a href="#线性规划模型" class="headerlink" title="线性规划模型"></a>线性规划模型</h1><h2 id="标准型规划问题"><a href="#标准型规划问题" class="headerlink" title="标准型规划问题"></a>标准型规划问题</h2><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301721957.png" srcset="/img/loading.gif" lazyload alt="屏幕截图 2023-07-30 171901" style="zoom: 80%;" />
+
+<h3 id="方法一：scipy库求解"><a href="#方法一：scipy库求解" class="headerlink" title="方法一：scipy库求解"></a>方法一：scipy库求解</h3><figure class="highlight coffeescript"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><pre><code class="hljs coffeescript"><span class="hljs-keyword">from</span> scipy <span class="hljs-keyword">import</span> optimize<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br><span class="hljs-comment">#求解函数</span><br>res = optimize.linprog(c,A,b,Aeq,beq,LB,UB,X0,OPTIONS)<br><span class="hljs-comment">#目标函数最小值</span><br><span class="hljs-built_in">print</span>(res.fun)<br><span class="hljs-comment">#最优解</span><br><span class="hljs-built_in">print</span>(rres.x)<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>c</code>：目标函数的系数向量。</li>
+<li><code>A</code>：约束条件的系数矩阵。</li>
+<li><code>b</code>：约束条件的右侧常数向量。</li>
+<li><code>Aeq</code>：等式约束条件的系数矩阵。</li>
+<li><code>beq</code>：等式约束条件的右侧常数向量。</li>
+<li><code>LB</code>：变量下界向量。</li>
+<li><code>UB</code>：变量上界向量。</li>
+<li><code>X0</code>：初始解向量。</li>
+<li><code>OPTIONS</code>：一个字典，包含各种控制求解器的选项。</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li>不等式约束条件是 小于等于号（ &lt;= ）</li>
+<li>如果<code>c</code>中的所有元素都是&gt;=0，则函数求解最小值；如果<code>c</code>中的所有元素都是&lt;=0，则函数求解最大值。</li>
+</ul>
+<p>例1：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301724006.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus">from scipy import optimize<br>import numpy as np<br>#确定c,A,<span class="hljs-selector-tag">b</span>,Aeq,beq<br>c = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[2,3,-5]</span>)		#目标函数系数<br>A = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[[-2,5,-1]</span>,<span class="hljs-selector-attr">[1,3,1]</span>])  #不等式约束左边系数矩阵<br><span class="hljs-selector-tag">b</span> = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[-10,12]</span>)			#不等式约束右边系数矩阵<br>Aeq = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[[1,1,1]</span>])		#等式的左边系数矩阵<br>beq = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[7]</span>)				#等式的右边系数矩阵<br>#求-<span class="hljs-number">1</span><br>res = optimize<span class="hljs-selector-class">.linprog</span>(-c,A,<span class="hljs-selector-tag">b</span>,Aeq,beq)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(res)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>上述代码运行结果：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span>: -14.571428571428571    	#目标函数最小值</span><br>x: [ <span class="hljs-number">6.429e+00</span>  <span class="hljs-number">5.714e-01</span>  <span class="hljs-number">0.000e+00</span>]	#最优解<br></code></pre></td></tr></table></figure>
+
+<p>使用方法二求解：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pulp<br>z = [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, -<span class="hljs-number">5</span>]         <span class="hljs-comment">#目标函数系数矩阵</span><br><span class="hljs-comment">#约束</span><br>a = [[-<span class="hljs-number">2</span>,<span class="hljs-number">5</span>, -<span class="hljs-number">1</span>], [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>]]<br>b = [-<span class="hljs-number">10</span>,<span class="hljs-number">12</span>]<br>eqa = [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>]<br>eqb = [<span class="hljs-number">7</span>]<br><span class="hljs-comment">#确定最大化最小化问题，最大化只要把Min改成Max即可</span><br>m = pulp.LpProblem(sense=pulp.LpMaximize)<br><span class="hljs-comment">#定义三个变量放到列表中</span><br>x = [pulp.LpVariable(<span class="hljs-string">f&#x27;x<span class="hljs-subst">&#123;i&#125;</span>&#x27;</span>, lowBound=<span class="hljs-number">0</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]]<br><span class="hljs-comment">#定义目标函数，lpDot可以将两个列表的对应为相乘再加和</span><br><span class="hljs-comment">#相当于z[0] * x[0] + z[1] * x[1] + z[2] * x[2]</span><br>m +=pulp.lpDot(z,x)<br><span class="hljs-comment">#设置约束条件</span><br><span class="hljs-comment">#不等式约束条件</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(a)):<br>    m += (pulp.lpDot(a[i],x) &lt;= b[i])<br><span class="hljs-comment">#等式约束条件</span><br>m += pulp.lpDot(eqa, x) == eqb<br><span class="hljs-comment">#求解</span><br>m.solve()<br><span class="hljs-comment">#输出结果</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;优化结果：<span class="hljs-subst">&#123;pulp.value(m.objective)&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;参数取值：<span class="hljs-subst">&#123;[pulp.value(var) <span class="hljs-keyword">for</span> var <span class="hljs-keyword">in</span> x]&#125;</span>&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码运行结果为：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dns">优化结果：<span class="hljs-number">14.57142851</span><br>参数取值：[<span class="hljs-number">6.4285714</span>, <span class="hljs-number">0.57142857</span>, <span class="hljs-number">0</span>.<span class="hljs-number">0</span>]<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="方法二：pulp库求解"><a href="#方法二：pulp库求解" class="headerlink" title="方法二：pulp库求解"></a>方法二：pulp库求解</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301745181.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> pulp<br>z = [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>]         <span class="hljs-comment">#目标函数系数矩阵</span><br><span class="hljs-comment">#约束</span><br>a = [[<span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">2</span>], [<span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">0</span>]]<br>b = [<span class="hljs-number">8</span>,<span class="hljs-number">6</span>]<br>eqa = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>]<br>eqb = [<span class="hljs-number">101</span>]<br><span class="hljs-comment">#确定最大化最小化问题，最大化只要把Min改成Max即可</span><br>m = pulp.LpProblem(sense=pulp.LpMaximize)<br><span class="hljs-comment">#定义三个变量放到列表中</span><br>x = [pulp.LpVariable(<span class="hljs-string">f&#x27;x<span class="hljs-subst">&#123;i&#125;</span>&#x27;</span>, lowBound=<span class="hljs-number">0</span>) <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]]<br><span class="hljs-comment">#定义目标函数，lpDot可以将两个列表的对应为相乘再加和</span><br><span class="hljs-comment">#相当于z[0] * x[0] + z[1] * x[1] + z[2] * x[2]</span><br>m +=pulp.lpDot(z,x)<br><span class="hljs-comment">#设置约束条件</span><br><span class="hljs-comment">#不等式约束条件</span><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(a)):<br>    m += (pulp.lpDot(a[i],x) &gt;= b[i])<br><span class="hljs-comment">#等式约束条件</span><br>m += pulp.lpDot(eqa, x) == eqb<br><span class="hljs-comment">#求解</span><br>m.solve()<br><span class="hljs-comment">#输出结果</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;优化结果：<span class="hljs-subst">&#123;pulp.value(m.objective)&#125;</span>&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">f&#x27;参数取值：<span class="hljs-subst">&#123;[pulp.value(var) <span class="hljs-keyword">for</span> var <span class="hljs-keyword">in</span> x]&#125;</span>&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>上述代码运行结果：</p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog">优化结果：<span class="hljs-number">202</span>.<span class="hljs-number">0</span><br>参数取值：<span class="hljs-string">[101.0, 0.0, 0.0]</span><br></code></pre></td></tr></table></figure>
+
+<p>使用方法一求解本题：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus">from scipy import optimize<br>import numpy as np<br>#确定c,A,<span class="hljs-selector-tag">b</span>,Aeq,beq<br>c = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[2,3,1]</span>)		#目标函数系数<br>A = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[[-1,-4,-2]</span>,<span class="hljs-selector-attr">[-3,-2,0]</span>])  #不等式约束左边系数矩阵<br><span class="hljs-selector-tag">b</span> = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[-8,-6]</span>)			#不等式约束右边系数矩阵<br>Aeq = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[[1,2,4]</span>])		#等式的左边系数矩阵<br>beq = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[101]</span>)				#等式的右边系数矩阵<br>#求解<br>res = optimize<span class="hljs-selector-class">.linprog</span>(-c,A,<span class="hljs-selector-tag">b</span>,Aeq,beq,method=<span class="hljs-string">&#x27;highs&#x27;</span>)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(res)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>上述代码运行结果：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span>: -202.0</span><br>x: [ <span class="hljs-number">1.010e+02</span>  <span class="hljs-number">0.000e+00</span>  <span class="hljs-number">0.000e+00</span>]<br></code></pre></td></tr></table></figure>
+
+<h3 id="方法三：cvxpy库求解"><a href="#方法三：cvxpy库求解" class="headerlink" title="方法三：cvxpy库求解"></a>方法三：cvxpy库求解</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311336775.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">import</span> cvxpy as cp<br><span class="hljs-attribute">x</span>=cp.Variable((<span class="hljs-number">5</span>,<span class="hljs-number">4</span>), pos=True)    #pos=True表示其元素均为正数<br><span class="hljs-attribute">obj</span>=cp.Maximize(<span class="hljs-number">1</span>.<span class="hljs-number">15</span>*x[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]+<span class="hljs-number">1</span>.<span class="hljs-number">40</span>*x[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]+<span class="hljs-number">1</span>.<span class="hljs-number">25</span>*x[<span class="hljs-number">2</span>,<span class="hljs-number">1</span>]+<span class="hljs-number">1</span>.<span class="hljs-number">06</span>*x[<span class="hljs-number">4</span>,<span class="hljs-number">3</span>])<br><span class="hljs-attribute">cons</span>=[x[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]+x[<span class="hljs-number">0</span>,<span class="hljs-number">3</span>]==<span class="hljs-number">100000</span>,<br>      <span class="hljs-attribute">x</span>[<span class="hljs-number">1</span>,<span class="hljs-number">0</span>]+x[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]+x[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>]==<span class="hljs-number">1</span>.<span class="hljs-number">06</span>*x[<span class="hljs-number">0</span>,<span class="hljs-number">3</span>],<br>      <span class="hljs-attribute">x</span>[<span class="hljs-number">2</span>,<span class="hljs-number">0</span>]+x[<span class="hljs-number">2</span>,<span class="hljs-number">1</span>]+x[<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]==<span class="hljs-number">1</span>.<span class="hljs-number">15</span>*x[<span class="hljs-number">0</span>,<span class="hljs-number">0</span>]+<span class="hljs-number">1</span>.<span class="hljs-number">06</span>*x[<span class="hljs-number">1</span>,<span class="hljs-number">3</span>],<br>      <span class="hljs-attribute">x</span>[<span class="hljs-number">3</span>,<span class="hljs-number">0</span>]+x[<span class="hljs-number">3</span>,<span class="hljs-number">3</span>]==<span class="hljs-number">1</span>.<span class="hljs-number">15</span>*x[<span class="hljs-number">1</span>,<span class="hljs-number">0</span>]+<span class="hljs-number">1</span>.<span class="hljs-number">06</span>*x[<span class="hljs-number">2</span>,<span class="hljs-number">3</span>],<br>      <span class="hljs-attribute">x</span>[<span class="hljs-number">4</span>,<span class="hljs-number">3</span>]==<span class="hljs-number">1</span>.<span class="hljs-number">15</span>*x[<span class="hljs-number">2</span>,<span class="hljs-number">0</span>]+<span class="hljs-number">1</span>.<span class="hljs-number">06</span>*x[<span class="hljs-number">3</span>,<span class="hljs-number">3</span>],<br>      <span class="hljs-attribute">x</span>[<span class="hljs-number">2</span>,<span class="hljs-number">1</span>]&lt;=<span class="hljs-number">40000</span>, x[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>]&lt;=<span class="hljs-number">30000</span>]<br><span class="hljs-attribute">prob</span>=cp.Problem(obj, cons)<br><span class="hljs-attribute">prob</span>.solve(solver=&#x27;OSQP&#x27;)<br><span class="hljs-attribute">print</span>(<span class="hljs-string">&quot;最优值为：&quot;</span>, prob.value)<br><span class="hljs-attribute">print</span>(<span class="hljs-string">&quot;最优解为：&quot;</span>, x.value)<br></code></pre></td></tr></table></figure>
+
+<p>输出结果为：</p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs subunit">最优值为： 143749.99999655166<br>最优解为： [[5.75675630e<span class="hljs-string">+04</span> 4.77996601e<span class="hljs-string">+03</span> 4.77996601e<span class="hljs-string">+03</span> 4.24324370e<span class="hljs-string">+04</span>]<br> [1.49783832e<span class="hljs-string">+04</span> 4.77996601e<span class="hljs-string">+03</span> 3.00000000e<span class="hljs-string">+04</span> 3.72022324e<span class="hljs-string">-05</span>]<br> [1.64696307e<span class="hljs-string">+04</span> 4.00000000e<span class="hljs-string">+04</span> 4.77996601e<span class="hljs-string">+03</span> 9.73306683e<span class="hljs-string">+03</span>]<br> [2.75421915e<span class="hljs-string">+04</span> 4.77996601e<span class="hljs-string">+03</span> 4.77996601e<span class="hljs-string">+03</span> 3.45246627e<span class="hljs-string">-05</span>]<br> [4.77996601e<span class="hljs-string">+03</span> 4.77996601e<span class="hljs-string">+03</span> 4.77996601e<span class="hljs-string">+03</span> 1.89400753e<span class="hljs-string">+04</span>]]<br></code></pre></td></tr></table></figure>
+
+<h2 id="运输问题"><a href="#运输问题" class="headerlink" title="运输问题"></a>运输问题</h2><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311441376.png" srcset="/img/loading.gif" lazyload style="zoom: 67%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311428663.png" srcset="/img/loading.gif" lazyload style="zoom:67%;" />
+
+<p>data4_5_3的文件如图：</p>
+<table>
+<thead>
+<tr>
+<th>6</th>
+<th>2</th>
+<th>6</th>
+<th>7</th>
+<th>4</th>
+<th>2</th>
+<th>5</th>
+<th>9</th>
+<th>60</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4</td>
+<td>9</td>
+<td>5</td>
+<td>3</td>
+<td>8</td>
+<td>5</td>
+<td>8</td>
+<td>2</td>
+<td>55</td>
+</tr>
+<tr>
+<td>5</td>
+<td>2</td>
+<td>1</td>
+<td>9</td>
+<td>7</td>
+<td>4</td>
+<td>3</td>
+<td>3</td>
+<td>51</td>
+</tr>
+<tr>
+<td>7</td>
+<td>6</td>
+<td>7</td>
+<td>3</td>
+<td>9</td>
+<td>2</td>
+<td>7</td>
+<td>1</td>
+<td>43</td>
+</tr>
+<tr>
+<td>2</td>
+<td>3</td>
+<td>9</td>
+<td>5</td>
+<td>7</td>
+<td>2</td>
+<td>6</td>
+<td>5</td>
+<td>41</td>
+</tr>
+<tr>
+<td>5</td>
+<td>5</td>
+<td>2</td>
+<td>2</td>
+<td>8</td>
+<td>1</td>
+<td>4</td>
+<td>3</td>
+<td>52</td>
+</tr>
+<tr>
+<td>35</td>
+<td>37</td>
+<td>22</td>
+<td>32</td>
+<td>41</td>
+<td>32</td>
+<td>43</td>
+<td>38</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>代码如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs routeros">import cvxpy as cp<br>import pandas as pd<br><span class="hljs-attribute">data</span>=pd.read_excel(&quot;data4_5_3.xlsx&quot;, <span class="hljs-attribute">header</span>=None)<br><span class="hljs-attribute">data</span>=data.values<br><span class="hljs-attribute">c</span>=data[:-1, :-1]<br><span class="hljs-attribute">d</span>=data[-1, :-1]<br><span class="hljs-attribute">e</span>=data[:-1, -1]<br><span class="hljs-attribute">x</span>=cp.Variable((6,8), <span class="hljs-attribute">pos</span>=<span class="hljs-literal">True</span>)<br><span class="hljs-attribute">obj</span>=cp.Minimize(cp.sum(cp.multiply(c,x)))<br>con= [cp.sum(x, <span class="hljs-attribute">axis</span>=0)==d,<br>      cp.sum(x, <span class="hljs-attribute">axis</span>=1)&lt;=e]<br>prob = cp.Problem(obj, con)<br>prob.solve(<span class="hljs-attribute">solver</span>=<span class="hljs-string">&#x27;OSQP&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;最优值为:&quot;</span>, prob.value)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;最优解为：\n&quot;</span>, x.value)<br><span class="hljs-attribute">xd</span>=pd.DataFrame(x.value)<br>xd.to_excel(<span class="hljs-string">&quot;data4_5_4.xlsx&quot;</span>)          #数据写入Excel文件，便于做表使用<br></code></pre></td></tr></table></figure>
+
+<h1 id="整数规划模型"><a href="#整数规划模型" class="headerlink" title="整数规划模型"></a>整数规划模型</h1><h2 id="背包问题"><a href="#背包问题" class="headerlink" title="背包问题"></a>背包问题</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311533306.png" srcset="/img/loading.gif" lazyload></p>
+<p>总结出的数学模型为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311534896.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="指派问题"><a href="#指派问题" class="headerlink" title="指派问题"></a>指派问题</h2><p>在指派问题中，我们通常有n个工人或任务，每个工人或任务都有一个特定的能力或收益。我们要将这些工人或任务分配到不同的项目中，以确定每个项目由哪个工人或任务负责。这个问题的目标是找到一个最优的分配方案，使得总成本最小，其中成本可以包括工人的工资、任务的耗时、资源消耗等。</p>
+<p>指派问题通常使用线性规划或图论方法进行求解。其中，线性规划方法通常用于解决具有特定限制条件的指派问题，例如要求特定工人完成特定任务等。而图论方法则用于解决没有特定限制条件的指派问题，例如最小生成树问题和最短路径问题等。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311517522.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stylus">from scipy<span class="hljs-selector-class">.optimize</span> import linear_sum_assignment<br>import numpy as np<br>cost = np<span class="hljs-selector-class">.array</span>(<span class="hljs-selector-attr">[[25,29,31,42]</span>,<span class="hljs-selector-attr">[39,38,26,20]</span>,<span class="hljs-selector-attr">[34,27,28,40]</span>,<span class="hljs-selector-attr">[24,42,36,23]</span>])<br>row_ind,col_ind = <span class="hljs-built_in">linear_sum_assignment</span>(cost)<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(row_ind)</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(col_ind)</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(cost[row_ind,col_ind])</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(cost[row_ind,col_ind].sum()</span></span>)<br></code></pre></td></tr></table></figure>
+
+<h2 id="旅行商问题"><a href="#旅行商问题" class="headerlink" title="旅行商问题"></a>旅行商问题</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311544349.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311545151.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311546557.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311546836.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="整数规划例题"><a href="#整数规划例题" class="headerlink" title="整数规划例题"></a>整数规划例题</h2><h3 id="eg1"><a href="#eg1" class="headerlink" title="eg1."></a>eg1.</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311556782.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311558739.png" srcset="/img/loading.gif" lazyload></p>
+<p>该问题数据模型为：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311558538.png" srcset="/img/loading.gif" lazyload></p>
+<p>Python代码如下：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs stylus">import cvxpy as cp<br>x=cp<span class="hljs-selector-class">.Variable</span>(<span class="hljs-number">6</span>, integer=True)<br>obj=cp<span class="hljs-selector-class">.Minimize</span>(<span class="hljs-built_in">sum</span>(x))<br>cons=<span class="hljs-selector-attr">[x[0]</span>+x<span class="hljs-selector-attr">[5]</span>&gt;=<span class="hljs-number">35</span>, x<span class="hljs-selector-attr">[0]</span>+x<span class="hljs-selector-attr">[1]</span>&gt;=<span class="hljs-number">40</span>,<br>      x<span class="hljs-selector-attr">[1]</span>+x<span class="hljs-selector-attr">[2]</span>&gt;=<span class="hljs-number">50</span>, x<span class="hljs-selector-attr">[2]</span>+x<span class="hljs-selector-attr">[3]</span>&gt;=<span class="hljs-number">45</span>,<br>      x<span class="hljs-selector-attr">[3]</span>+x<span class="hljs-selector-attr">[4]</span>&gt;=<span class="hljs-number">55</span>, x<span class="hljs-selector-attr">[4]</span>+x<span class="hljs-selector-attr">[5]</span>&gt;=<span class="hljs-number">30</span>,<br>      x&gt;=<span class="hljs-number">0</span>]<br>prob=cp<span class="hljs-selector-class">.Problem</span>(obj, cons)<br>prob<span class="hljs-selector-class">.solve</span>()<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;最优值为：&quot;</span>, prob.value)</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&quot;最优解为：&quot;</span>, x.value)</span></span><br></code></pre></td></tr></table></figure>
+
+<h3 id="eg2"><a href="#eg2" class="headerlink" title="eg2."></a>eg2.</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311623598.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311623088.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311624814.png" srcset="/img/loading.gif" lazyload alt="屏幕截图 2023-07-31 162036"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311624343.png" srcset="/img/loading.gif" lazyload alt="屏幕截图 2023-07-31 162202"></p>
+<p>data4_10.txt内容如下：</p>
+<table>
+<thead>
+<tr>
+<th>15</th>
+<th>13.8</th>
+<th>12.5</th>
+<th>11</th>
+<th>14.3</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>14.5</td>
+<td>14</td>
+<td>13.2</td>
+<td>10.5</td>
+<td>15</td>
+</tr>
+<tr>
+<td>13.8</td>
+<td>13</td>
+<td>12.8</td>
+<td>11.3</td>
+<td>14.6</td>
+</tr>
+<tr>
+<td>14.7</td>
+<td>13.6</td>
+<td>13</td>
+<td>11.6</td>
+<td>14</td>
+</tr>
+</tbody></table>
+<p>Python代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> cvxpy <span class="hljs-keyword">as</span> cp<br><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np<br>c = np.loadtxt(<span class="hljs-string">&#x27;data4_10.txt&#x27;</span>)<br>x = cp.Variable((<span class="hljs-number">4</span>,<span class="hljs-number">5</span>), integer=<span class="hljs-literal">True</span>)  <span class="hljs-comment">#定义决策变量</span><br>obj = cp.Minimize(cp.<span class="hljs-built_in">sum</span>(cp.multiply(c,x)))    <span class="hljs-comment">#构造目标函数</span><br>cons = [<span class="hljs-number">0</span>&lt;=x, x&lt;=<span class="hljs-number">1</span>, cp.<span class="hljs-built_in">sum</span>(x, axis=<span class="hljs-number">0</span>)==<span class="hljs-number">1</span>,<br>        cp.<span class="hljs-built_in">sum</span>(x, axis=<span class="hljs-number">1</span>)&lt;=<span class="hljs-number">2</span>]     <span class="hljs-comment">#构造约束条件</span><br>prob = cp.Problem(obj, cons)<br>prob.solve()   <span class="hljs-comment">#求解问题</span><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;最优解为：\n&#x27;</span>, x.value)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;最优值为：&#x27;</span>, prob.value)<br></code></pre></td></tr></table></figure>
+
+<h3 id="eg3"><a href="#eg3" class="headerlink" title="eg3."></a>eg3.</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311646934.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311646497.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307311646517.png" srcset="/img/loading.gif" lazyload></p>
+<p>Python代码如下：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs routeros">import cvxpy as cp<br>import numpy as np<br><span class="hljs-attribute">a</span>=np.loadtxt(&quot;data4_11.txt&quot;)<br><span class="hljs-attribute">d</span>=np.zeros((10,10))<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(10):<br>    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(10):<br>        d[i,j]=np.linalg.norm(a[:,i]-a[:,j])<br><span class="hljs-attribute">x</span>=cp.Variable(10, <span class="hljs-attribute">integer</span>=<span class="hljs-literal">True</span>)<br><span class="hljs-attribute">y</span>=cp.Variable((10, 10),<span class="hljs-attribute">integer</span>=<span class="hljs-literal">True</span>)<br><span class="hljs-attribute">obj</span>=cp.Minimize(sum(x))<br>con=[sum(y)&gt;=1, cp.sum(y,<span class="hljs-attribute">axis</span>=1)&lt;=5,<br>     x&gt;=0, x&lt;=1, y&gt;=0, y&lt;=1] <br>     <br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(10):<br>    con.append(x[i]==y[i,i])<br>    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> range(10):<br>        con.append(d[i,j]*y[i,j]&lt;=10*x[i])<br>        con.append(x[i]&gt;=y[i,j])<br>prob = cp.Problem(obj, con)<br>prob.solve(<span class="hljs-attribute">solver</span>=<span class="hljs-string">&#x27;GLPK_MI&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;最优值为:&quot;</span>, prob.value)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;最优解为：\n&quot;</span>, x.value)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;----------\n&#x27;</span>, y.value)<br></code></pre></td></tr></table></figure>
+
+<h1 id="投资的收益与风险—–（暂时搁置）"><a href="#投资的收益与风险—–（暂时搁置）" class="headerlink" title="投资的收益与风险—–（暂时搁置）"></a>投资的收益与风险—–（暂时搁置）</h1><h1 id="比赛项目排序问题—-（暂时搁置）"><a href="#比赛项目排序问题—-（暂时搁置）" class="headerlink" title="比赛项目排序问题—-（暂时搁置）"></a>比赛项目排序问题—-（暂时搁置）</h1><span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Python/">Python</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1/">数学建模</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/01/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0%E6%A8%A1%E5%9E%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数学建模-线性代数模型</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/30/Linux-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%92%8C%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/">
+                        <span class="hidden-mobile">Linux-进程管理和计划任务</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

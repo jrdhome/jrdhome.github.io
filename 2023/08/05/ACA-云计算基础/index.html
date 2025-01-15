@@ -1,0 +1,835 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="数据中心概述数据中心，英文缩写叫IDC，也就是Internet Data Center（互联网数据中心）。 从作用上来看，数据中心就是一个超大的机房，里面有很多很多的服务器，专门对数据进行集中管理（存储、计算、交换）。 数据中心是新基础设施，是数字经济的动力引擎，也是国家和社会发展的支撑底座。 数据中心定义 维基百科：一整套复杂的设施。 谷歌：多功能建筑物，能够容纳多个服务器以及通信设备。 数据中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACA-云计算基础">
+<meta property="og:url" content="http://example.com/2023/08/05/ACA-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="数据中心概述数据中心，英文缩写叫IDC，也就是Internet Data Center（互联网数据中心）。 从作用上来看，数据中心就是一个超大的机房，里面有很多很多的服务器，专门对数据进行集中管理（存储、计算、交换）。 数据中心是新基础设施，是数字经济的动力引擎，也是国家和社会发展的支撑底座。 数据中心定义 维基百科：一整套复杂的设施。 谷歌：多功能建筑物，能够容纳多个服务器以及通信设备。 数据中">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052306349.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052314776.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052315179.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052321831.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052333406.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052326089.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052328404.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052329071.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052329514.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052330791.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052355782.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052353722.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052356229.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052354857.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052357301.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052358859.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052359018.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060008316.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060008567.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060009929.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060022462.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060025075.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060027509.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060027176.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060035321.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060037624.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060039265.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060039535.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060041105.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060042275.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060043041.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060045483.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060045226.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060046076.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060053126.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060054098.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060055092.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060056161.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060057255.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060057740.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060058518.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060059164.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060100209.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060101322.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060105975.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060105675.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060107360.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060107730.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060109286.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060109644.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060109753.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060110256.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060111722.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060114094.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060116483.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060118540.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060118868.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060119497.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060121444.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308070108398.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071452539.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071457136.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071511234.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071514070.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071514218.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071518902.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071517272.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071520344.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071520424.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071521752.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071523040.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071524708.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071524378.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071557970.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071610644.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071612675.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071612731.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071614452.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071615072.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071616831.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071622401.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071622007.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071623591.png">
+<meta property="article:published_time" content="2023-08-05T22:27:57.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.348Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="ACA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052306349.png">
+  
+  
+  <title>ACA-云计算基础 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ACA-云计算基础">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-05 22:27" pubdate>
+        August 5, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      43 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ACA-云计算基础</h1>
+            
+            <div class="markdown-body">
+              <h1 id="数据中心概述"><a href="#数据中心概述" class="headerlink" title="数据中心概述"></a>数据中心概述</h1><p>数据中心，英文缩写叫IDC，也就是Internet Data Center（互联网数据中心）。</p>
+<p>从作用上来看，数据中心就是一个超大的机房，里面有很多很多的服务器，专门对数据进行集中管理（存储、计算、交换）。</p>
+<p>数据中心是新基础设施，是数字经济的动力引擎，也是国家和社会发展的支撑底座。</p>
+<h2 id="数据中心定义"><a href="#数据中心定义" class="headerlink" title="数据中心定义"></a>数据中心定义</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052306349.png" srcset="/img/loading.gif" lazyload></p>
+<p>维基百科：一整套复杂的设施。</p>
+<p>谷歌：多功能建筑物，能够容纳多个服务器以及通信设备。</p>
+<h2 id="数据中心涉及的主要标准与规范"><a href="#数据中心涉及的主要标准与规范" class="headerlink" title="数据中心涉及的主要标准与规范"></a>数据中心涉及的主要标准与规范</h2><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052314776.png" srcset="/img/loading.gif" lazyload alt="image-20230805231311060"  />
+
+<h2 id="数据中心级别的介绍"><a href="#数据中心级别的介绍" class="headerlink" title="数据中心级别的介绍"></a>数据中心级别的介绍</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052315179.png" srcset="/img/loading.gif" lazyload alt="image-20230805231520975"></p>
+<p>分类要素：电源、制冷</p>
+<p>国内（GB50174-2017）：A级（高）、B级、C级（低）</p>
+<p>国际（TAL-942-B-2017）：Tier1（低）— Tier（高）</p>
+<h2 id="数据中心的选址"><a href="#数据中心的选址" class="headerlink" title="数据中心的选址"></a>数据中心的选址</h2><p>地理条件因素：海拔高、气温低、非地震带</p>
+<p>成本因素：电费</p>
+<p>政策导向：国家规划、当地政府引资</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052321831.png" srcset="/img/loading.gif" lazyload alt="image-20230805232120685"></p>
+<h2 id="数据中心功能及布局结构"><a href="#数据中心功能及布局结构" class="headerlink" title="数据中心功能及布局结构"></a>数据中心功能及布局结构</h2><p>大型数据中心：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052333406.png" srcset="/img/loading.gif" lazyload alt="image-20230805233330159"></p>
+<p>小型数据中心就像学校的机房。</p>
+<h2 id="数据中心分类"><a href="#数据中心分类" class="headerlink" title="数据中心分类"></a>数据中心分类</h2><ol>
+<li>企业数据中心</li>
+<li>运营商数据中心</li>
+<li>互联网数据中心</li>
+</ol>
+<h2 id="数据中心的基础设施"><a href="#数据中心的基础设施" class="headerlink" title="数据中心的基础设施#"></a>数据中心的基础设施#</h2><p>数据中心主要由四大部分组成：基础设施、物理设备、基础软件、管理支撑软件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052326089.png" srcset="/img/loading.gif" lazyload alt="image-20230805232638867"></p>
+<h2 id="数据中心的发展"><a href="#数据中心的发展" class="headerlink" title="数据中心的发展#"></a>数据中心的发展#</h2><p>计算机时代 -&gt; 互联网时代 -&gt; 云计算时代</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052328404.png" srcset="/img/loading.gif" lazyload alt="image-20230805232820205"></p>
+<h2 id="传统数据中心现状"><a href="#传统数据中心现状" class="headerlink" title="传统数据中心现状#"></a>传统数据中心现状#</h2><p><strong>1.资源物理隔离</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052329071.png" srcset="/img/loading.gif" lazyload alt="image-20230805232921838"></p>
+<p><strong>2.网络架构局限</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052329514.png" srcset="/img/loading.gif" lazyload alt="image-20230805232946178"></p>
+<p><strong>3.问题与痛点</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052330791.png" srcset="/img/loading.gif" lazyload alt="image-20230805233054569"></p>
+<h2 id="思考"><a href="#思考" class="headerlink" title="思考##"></a>思考##</h2><h3 id="数据中心有哪些核心功能？"><a href="#数据中心有哪些核心功能？" class="headerlink" title="数据中心有哪些核心功能？"></a>数据中心有哪些核心功能？</h3><figure class="highlight markdown"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></div></td><td class="code"><pre><code class="hljs markdown">数据中心具有以下核心功能：<br><br><span class="hljs-bullet">1.</span> 数据处理<br>数据中心作为一个集中的设备网络，可以处理大量的数据信息。它可以运行各种应用程序来处理组织的商业和运营数据。<br><br><span class="hljs-bullet">2.</span> 数据存储<br>数据中心提供大规模的存储空间，用于存储和管理组织的数据。这些数据可以是结构化的、非结构化的或半结构化的。<br><br><span class="hljs-bullet">3.</span> 数据传输<br>数据中心通过网络基础设施传递和加速数据的传输。它可以通过高速网络连接将数据从一个地点传输到另一个地点。<br><br><span class="hljs-bullet">4.</span> 数据展示<br>数据中心可以展示和呈现数据，以便用户可以轻松访问和理解数据。这可以通过数据可视化工具和仪表板来实现。<br><br><span class="hljs-bullet">5.</span> 计算能力<br>数据中心提供强大的计算能力，可以执行复杂的计算任务和算法。这对于处理大规模数据和进行高性能计算非常重要。<br><br><span class="hljs-bullet">6.</span> 服务提供<br>数据中心不仅是一个网络概念，还是一个服务概念。它提供各种服务，如云计算、虚拟化、容器化等，以满足组织和个人的需求。<br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="云计算概述"><a href="#云计算概述" class="headerlink" title="云计算概述"></a>云计算概述</h1><p>云计算可以看作是分布式算、并行计算和网格计算等计算范式的集大成者。</p>
+<h2 id="云计算的产生背景"><a href="#云计算的产生背景" class="headerlink" title="云计算的产生背景"></a>云计算的产生背景</h2><ul>
+<li>80年代中期（个人电脑） -&gt; 90年代初（互联网） -&gt; 现在（万物互联） </li>
+<li>数据量爆炸性增长（GB TB PB EB ZB）</li>
+<li>IT基础设施能耗</li>
+<li>服务器更新速度快企业升级费用昂贵</li>
+<li>互联网上存在着大量闲置状态的计算设备和存储资源</li>
+</ul>
+<p>需求推动、技术进步、商业模式变革</p>
+<h2 id="云计算的发展历史"><a href="#云计算的发展历史" class="headerlink" title="云计算的发展历史"></a>云计算的发展历史</h2><p><strong>1.云计算演进</strong></p>
+<p>自建机房 -&gt; 传统IDC托管 -&gt; 云计算</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052355782.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>2.云计算发展事记</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052353722.png" srcset="/img/loading.gif" lazyload alt="image-20230805235233904"></p>
+<h2 id="云计算的影响"><a href="#云计算的影响" class="headerlink" title="云计算的影响"></a>云计算的影响</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052356229.png" srcset="/img/loading.gif" lazyload alt="image-20230805235430044"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052354857.png" srcset="/img/loading.gif" lazyload alt="image-20230805235452588"></p>
+<h2 id="云计算的概念"><a href="#云计算的概念" class="headerlink" title="云计算的概念#"></a>云计算的概念#</h2><p>按量付费、按需访问网络上的资源</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052357301.png" srcset="/img/loading.gif" lazyload alt="image-20230805235719113"></p>
+<h3 id="云计算中角色"><a href="#云计算中角色" class="headerlink" title="云计算中角色"></a>云计算中角色</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052358859.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="云计算基本思想"><a href="#云计算基本思想" class="headerlink" title="云计算基本思想"></a>云计算基本思想</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308052359018.png" srcset="/img/loading.gif" lazyload alt="image-20230805235913808"></p>
+<h3 id="云计算特征"><a href="#云计算特征" class="headerlink" title="云计算特征"></a>云计算特征</h3><ul>
+<li>超大规模</li>
+<li>虚拟化</li>
+<li>按需服务</li>
+<li>高可靠性</li>
+<li>高可拓展性</li>
+<li>通用性</li>
+<li>极其经济廉价</li>
+<li>自动化</li>
+<li>完善的运维机制</li>
+</ul>
+<p>云计算的目标：使用户像使用电、水、气一样使用IT资源</p>
+<h2 id="云计算的优缺点"><a href="#云计算的优缺点" class="headerlink" title="云计算的优缺点#"></a>云计算的优缺点#</h2><table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060008316.png" srcset="/img/loading.gif" lazyload alt="image-20230806000802175" style="zoom:80%;" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060008567.png" srcset="/img/loading.gif" lazyload alt="image-20230806000839419" style="zoom:80%;" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060009929.png" srcset="/img/loading.gif" lazyload alt="image-20230806000929714" style="zoom: 80%;" /></td>
+</tr>
+</tbody></table>
+<h2 id="思考-1"><a href="#思考-1" class="headerlink" title="思考##"></a>思考##</h2><h3 id="云计算的出现在我们生活中有哪些体现？"><a href="#云计算的出现在我们生活中有哪些体现？" class="headerlink" title="云计算的出现在我们生活中有哪些体现？"></a>云计算的出现在我们生活中有哪些体现？</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs powershell">在线办公软件：自从云计算技术出现以后，办公室的概念已经模糊。不管是谷歌的Apps还是微软推出的SharePoint，都可以在任何一个有互联网的地方同步办公所需要的办公文件，而不需要随身携带，只要需要时，就可以随时打开。这大大降低了办公的局限性，提高了工作效率。<br><br>云存储：在日常生活中，备份文件就和买保险一样的重要。个人数据的重要性越来越突出，为了保护你的个人数据不受各种灾害的影响，云存储就成了最佳选择。比如像“微盘”等专用的云存储应用，它们能够被安装到不同系统平台的设备上。使用时，用户可以在本地计算机上创建及修改文件，然后自动同步到网络的微盘上；到另外的地方，用户可以使用平板电脑等移动设备，继续修改微盘上的文件，并再次进行同步。这样，微盘就像一个不需要随时携带，但却可以随时使用的U盘一样。<br><br>地图导航：在没有<span class="hljs-built_in">GPS</span>的时代，每到一个地方，我们都需要购买当地的地图。而现在，我们只需要一部手机，就可以拥有一张全世界的地图。这正是基于云计算技术的<span class="hljs-built_in">GPS</span>带给我们的便利。<br><br>电子商务：电子商务现在已经进入了生活中的每一个角落，对于那些不爱逛街的人来说，不用忍受逛街带来的劳累，就可以买到喜欢的东西是一个很棒的选择。而云计算为电子商务提供了强大的后盾，保障了交易的顺畅进行。<br><br>云音乐：音乐已成为每个人生活中必不可少的一部分。随着云计算的发展，无论是上班还是下班，或者在没有电脑的情况下，我们都可以通过手机、平板电脑等移动设备随时听取云端的音乐，享受音乐带来的快乐。<br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="云计算核心技术"><a href="#云计算核心技术" class="headerlink" title="云计算核心技术"></a>云计算核心技术</h1><p>云计算可以视为网络计算和虚拟化的融合：既利用网络分布式计算处理能力将IT资源构筑成一个资源池，再加上成熟的服务器虚拟化，存储虚拟化技术使用户可以实时的监控和调配资源。</p>
+<h2 id="云计算技术架构"><a href="#云计算技术架构" class="headerlink" title="云计算技术架构"></a>云计算技术架构</h2><p><strong>1.信息时代的重大变革</strong></p>
+<p>物理资源层、<strong>资源层、管理中间件</strong>、SOA构建层</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060022462.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="云计算关键技术"><a href="#云计算关键技术" class="headerlink" title="云计算关键技术##"></a>云计算关键技术##</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060025075.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="①虚拟化技术"><a href="#①虚拟化技术" class="headerlink" title="①虚拟化技术"></a>①虚拟化技术</h3><p><strong>虚拟化技术的基本概念及特点</strong></p>
+<ul>
+<li>计算元件在虚拟的为不是真实的基础上运行</li>
+<li>虚拟化：物理资源 -&gt; 具有可管理性的逻辑资源</li>
+<li>含义：<ul>
+<li>对象：各种各样的资源</li>
+<li>隐藏不必要的细节</li>
+<li>实现真实环境下的部分或者全部功能</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060027509.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>虚拟化的分类</strong></p>
+<p>服务器虚拟化、桌面虚拟化、存储虚拟化、网络虚拟化、应用虚拟化</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060027176.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>虚拟化厂商及产品</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060035321.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>虚拟化技术的分类</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060037624.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="②海量数据存储与处理"><a href="#②海量数据存储与处理" class="headerlink" title="②海量数据存储与处理"></a>②海量数据存储与处理</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060039265.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060039535.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060041105.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="③资源管理与调度技术"><a href="#③资源管理与调度技术" class="headerlink" title="③资源管理与调度技术"></a>③资源管理与调度技术</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060042275.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="④服务管理技术"><a href="#④服务管理技术" class="headerlink" title="④服务管理技术"></a>④服务管理技术</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060043041.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="⑤云计算管理平台"><a href="#⑤云计算管理平台" class="headerlink" title="⑤云计算管理平台"></a>⑤云计算管理平台</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060045483.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060045226.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="云计算技术的发展趋势"><a href="#云计算技术的发展趋势" class="headerlink" title="云计算技术的发展趋势"></a>云计算技术的发展趋势</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060046076.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="思考-2"><a href="#思考-2" class="headerlink" title="思考##"></a>思考##</h2><h3 id="如何解释云计算技术架构？"><a href="#如何解释云计算技术架构？" class="headerlink" title="如何解释云计算技术架构？"></a>如何解释云计算技术架构？</h3><figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dns">云计算可以视为网络计算和虚拟化的融合。<br>云计算技术架构主要分为以下四层：物理资源层、资源层、管理中间件、<span class="hljs-keyword">SOA</span>构建层。其中管理中间件和资源池层是云计算关键部分。<br>	物理资源层：包括计算机、存储器、网络设备、数据库等。<br>	资源层：将大量相同类型的资源构成同构或接近同构的资源池，是物理资源的集成和管理工作。<br>	管理中间件：负责对云计算的资源进行管理，并对众多应用任务进行调度，使资源能够高效、安全的提供服务。<br>	<span class="hljs-keyword">SOA</span>构建层：将云计算能力封装成标准的服务，并进行管理和使用。<br></code></pre></td></tr></table></figure>
+
+<h3 id="云计算关键技术有哪些？"><a href="#云计算关键技术有哪些？" class="headerlink" title="云计算关键技术有哪些？"></a>云计算关键技术有哪些？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs">虚拟化技术<br>海量数据存储与处理<br>资源管理和调度技术<br>服务管理技术<br>云计算管理平台<br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="云计算分类及主流产品"><a href="#云计算分类及主流产品" class="headerlink" title="云计算分类及主流产品"></a>云计算分类及主流产品</h1><p>云计算主要分为四种类型：私有云、公有云、混合云和多云。</p>
+<p>云计算的服务模式目前有三种：基础架构即服务（IaaS）、平台即服务（PaaS）和软件即服务（SaaS）。</p>
+<p>未来随着技术的发展，云计算将会向第四种模式发展：服务到服务（S2S）。</p>
+<h2 id="云计算分类"><a href="#云计算分类" class="headerlink" title="云计算分类"></a>云计算分类</h2><p>公有云、私有云、社区云、混合云</p>
+<h3 id="公有云"><a href="#公有云" class="headerlink" title="公有云"></a>公有云</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060053126.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>优势</strong></p>
+<ul>
+<li>规模大</li>
+<li>价格低廉</li>
+<li>灵活</li>
+<li>功能全面</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060054098.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="私有云"><a href="#私有云" class="headerlink" title="私有云"></a>私有云</h3><p>私有云的建设、运营和使用都在<strong>某个组织或企业内部完成</strong>，其服务对象被限制在组织内部，其他的人和机构都无权租赁并使用云端计算资源。至于云端部署何处、所有权归谁、由谁负责、日常管理并没有严格规定。</p>
+<p><strong>分类</strong></p>
+<ul>
+<li>本地私有云：适合运行企业中的关键的应用。</li>
+<li>托管私有云：把云端托管在第三方机房或者其他云端，计算设备可以自己购买，也可以租用第三方云端的计算资源。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060055092.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>优势</strong></p>
+<ul>
+<li>数据安全</li>
+<li>服务质量—稳定</li>
+<li>充分利用现有硬件资源</li>
+<li>支持定制和遗留应用</li>
+<li>不影响现有IT管理的流程</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060056161.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060057255.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>劣势</strong></p>
+<ul>
+<li>成本开发高</li>
+<li>持续运营成本偏高</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060057740.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="社区云"><a href="#社区云" class="headerlink" title="社区云"></a>社区云</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060058518.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="混合云"><a href="#混合云" class="headerlink" title="混合云"></a>混合云</h3><p>混合云是由两个或两个以上不同类型的云（私有云、社区云、公共云）组成的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060059164.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>优势</strong></p>
+<ul>
+<li>架构更灵活</li>
+<li>技术方案更容易掌握</li>
+<li>充分利用现有硬件资源</li>
+<li>更容易满足合规性要求</li>
+<li>更低的费用</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060100209.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060101322.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="云计算的应用场景"><a href="#云计算的应用场景" class="headerlink" title="云计算的应用场景"></a>云计算的应用场景</h2><p><strong>1  IDC公有云</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060105975.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>2  企业私有云</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060105675.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>3  云存储系统</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060107360.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>4  虚拟桌面云</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060107730.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>5  开发测试云</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060109286.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>6  大规模数据处理云</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060109644.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>7  电子政务云</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060109753.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>8  游戏云</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060110256.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>9  云杀毒</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060111722.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="云计算的主流产品"><a href="#云计算的主流产品" class="headerlink" title="云计算的主流产品#"></a>云计算的主流产品#</h2><h3 id="开源云产品"><a href="#开源云产品" class="headerlink" title="开源云产品"></a>开源云产品</h3><p><strong>OpenStack——云计算管理平 Apache顶级项目</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060114094.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>K8S</strong>——可移植，可扩展的开源云平台</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060116483.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="收费云产品"><a href="#收费云产品" class="headerlink" title="收费云产品"></a>收费云产品</h3><p><strong>阿里云产品</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060118540.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>腾讯云 TStack</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060118868.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>华为云会议</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060119497.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>百度ARM云桌面</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308060121444.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="思考-3"><a href="#思考-3" class="headerlink" title="思考##"></a>思考##</h2><h3 id="云计算分类有哪些？"><a href="#云计算分类有哪些？" class="headerlink" title="云计算分类有哪些？"></a>云计算分类有哪些？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs">私有云<br>公有云<br>混合云<br>社区云<br></code></pre></td></tr></table></figure>
+
+<h3 id="云计算的主流产品如何分类？"><a href="#云计算的主流产品如何分类？" class="headerlink" title="云计算的主流产品如何分类？"></a>云计算的主流产品如何分类？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs">云计算的服务模式目前有三种：基础架构即服务（IaaS）、平台即服务（PaaS）和软件即服务（SaaS）<br>主流产品有：阿里云、华为云、百度云等<br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="云计算架构"><a href="#云计算架构" class="headerlink" title="云计算架构"></a>云计算架构</h1><h2 id="云计算基本架构"><a href="#云计算基本架构" class="headerlink" title="云计算基本架构"></a>云计算基本架构</h2><p>云服务提供、云服务管理、云服务资源。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308070108398.png" srcset="/img/loading.gif" lazyload></p>
+<p>云计算服务提供商可以专注于自己所在的层次，无需拥有三个层次的服务能力。</p>
+<p>上层服务提供商可以利用下层的云计算服务实现自己计划提供的云计算服务。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071452539.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="云计算服务层次"><a href="#云计算服务层次" class="headerlink" title="云计算服务层次#"></a>云计算服务层次#</h2><h3 id="1-基础设施及服务-–-IaaS（最底层服务）"><a href="#1-基础设施及服务-–-IaaS（最底层服务）" class="headerlink" title="1.基础设施及服务 – IaaS（最底层服务）"></a>1.基础设施及服务 – IaaS（最底层服务）</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071457136.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>核心技术：</strong></p>
+<p>​    虚拟化技术、分布式存储技术、超大规模资源管理技术、云服务计费技术</p>
+<p><strong>优势：</strong></p>
+<ul>
+<li><strong>低成本</strong>：企业不需要购置硬件，IaaS 可以满足突发性需求</li>
+<li><strong>免维护</strong>：企业不需要进行维护</li>
+<li><strong>灵活迁移</strong>：运行在IaaS上的应用将可以灵活地在IaaS服务平台间进行迁移</li>
+<li><strong>伸缩性强</strong>：公司可以根据实际业务需求租用云计算服务</li>
+<li><strong>支持应用广泛</strong>：同一个云可以同时支持不赢的应用运行</li>
+</ul>
+<p><strong>主要产品：</strong></p>
+<p>亚马逊的ECS    阿里云的ECS    </p>
+<h3 id="2-平台即服务-–-PaaS（中间层服务）"><a href="#2-平台即服务-–-PaaS（中间层服务）" class="headerlink" title="2.平台即服务 – PaaS（中间层服务）"></a>2.平台即服务 – PaaS（中间层服务）</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071511234.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>功能：</strong></p>
+<p>开发测试环境，运行环境、运维环境</p>
+<p><strong>核心技术：</strong></p>
+<p>REST技术、分布式缓存、应用服务器、多租户技术</p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>友好的开发环境</li>
+<li>丰富的服务</li>
+<li>精细的管理和控制</li>
+<li>伸缩性强</li>
+<li>多租户机制</li>
+<li>整合率高</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071514070.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071514218.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>主要产品：</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071518902.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>IaaS和PaaS比较</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071517272.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="3-软件即服务-–-SaaS（最顶层服务）"><a href="#3-软件即服务-–-SaaS（最顶层服务）" class="headerlink" title="3.软件即服务 – SaaS（最顶层服务）"></a>3.软件即服务 – SaaS（最顶层服务）</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071520344.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>特性：</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071520424.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>优势：</strong></p>
+<ul>
+<li>使用简单</li>
+<li>支持公开协议</li>
+<li>成本低</li>
+<li>安全保障</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071521752.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>主要产品：</strong></p>
+<p>钉钉、飞书、腾讯会议</p>
+<h2 id="云计算架构与传统架构的区别"><a href="#云计算架构与传统架构的区别" class="headerlink" title="云计算架构与传统架构的区别##"></a>云计算架构与传统架构的区别##</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071523040.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071524708.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="云计算架构的优势"><a href="#云计算架构的优势" class="headerlink" title="云计算架构的优势#"></a>云计算架构的优势#</h2><ul>
+<li>减少成本</li>
+<li>具有弹性伸缩能力，高可用及高可靠性</li>
+<li>实现业务快速部署上限，缩短业务上线周期</li>
+<li>全面安全防护能力</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071524378.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="思考-4"><a href="#思考-4" class="headerlink" title="思考##"></a>思考##</h2><h3 id="云计算架构与传统架构有什么区别？"><a href="#云计算架构与传统架构有什么区别？" class="headerlink" title="云计算架构与传统架构有什么区别？"></a>云计算架构与传统架构有什么区别？</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">首先，云计算架构将计算和存储资源集中起来，通过虚拟化技术形成虚拟的资源池，然后通过网络对外提供服务。这种架构使得计算和存储资源可以根据需要进行动态分配，提高了资源利用率，并且可以根据实际需求进行扩展或缩减。而传统架构则是基于本地服务器和存储设备的，资源的利用率较低，并且扩展性较差。<br><br>其次，云计算架构强调的是服务化，即通过提供服务的方式来对外提供应用程序和数据。这种服务化的方式使得应用程序的部署和管理更加简单、快速，并且可以根据需要进行动态调整。而传统架构则通常采用传统的应用程序部署方式，需要手动配置和管理，较为繁琐且扩展性较差。<br><br>此外，云计算架构还具有高度的可靠性和安全性。它采用了多种容错和备份机制，确保数据的可靠性和安全性。同时，由于数据和应用程序都集中管理和维护，也增加了数据的安全性。而传统架构则可能存在数据安全和隐私保护等方面的问题。<br><br>最后，云计算架构还具有高度的可扩展性和灵活性。由于计算和存储资源可以动态分配，因此可以轻松地扩展应用程序或增加新的服务。这使得企业可以更加灵活地应对市场变化和业务需求的变化。而传统架构则可能面临硬件限制和扩展困难等问题。<br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="阿里云云计算服务概述"><a href="#阿里云云计算服务概述" class="headerlink" title="阿里云云计算服务概述#"></a>阿里云云计算服务概述#</h1><p>本节主要通过对<strong>飞天操作系统</strong>和<strong>神龙计算、洛神网络、盘古储存</strong>三大关键技术进行讲解。</p>
+<h2 id="阿里云云计算服务"><a href="#阿里云云计算服务" class="headerlink" title="阿里云云计算服务"></a>阿里云云计算服务</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071557970.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="飞天操作系统"><a href="#飞天操作系统" class="headerlink" title="飞天操作系统"></a>飞天操作系统</h2><p>飞天（Apsara）由阿里云自主研发，服务全球的超大规模计算操作系统。它可以将遍布全球的百万级服务器连接成一台超级计算机，以在线公共服务的方式为社会提供计算能力。</p>
+<p>飞天的革命性在于将云计算的三个方向整合起来：提供强大的计算能力，提供通用的计算能力，提供普惠的计算能力。</p>
+<p><strong>核心服务：</strong></p>
+<p>​                <strong>神龙计算，洛神网络，盘古存储，数据库</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071610644.png" srcset="/img/loading.gif" lazyload alt="image-20230807161030402"></p>
+<p><strong>飞天操作系统架构</strong>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071612675.png" srcset="/img/loading.gif" lazyload></p>
+<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071612731.png" srcset="/img/loading.gif" lazyload alt="image-20230807161242501" style="zoom: 67%;" />
+
+
+
+<h2 id="神龙计算"><a href="#神龙计算" class="headerlink" title="神龙计算"></a>神龙计算</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071614452.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071615072.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071616831.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="洛神网络"><a href="#洛神网络" class="headerlink" title="洛神网络"></a>洛神网络</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071622401.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="盘古存储"><a href="#盘古存储" class="headerlink" title="盘古存储"></a>盘古存储</h2><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071622007.png" srcset="/img/loading.gif" lazyload alt="image-20230807162240797" style="zoom:80%;" />
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071623591.png" srcset="/img/loading.gif" lazyload alt="image-20230807162326298"></p>
+<h2 id="思考-5"><a href="#思考-5" class="headerlink" title="思考##"></a>思考##</h2><h3 id="（理解）飞天操作系统的三大核心组件是什么？"><a href="#（理解）飞天操作系统的三大核心组件是什么？" class="headerlink" title="（理解）飞天操作系统的三大核心组件是什么？"></a>（理解）飞天操作系统的三大核心组件是什么？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">神龙计算、洛神网络、盘古存储<br></code></pre></td></tr></table></figure>
+
+<h3 id="（掌握）盘古存储可以提供哪些存储服务？"><a href="#（掌握）盘古存储可以提供哪些存储服务？" class="headerlink" title="（掌握）盘古存储可以提供哪些存储服务？"></a>（掌握）盘古存储可以提供哪些存储服务？</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs diff">盘古存储是一款基于分布式文件系统的存储服务，它可以提供高容量、高可靠、高性能和低成本的存储服务。具体来说，盘古存储可以提供以下几种存储服务：<br><br><span class="hljs-deletion">-块存储：类似于传统存储设备中的块设备，提供随机I/O性能较好的存储服务，适用于关系型数据库、文件系统等需要块设备存储的场景。</span><br><span class="hljs-deletion">-文件存储：提供传统的文件存储服务，支持POSIX接口和NFS协议，适用于需要存储大量非结构化数据的场景，如视频、图片、日志等。</span><br><span class="hljs-deletion">-对象存储：类似于AWS S3、阿里云OSS等云存储服务，提供键值对方式的存储服务，适用于存储海量数据、日志等场景。</span><br><span class="hljs-deletion">-分布式文件系统：类似于Google File System、HDFS等分布式文件系统，提供跨多个数据中心的分布式文件存储服务，适用于需要跨数据中心进行数据共享和访问的场景。</span><br>  <br>  盘古存储的优点包括高可用性、高可靠性、高性能和低成本等。它采用了分布式架构和数据冗余等技术，确保数据可靠性和可用性；同时，它还支持数据自动备份和恢复等功能，进一步提高了数据的可靠性。此外，盘古存储还支持数据加密和隐私保护等功能，保障用户数据的安全性。<br></code></pre></td></tr></table></figure>
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ACA/">ACA</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/05/ACA-%E5%BC%B9%E6%80%A7%E8%AE%A1%E7%AE%97/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ACA-弹性计算</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%BD%BF%E7%94%A8%E5%88%9D%E4%BD%93%E9%AA%8C/">
+                        <span class="hidden-mobile">Clouder-负载均衡使用初体验</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

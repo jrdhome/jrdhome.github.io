@@ -1,0 +1,785 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 基本正则表达式元字符1.1 字符匹配123456789101112131415161718192021.  		 	匹配任意单个字符，可以是一个汉字[]   		匹配指定范围内的任意单个字符，示例：[wang]   [0-9]   [a-z]   [a-zA-Z][^] 		排除，匹配指定范围外的任意单个字符,示例：[^wang] [:alnum:] 	字母和数字[:alpha:] 	代表任何">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-正则表达式与文本三剑客">
+<meta property="og:url" content="http://example.com/2023/08/20/Linux-%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B8%8E%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 基本正则表达式元字符1.1 字符匹配123456789101112131415161718192021.  		 	匹配任意单个字符，可以是一个汉字[]   		匹配指定范围内的任意单个字符，示例：[wang]   [0-9]   [a-z]   [a-zA-Z][^] 		排除，匹配指定范围外的任意单个字符,示例：[^wang] [:alnum:] 	字母和数字[:alpha:] 	代表任何">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-08-20T16:16:58.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.350Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Linux-正则表达式与文本三剑客 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-正则表达式与文本三剑客">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-20 16:16" pubdate>
+        August 20, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      79 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-正则表达式与文本三剑客</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-基本正则表达式元字符"><a href="#1-基本正则表达式元字符" class="headerlink" title="1 基本正则表达式元字符"></a><strong>1 基本正则表达式元字符</strong></h1><h2 id="1-1-字符匹配"><a href="#1-1-字符匹配" class="headerlink" title="1.1 字符匹配"></a>1.1 字符匹配</h2><figure class="highlight inform7"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></div></td><td class="code"><pre><code class="hljs inform7">.  		 	匹配任意单个字符，可以是一个汉字<br><span class="hljs-comment">[]</span>   		匹配指定范围内的任意单个字符，示例：<span class="hljs-comment">[wang]</span>   <span class="hljs-comment">[0-9]</span>   <span class="hljs-comment">[a-z]</span>   <span class="hljs-comment">[a-zA-Z]</span><br><span class="hljs-comment">[^]</span> 		排除，匹配指定范围外的任意单个字符,示例：<span class="hljs-comment">[^wang]</span> <br><span class="hljs-comment">[:alnum:]</span> 	字母和数字<br><span class="hljs-comment">[:alpha:]</span> 	代表任何英文大小写字符，亦即 A-Z, a-z<br><span class="hljs-comment">[:lower:]</span> 	小写字母,示例:<span class="hljs-comment">[<span class="hljs-comment">[:lower:]</span>]</span>,相当于<span class="hljs-comment">[a-z]</span><br><span class="hljs-comment">[:upper:]</span> 	大写字母<br><span class="hljs-comment">[:blank:]</span> 	空白字符（空格和制表符）<br><span class="hljs-comment">[:space:]</span> 	包括空格、制表符(水平和垂直)、换行符、回车符等各种类型的空白,比<span class="hljs-comment">[:blank:]</span>包含的范围<br>广<br><span class="hljs-comment">[:cntrl:]</span> 	不可打印的控制字符（退格、删除、警铃...）<br><span class="hljs-comment">[:digit:]</span> 	十进制数字<br><span class="hljs-comment">[:xdigit:]</span>	十六进制数字<br><span class="hljs-comment">[:graph:]</span>	 可打印的非空白字符<br><span class="hljs-comment">[:print:]</span> 	可打印字符<br><span class="hljs-comment">[:punct:]</span> 	标点符号<br>\w 			#匹配单词构成部分，等价于<span class="hljs-comment">[_<span class="hljs-comment">[:alnum:]</span>]</span><br>\W 			#匹配非单词构成部分，等价于<span class="hljs-comment">[^_<span class="hljs-comment">[:alnum:]</span>]</span><br>\S      	#匹配任何非空白字符。等价于 <span class="hljs-comment">[^ \f\n\r\t\v]</span>。<br>\s     		#匹配任何空白字符，包括空格、制表符、换页符等等。等价于 <span class="hljs-comment">[ \f\n\r\t\v]</span>。注意<br>Unicode 	正则表达式会匹配全角空格符<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-匹配次数"><a href="#1-2-匹配次数" class="headerlink" title="1.2 匹配次数"></a>1.2 匹配次数</h2><p>用在要指定次数的字符后面，用于指定前面的字符要出现的次数</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs livescript">* 		<span class="hljs-comment">#匹配前面的字符任意次，包括0次，贪婪模式：尽可能长的匹配</span><br>.* 		<span class="hljs-comment">#任意长度的任意字符</span><br><span class="hljs-string">\?</span> 		<span class="hljs-comment">#匹配其前面的字符出现0次或1次,即:可有可无</span><br><span class="hljs-string">\+</span> 		<span class="hljs-comment">#匹配其前面的字符出现最少1次,即:肯定有且 &gt;=1 次</span><br><span class="hljs-string">\&#123;n\&#125;</span> 	<span class="hljs-comment">#匹配前面的字符n次</span><br><span class="hljs-string">\&#123;m,n\&#125;</span> <span class="hljs-comment">#匹配前面的字符至少m次，至多n次</span><br><span class="hljs-string">\&#123;,n\&#125;</span>  <span class="hljs-comment">#匹配前面的字符至多n次,&lt;=n</span><br><span class="hljs-string">\&#123;n,\&#125;</span>  <span class="hljs-comment">#匹配前面的字符至少n次</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-3-位置锚定"><a href="#1-3-位置锚定" class="headerlink" title="1.3 位置锚定"></a><strong>1.3 位置锚定</strong></h2><p>位置锚定可以用于定位出现的位置</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs elixir">^ 				<span class="hljs-comment">#行首锚定, 用于模式的最左侧</span><br><span class="hljs-variable">$ </span>				<span class="hljs-comment">#行尾锚定，用于模式的最右侧</span><br>^<span class="hljs-title class_">PATTERN</span><span class="hljs-variable">$ </span>		<span class="hljs-comment">#用于模式匹配整行</span><br>^<span class="hljs-variable">$	</span>	 		<span class="hljs-comment">#空行</span><br>^[[<span class="hljs-symbol">:space</span><span class="hljs-symbol">:</span>]]*<span class="hljs-variable">$ </span>	<span class="hljs-comment">#空白行</span><br>\&lt; 或 \b   	   <span class="hljs-comment">#词首锚定，用于单词模式的左侧</span><br>\&gt; 或 \b        <span class="hljs-comment">#词尾锚定，用于单词模式的右侧</span><br>\&lt;<span class="hljs-title class_">PATTERN</span>\&gt;     <span class="hljs-comment">#匹配整个单词</span><br><br><span class="hljs-comment">#注意: 单词是由字母,数字,下划线组成</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="1-4-分组其他"><a href="#1-4-分组其他" class="headerlink" title="1.4 分组其他"></a>1.4 分组其他</h2><h3 id="1-4-1-分组"><a href="#1-4-1-分组" class="headerlink" title="1.4.1 分组"></a>1.4.1 分组</h3><p>分组：() 将多个字符捆绑在一起，当作一个整体处理，如：\(root)+</p>
+<p>后向引用：分组括号中的模式匹配到的内容会被正则表达式引擎记录于内部的变量中，这些变量的命名</p>
+<p>方式为: \1, \2, \3, …</p>
+<p>\1 表示从左侧起第一个左括号以及与之匹配右括号之间的模式所匹配到的字符</p>
+<p>示例：</p>
+<figure class="highlight taggerscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs taggerscript"><span class="hljs-symbol">\(</span>string1<span class="hljs-symbol">\(</span>string2<span class="hljs-symbol">\)</span><span class="hljs-symbol">\)</span><br>\1 ：string1<span class="hljs-symbol">\(</span>string2<span class="hljs-symbol">\)</span><br>\2 ：string2<br></code></pre></td></tr></table></figure>
+
+<p>注意： 后向引用 引用前面的分组括号中的模式所匹配字符，而非模式本身</p>
+<h3 id="1-4-2-或者"><a href="#1-4-2-或者" class="headerlink" title="1.4.2 或者"></a>1.4.2 或者</h3><p>或者：\|</p>
+<p>示例：</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs less"><span class="hljs-selector-tag">a</span>\|<span class="hljs-selector-tag">b</span> <span class="hljs-selector-id">#a</span>或<span class="hljs-selector-tag">b</span>  <br><span class="hljs-selector-tag">C</span>\|<span class="hljs-selector-tag">cat</span> <span class="hljs-selector-id">#C</span>或<span class="hljs-selector-tag">cat</span>   <br>\(C\|c\)<span class="hljs-selector-tag">at</span> <span class="hljs-selector-id">#Cat</span>或<span class="hljs-selector-tag">cat</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="2-扩展正则表达式元字符"><a href="#2-扩展正则表达式元字符" class="headerlink" title="2 扩展正则表达式元字符"></a><strong>2 扩展正则表达式元字符</strong></h1><p>使用扩展正则表达式时需加入选项 <strong>-E</strong></p>
+<h2 id="2-1-字符匹配"><a href="#2-1-字符匹配" class="headerlink" title="2.1 字符匹配"></a><strong>2.1 字符匹配</strong></h2><figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs less">. 任意单个字符<br><span class="hljs-selector-attr">[wang]</span> 指定范围的字符<br><span class="hljs-selector-attr">[^wang]</span> 不在指定范围的字符<br><span class="hljs-selector-attr">[:alnum:]</span> 字母和数字<br><span class="hljs-selector-attr">[:alpha:]</span> 代表任何英文大小写字符，亦即 <span class="hljs-selector-tag">A</span><span class="hljs-selector-tag">-Z</span>, <span class="hljs-selector-tag">a</span><span class="hljs-selector-tag">-z</span><br><span class="hljs-selector-attr">[:lower:]</span> 小写字母,示例:<span class="hljs-selector-attr">[[:lower:]</span>],相当于<span class="hljs-selector-attr">[a-z]</span><br><span class="hljs-selector-attr">[:upper:]</span> 大写字母<br><span class="hljs-selector-attr">[:blank:]</span> 空白字符（空格和制表符）<br><span class="hljs-selector-attr">[:space:]</span> 水平和垂直的空白字符（比<span class="hljs-selector-attr">[:blank:]</span>包含的范围广）<br><span class="hljs-selector-attr">[:cntrl:]</span> 不可打印的控制字符（退格、删除、警铃...）<br><span class="hljs-selector-attr">[:digit:]</span> 十进制数字<br><span class="hljs-selector-attr">[:xdigit:]</span>十六进制数字<br><span class="hljs-selector-attr">[:graph:]</span> 可打印的非空白字符<br><span class="hljs-selector-attr">[:print:]</span> 可打印字符<br><span class="hljs-selector-attr">[:punct:]</span> 标点符号<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-匹配次数"><a href="#2-2-匹配次数" class="headerlink" title="2.2 匹配次数"></a><strong>2.2 匹配次数</strong></h2><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs excel">*   匹配前面字符任意次<br>? <span class="hljs-number">0</span>或<span class="hljs-number">1</span>次<br>+ <span class="hljs-number">1</span>次或多次<br>&#123;<span class="hljs-built_in">n</span>&#125; 匹配<span class="hljs-built_in">n</span>次<br>&#123;m,<span class="hljs-built_in">n</span>&#125; 至少m，至多<span class="hljs-built_in">n</span>次<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-位置锚定"><a href="#2-3-位置锚定" class="headerlink" title="2.3 位置锚定"></a><strong>2.3 位置锚定</strong></h2><figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs livescript">^ 行首<br>$ 行尾<br><span class="hljs-string">\&lt;,</span> <span class="hljs-string">\b</span> 语首<br><span class="hljs-string">\&gt;,</span> <span class="hljs-string">\b</span> 语尾<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-4-分组其它"><a href="#2-4-分组其它" class="headerlink" title="2.4 分组其它"></a><strong>2.4 分组其它</strong></h2><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs coq">() 分组<br>后向引用：\<span class="hljs-number">1</span>, \<span class="hljs-number">2</span>, ...<br>| <span class="hljs-type">或者</span><br><span class="hljs-type">a</span>|<span class="hljs-type">b</span> #a或b<br>C|<span class="hljs-type">cat</span> #C或cat<br>(C|<span class="hljs-type">c</span>)<span class="hljs-built_in">at</span> #Cat或cat<br></code></pre></td></tr></table></figure>
+
+<h1 id="3-文本处理三剑客"><a href="#3-文本处理三剑客" class="headerlink" title="3 文本处理三剑客"></a><strong>3 文本处理三剑客</strong></h1><ul>
+<li><p>grep 命令主要对文本的（正则表达式）行基于模式进行过滤</p>
+</li>
+<li><p>sed：stream editor，文本编辑工具</p>
+</li>
+<li><p>awk：Linux上的实现gawk，文本报告生成器</p>
+</li>
+</ul>
+<h2 id="3-1-文本处理三剑客之-grep"><a href="#3-1-文本处理三剑客之-grep" class="headerlink" title="3.1 文本处理三剑客之 grep"></a><strong>3.1 文本处理三剑客之</strong> <strong>grep</strong></h2><p>grep: Global search REgular expression and Print out the line</p>
+<p>作用：文本搜索工具，根据用户指定的“模式”对目标文本<strong>逐行进行匹配检查</strong>；打印匹配到的行</p>
+<p>模式：由正则表达式字符及文本字符所编写的过滤条件</p>
+<p><strong>格式：</strong></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">grep</span> [<span class="hljs-keyword">OPTIONS</span>] PATTERN [<span class="hljs-keyword">FILE</span>...]<br></code></pre></td></tr></table></figure>
+
+<p><strong>常见选项：</strong></p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs ldif"><span class="hljs-literal">-</span>color=auto 对匹配到的文本着色显示<br><span class="hljs-literal">-</span>m <span class="hljs-comment">#   匹配#次后停止</span><br><span class="hljs-literal">-</span>v 显示不被pattern匹配到的行,即取反<br><span class="hljs-literal">-</span>i 忽略字符大小写<br><span class="hljs-literal">-</span>n 显示匹配的行号<br><span class="hljs-literal">-</span>c 统计匹配的行数<br><span class="hljs-literal">-</span>o 仅显示匹配到的字符串     <br><span class="hljs-literal">-</span>q 静默模式，不输出任何信息       可以用 echo $? 判断是否找到信息<br><span class="hljs-literal">-</span>A <span class="hljs-comment"># after, 后#行</span><br><span class="hljs-literal">-</span>B <span class="hljs-comment"># before, 前#行</span><br><span class="hljs-literal">-</span>C <span class="hljs-comment"># context, 前后各#行</span><br><span class="hljs-literal">-</span>e 实现多个选项间的逻辑or关系,如：grep –e ‘cat &#x27; -e ‘dog&#x27; file<br><span class="hljs-literal">-</span>w 匹配整个单词<br><span class="hljs-literal">-</span>E 使用ERE，相当于egrep，可以使用扩展的正则表达式<br><span class="hljs-literal">-</span>F 不支持正则表达式，相当于fgrep<br><span class="hljs-literal">-</span>f file 根据模式文件处理<br><span class="hljs-literal">-</span>r  递归目录，但不处理软链接<br><span class="hljs-literal">-</span>R  递归目录，但处理软链接<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-文本处理三剑客之-sed"><a href="#3-2-文本处理三剑客之-sed" class="headerlink" title="3.2 文本处理三剑客之 sed"></a><strong>3.2 文本处理三剑客之</strong> <strong>sed</strong></h2><p>官网:  <a target="_blank" rel="noopener" href="http://sed.sourceforge.net/">http://sed.sourceforge.net/</a></p>
+<p>Sed是从文件或管道中<strong>读取一行，处理一行，输出一行</strong>；再读取一行，再处理一行，再输出一行，直到最后一行。每当处理一行时，把当前处理的行存储在临时缓冲区中，称为<strong>模式空间（Pattern Space）</strong>，接着用sed命令处理缓冲区中的内容，处理完成后，把缓冲区的内容送往屏幕。接着处理下一行，这样不断重复，直到文件末尾。一次处理一行的设计模式使得sed性能很高，sed在读取大文件时,不会出现卡顿的现象。如果使用vi命令打开几十M上百M的文件，明显会出现有卡顿的现象，这是因为vi命令打开文件是一次性将文件加载到内存，然后再打开。Sed就避免了这种情况，一行一行的处理，打开速度非常快，执行速度也很快</p>
+<p>帮助参考网站：<a target="_blank" rel="noopener" href="http://www.gnu.org/software/sed/manual/sed.html">http://www.gnu.org/software/sed/manual/sed.html</a></p>
+<h3 id="3-2-1-基本用法"><a href="#3-2-1-基本用法" class="headerlink" title="3.2.1 基本用法"></a><strong>3.2.1 基本用法</strong></h3><p><strong>格式：</strong></p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli">sed [option]<span class="hljs-string">...</span> &#x27;script;script;<span class="hljs-string">...</span>&#x27; [inputfile.<span class="hljs-string">..</span>]<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项：</strong></p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs ldif"><span class="hljs-literal">-</span>n 			不输出模式空间内容到屏幕，即不自动打印<br><span class="hljs-literal">-</span>e 			多点编辑<br><span class="hljs-literal">-</span>f FILE 	从指定文件中读取编辑脚本<br><span class="hljs-literal">-</span>r, -E 		使用扩展正则表达式<br><span class="hljs-literal">-</span>i.bak 		备份文件并原处编辑<br><span class="hljs-literal">-</span>s          将多个文件视为独立文件，而不是单个连续的长文件流<br><br><span class="hljs-comment">#说明: </span><br><span class="hljs-literal">-</span>ir 不支持<br><span class="hljs-literal">-</span>i -r 支持<br><span class="hljs-literal">-</span>ri   支持<br><span class="hljs-literal">-</span>ni   会清空文件，危险选项<br></code></pre></td></tr></table></figure>
+
+<p><strong>script格式</strong>：</p>
+<figure class="highlight scheme"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scheme"><span class="hljs-symbol">&#x27;地址+命令</span>&#x27;<br></code></pre></td></tr></table></figure>
+
+<p><strong>地址格式：</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-number">1</span>. 不给地址：对全文进行处理<br><span class="hljs-number">2</span>. 单地址：<br>   <span class="hljs-comment">#：指定的行，$：最后一行</span><br>   <span class="hljs-regexp">/pattern/</span>：被此处模式所能够匹配到的每一行<br><span class="hljs-number">3</span>. 地址范围：<br>   <span class="hljs-comment">#,#     #从#行到第#行，3，6 从第3行到第6行</span><br>   <span class="hljs-comment">#,+#   #从#行到+#行，3,+4 表示从3行到第7行</span><br>   <span class="hljs-regexp">/pat1/</span>,<span class="hljs-regexp">/pat2/</span><br>   <span class="hljs-comment">#,/pat/</span><br>   <span class="hljs-regexp">/pat/</span>,<span class="hljs-comment">#</span><br><span class="hljs-number">4</span>. 步进：~<br>     <span class="hljs-number">1</span>~<span class="hljs-number">2</span> 奇数行<br>     <span class="hljs-number">2</span>~<span class="hljs-number">2</span> 偶数行<br></code></pre></td></tr></table></figure>
+
+<p><strong>命令</strong></p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs excel">p 打印当前模式空间内容，追加到默认输出之后<br>Ip 忽略大小写输出<br>d 删除模式空间匹配的行，并立即启用下一轮循环<br>a [\]<span class="hljs-built_in">text</span> 在指定行后面追加文本，支持使用\n实现多行追加<br>i [\]<span class="hljs-built_in">text</span> 在行前面插入文本<br>c [\]<span class="hljs-built_in">text</span> 替换行为单行或多行文本<br>w file 保存模式匹配的行至指定文件<br>r file 读取指定文件的文本至模式空间中匹配到的行后<br>= 为模式空间中的行打印行号<br>! 模式空间中匹配行取反处理<br>q           结束或退出sed<br></code></pre></td></tr></table></figure>
+
+<p><strong>查找替代</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs awk">s<span class="hljs-regexp">/pattern/</span>string/修饰符 	查找替换,支持使用其它分隔符，可以是其它形式：s@@@，s<span class="hljs-comment">###</span><br><br>替换修饰符：<br>g 行内全局替换<br>p 显示替换成功的行<br>w   <span class="hljs-regexp">/PATH/</span>FILE 将替换成功的行保存至文件中<br>I,i   忽略大小写<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-2-2-高级用法（了解）"><a href="#3-2-2-高级用法（了解）" class="headerlink" title="3.2.2 高级用法（了解）"></a><strong>3.2.2 高级用法（了解）</strong></h3><p>sed 中除了<strong>模式空间</strong>，还另外还支持<strong>保持空间（Hold Space）</strong>,利用此空间，可以将模式空间中的数据，临时保存至保持空间，从而后续接着处理，实现更为强大的功能。</p>
+<p><strong>常见的高级命令</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs http">P 打印模式空间开端至\n内容，并追加到默认输出之前<br>h 把模式空间中的内容覆盖至保持空间中<br>H 把模式空间中的内容追加至保持空间中<br>g 从保持空间取出数据覆盖至模式空间<br>G 从保持空间取出内容追加至模式空间<br>x 把模式空间中的内容与保持空间中的内容进行互换<br>n 读取匹配到的行的下一行覆盖至模式空间<br>N 读取匹配到的行的下一行追加至模式空间<br>d 删除模式空间中的行<br>D 如果模式空间包含换行符，则删除直到第一个换行符的模式空间中的文本，并不会读取新的输入行，而使用合成的模式空间重新启动循环。如果模式空间不包含换行符，则会像发出d命令那样启动正常的新循环<br>范例<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-文本处理三剑客之-awk"><a href="#3-3-文本处理三剑客之-awk" class="headerlink" title="3.3 文本处理三剑客之 awk"></a><strong>3.3 文本处理三剑客之</strong> <strong>awk</strong></h2><h3 id="3-3-1-基本工作原理和基本用法"><a href="#3-3-1-基本工作原理和基本用法" class="headerlink" title="3.3.1 基本工作原理和基本用法"></a>3.3.1 基本工作原理和基本用法</h3><p>awk：Aho, Weinberger, Kernighan，报告生成器，格式化文本输出，GNU/Linux发布的AWK目前由自由软件基金会（FSF）进行开发和维护，通常也称它为 GNU AWK</p>
+<p><strong>有多种版本：</strong></p>
+<ul>
+<li>AWK：原先来源于 AT &amp; T 实验室的的AWK</li>
+<li>NAWK：New awk，AT &amp; T 实验室的AWK的升级版</li>
+<li>GAWK：即GNU AWK。所有的GNU/Linux发布版都自带GAWK，它与AWK和NAWK完全兼容</li>
+</ul>
+<p>GNU AWK 用户手册文档：</p>
+<p>​                <a target="_blank" rel="noopener" href="https://www.gnu.org/software/gawk/manual/gawk.html">https://www.gnu.org/software/gawk/manual/gawk.html</a></p>
+<p>​                <a target="_blank" rel="noopener" href="https://man7.org/linux/man-pages/man1/awk.1p.html">https://man7.org/linux/man-pages/man1/awk.1p.html</a></p>
+<p><strong>gawk：</strong>模式扫描和处理语言，可以实现下面功能</p>
+<ul>
+<li>文本处理</li>
+<li>输出格式化的文本报表</li>
+<li>执行算数运算</li>
+<li>执行字符串操作</li>
+</ul>
+<p><strong>格式：</strong></p>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs delphi">awk [options] <span class="hljs-string">&#x27;program&#x27;</span> <span class="hljs-keyword">var</span>=value <span class="hljs-keyword">file</span>…<br>awk [options] -f programfile <span class="hljs-keyword">var</span>=value <span class="hljs-keyword">file</span>…<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<p>program通常是被放在单引号中，并可以由三种部分组成</p>
+<ul>
+<li>BEGIN语句块</li>
+<li>模式匹配的通用语句块</li>
+<li>END语句块</li>
+</ul>
+<p><strong>常见选项：</strong></p>
+<ul>
+<li><strong>-F “分隔符”</strong> 指明输入时用到的字段分隔符，默认的分隔符是若干个连续空白符</li>
+<li><strong>-v var=value 变量赋值</strong></li>
+</ul>
+<p><strong>Program格式：</strong></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs abnf">pattern&#123;action statements<span class="hljs-comment">;..&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>pattern：决定动作语句何时触发及触发事件，比如：BEGIN,END,正则表达式等</p>
+<p>action statements：对数据进行处理，放在{}内指明，常见：print, printf</p>
+<p><strong>awk</strong> <strong>工作过程</strong></p>
+<p>第一步：<strong>执行BEGIN{action;… }语句块</strong>中的语句</p>
+<p>第二步：从文件或标准输入(stdin)<strong>读取一行</strong>，然后执行pattern{ action;… }语句块，它<strong>逐行扫描文件</strong>，从第一行到最后一行重复这个过程，直到文件全部被读取完毕。</p>
+<p>第三步：当读至输入流末尾时，<strong>执行END{action;…}语句块</strong></p>
+<p>BEGIN语句块在awk开始从输入流中读取行之前被执行，这是一个可选的语句块，比如变量初始化、打印输出表格的表头等语句通常可以写在BEGIN语句块中</p>
+<p>END语句块在awk从输入流中读取完所有的行之后即被执行，比如打印所有行的分析结果这类信息汇总都是在END语句块中完成，它也是一个可选语句块</p>
+<p>pattern语句块中的通用命令是最重要的部分，也是可选的。如果没有提供pattern语句块，则默认执行{ print }，即打印每一个读取到的行，awk读取的每一行都会执行该语句块</p>
+<p><strong>分割符、域和记录</strong></p>
+<ul>
+<li>由分隔符分隔的字段（列column,域field）标记$1,$2…$n称为域标识，$0为所有域，注意：和shell中变量$符含义不同</li>
+<li>文件的每一行称为记录record</li>
+<li>如果省略action，则默认执行 print $0 的操作</li>
+</ul>
+<p><strong>常用的action分类</strong></p>
+<ul>
+<li>output statements：print,printf</li>
+<li>Expressions：算术，比较表达式等</li>
+<li>Compound statements：组合语句</li>
+<li>Control statements：if, while等</li>
+<li>input statements</li>
+</ul>
+<p><strong>awk控制语句</strong></p>
+<ul>
+<li>{ statements;… } 组合语句</li>
+<li>if(condition) {statements;…} </li>
+<li>if(condition) {statements;…} else {statements;…}</li>
+<li>while(conditon) {statments;…}</li>
+<li>do {statements;…} while(condition)</li>
+<li>for(expr1;expr2;expr3) {statements;…}</li>
+<li>break</li>
+<li>continue</li>
+<li>exit </li>
+</ul>
+<h3 id="3-3-2-动作-print"><a href="#3-3-2-动作-print" class="headerlink" title="3.3.2 动作 print"></a>3.3.2 动作 print</h3><p><strong>格式</strong></p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams"><span class="hljs-function"><span class="hljs-title">print</span></span> item1, item2, ...<br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong></p>
+<ul>
+<li>逗号分隔符</li>
+<li>输出item可以字符串，也可是数值；当前记录的字段、变量或awk的表达式</li>
+<li>如省略item，相当于print $0</li>
+<li>固定字符符需要用“ ” 引起来，而变量和数字不需要</li>
+</ul>
+<h3 id="3-3-3-awk-变量"><a href="#3-3-3-awk-变量" class="headerlink" title="3.3.3 awk 变量"></a><strong>3.3.3 awk</strong> <strong>变量</strong></h3><p>awk中的变量分为：内置和自定义变量</p>
+<h4 id="3-3-3-1-常见的内置变量"><a href="#3-3-3-1-常见的内置变量" class="headerlink" title="3.3.3.1 常见的内置变量"></a><strong>3.3.3.1 常见的内置变量</strong></h4><p><strong>-v</strong></p>
+<ul>
+<li><p><strong>FS：输入字段分隔符，默认为空白字符,功能相当于 -F</strong></p>
+</li>
+<li><p>OFS：输出字段分隔符，默认为空白字符</p>
+</li>
+<li><p>RS：输入记录record分隔符，指定输入时的换行符</p>
+</li>
+<li><p>ORS：输出记录分隔符，输出时用指定符号代替换行符</p>
+</li>
+<li><p><strong>NF：字段数量</strong></p>
+</li>
+<li><p><strong>NR：记录的编号</strong></p>
+</li>
+<li><p>FNR：各文件分别计数，记录的编号  </p>
+</li>
+<li><p>FILENAME：当前文件名</p>
+</li>
+<li><p>ARGC：命令行参数的个数</p>
+</li>
+<li><p>ARGV：数组，保存的是命令行所给定的各参数，每一个参数：ARGV[0]，……</p>
+</li>
+</ul>
+<h4 id="3-3-3-2-自定义变量"><a href="#3-3-3-2-自定义变量" class="headerlink" title="3.3.3.2 自定义变量"></a>3.3.3.2 <strong>自定义变量</strong></h4><p>自定义变量是区分字符大小写的,使用下面方式进行赋值</p>
+<ul>
+<li>-<strong>v var=value</strong> </li>
+</ul>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">awk -v <span class="hljs-keyword">class</span>=&quot;<span class="hljs-symbol">M80</span>&quot; &#x27;<span class="hljs-symbol">BEGIN</span>&#123;print <span class="hljs-keyword">class</span>&#125;&#x27;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在program中直接定义</li>
+</ul>
+<figure class="highlight ocaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ocaml">awk <span class="hljs-symbol">&#x27;BEGIN</span>&#123;<span class="hljs-keyword">class</span>=<span class="hljs-string">&quot;M80&quot;</span>;print <span class="hljs-keyword">class</span>&#125;<span class="hljs-string">&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-4-动作-printf"><a href="#3-3-4-动作-printf" class="headerlink" title="3.3.4 动作 printf"></a>3.3.4 <strong>动作</strong> <strong>printf</strong></h3><p>printf 可以实现格式化输出</p>
+<p><strong>格式</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">printf</span> “FORMAT”, item1, item2, <br></code></pre></td></tr></table></figure>
+
+<p><strong>说明</strong></p>
+<ul>
+<li><strong>必须指定FORMAT</strong></li>
+<li><strong>不会自动换行</strong>，需要显式给出换行控制符 \n</li>
+<li>FORMAT中需要分别为后面每个item指定格式符</li>
+</ul>
+<p><strong>格式符：与item一一对应</strong></p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs haml"><span class="hljs-tag">%<span class="hljs-selector-tag">s</span></span>：显示字符串<br><span class="hljs-tag">%<span class="hljs-selector-tag">d</span></span>, %i：显示十进制整数<br><span class="hljs-tag">%<span class="hljs-selector-tag">f</span></span>：显示为浮点数<br><span class="hljs-tag">%<span class="hljs-selector-tag">e</span></span>, %E：显示科学计数法数值 <br><span class="hljs-tag">%<span class="hljs-selector-tag">c</span></span>：显示字符的ASCII码<br><span class="hljs-tag">%<span class="hljs-selector-tag">g</span></span>, %G：以科学计数法或浮点形式显示数值<br><span class="hljs-tag">%<span class="hljs-selector-tag">u</span></span>：无符号整数<br><span class="hljs-tag">%</span>%：显示%自身<br></code></pre></td></tr></table></figure>
+
+<p><strong>修饰符</strong></p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs prolog">#[.#] 第一个数字控制显示的宽度；第二个#表示小数点后精度，如：<span class="hljs-comment">%3.1f</span><br>- 左对齐（默认右对齐） 如：<span class="hljs-comment">%-15s</span><br>+  显示数值的正负符号  如：<span class="hljs-comment">%+d</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-5-操作符"><a href="#3-3-5-操作符" class="headerlink" title="3.3.5 操作符"></a>3.3.5 操作符</h3><p><strong>算术操作符</strong></p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-keyword">x</span>+y<span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span>-y<span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span>*y<span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span>/y<span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span>^y<span class="hljs-punctuation">,</span> <span class="hljs-keyword">x</span><span class="hljs-variable">%y</span><br>-<span class="hljs-keyword">x</span>：转换为负数<br>+<span class="hljs-keyword">x</span>：将字符串转换为数值<br></code></pre></td></tr></table></figure>
+
+<p><strong>字符串操作符</strong></p>
+<p>没有符号的操作符，字符串连接</p>
+<p><strong>赋值操作符</strong></p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">=, +=, -=, *=, /=, %=, ^=，++, --<br></code></pre></td></tr></table></figure>
+
+<p><strong>比较操作符</strong></p>
+<figure class="highlight erlang-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs erlang-repl">==, !=, &gt;, &gt;=, &lt;, &lt;=<br></code></pre></td></tr></table></figure>
+
+<p><strong>模式匹配符</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs diff">~ 左边是否和右边匹配，包含关系<br><span class="hljs-addition">!~ 是否不匹配</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>逻辑操作符</strong></p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs 1c">与：<span class="hljs-meta">&amp;&amp;，并且关系</span><br>或：<span class="hljs-string">||，或者关系</span><br>非：!，取反<br></code></pre></td></tr></table></figure>
+
+<p><strong>条件表达式（三目表达式）</strong></p>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs oxygene"><span class="hljs-keyword">selector</span>?<span class="hljs-keyword">if</span>-<span class="hljs-keyword">true</span>-expression:<span class="hljs-keyword">if</span>-<span class="hljs-keyword">false</span>-expression<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-6-模式PATTERN"><a href="#3-3-6-模式PATTERN" class="headerlink" title="3.3.6 模式PATTERN"></a>3.3.6 <strong>模式PATTERN</strong></h3><p>PATTERN:根据pattern条件，过滤匹配的行，再做处理</p>
+<ul>
+<li><p>如果未指定：空模式，匹配每一行</p>
+</li>
+<li><p>/regular expression/：仅处理能够模式匹配到的行，需要用/ /括起来</p>
+</li>
+<li><p>relational expression: 关系表达式，结果为“真”才会被处理</p>
+<p>真：结果为非0值，非空字符串</p>
+<p>假：结果为空字符串或0值或false</p>
+<p>! 表示取反</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">*奇数打印*<br><span class="hljs-built_in">seq</span> 10 | awk <span class="hljs-string">&#x27;i=!i&#x27;</span><br></code></pre></td></tr></table></figure></li>
+<li><p>line ranges：行范围</p>
+<p>  不支持直接用行号，但可以使用<strong>变量NR</strong>间接<strong>指定行号</strong></p>
+<p>  /pat1/,/pat2/ 不支持直接给出数字格式</p>
+</li>
+<li><p>BEGIN/END模式</p>
+<p>  BEGIN{}：仅在开始处理文件中的文本之前执行一次</p>
+<p>  END{}：仅在文本处理完成之后执行一次</p>
+</li>
+</ul>
+<h3 id="3-3-7-条件判断-if-else"><a href="#3-3-7-条件判断-if-else" class="headerlink" title="3.3.7 条件判断 if-else"></a>3.3.7 <strong>条件判断</strong> <strong>if-else</strong></h3><p><strong>语法</strong></p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">if</span>(condition)&#123;statement;…&#125;<span class="hljs-selector-attr">[else statement]</span><br><span class="hljs-built_in">if</span>(condition1)&#123;statement1&#125;else <span class="hljs-built_in">if</span>(condition2）&#123;statement2&#125;else if(condition3)&#123;statement3&#125;...... else &#123;statementN&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>使用场景</strong>： 对awk取得的整行或某个字段做条件判断</p>
+<h3 id="3-3-8-条件判断-switch"><a href="#3-3-8-条件判断-switch" class="headerlink" title="3.3.8 条件判断 switch"></a>3.3.8 <strong>条件判断</strong> <strong>switch</strong></h3><p><strong>语法</strong></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">switch</span>(expression) &#123;<span class="hljs-keyword">case</span> VALUE1 or <span class="hljs-regexp">/REGEXP/</span>: statement1; <span class="hljs-keyword">case</span> VALUE2 or <span class="hljs-regexp">/REGEXP2/</span>: statement2; ...; <span class="hljs-keyword">default</span>: statementn&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-9-循环-while"><a href="#3-3-9-循环-while" class="headerlink" title="3.3.9 循环 while"></a>3.3.9 <strong>循环</strong> <strong>while</strong></h3><p><strong>语法</strong></p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mel"><span class="hljs-keyword">while</span> (<span class="hljs-keyword">condition</span>) &#123;statement;…&#125;<br></code></pre></td></tr></table></figure>
+
+<p>条件“真”，进入循环；条件“假”，退出循环</p>
+<p><strong>使用场景</strong></p>
+<p>​        对一行内的多个字段逐一类似处理时使用</p>
+<p>​        对数组中的各元素逐一处理时使用</p>
+<h3 id="3-3-10-循环-do-while"><a href="#3-3-10-循环-do-while" class="headerlink" title="3.3.10 循环 do-while"></a>3.3.10 <strong>循环</strong> <strong>do-while</strong></h3><p><strong>语法</strong></p>
+<figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mel"><span class="hljs-keyword">do</span> &#123;statement;…&#125;<span class="hljs-keyword">while</span>(<span class="hljs-keyword">condition</span>)<br></code></pre></td></tr></table></figure>
+
+<p><strong>意义</strong>：无论真假，至少执行一次循环体</p>
+<h3 id="3-3-11-循环-for"><a href="#3-3-11-循环-for" class="headerlink" title="3.3.11 循环 for"></a>3.3.11 <strong>循环</strong> <strong>for</strong></h3><p><strong>语法</strong></p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">for</span>(expr1;expr2;expr3) &#123;statement;…&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>常见用法</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">for</span><span class="hljs-params">(variable assignment;condition;iteration process)</span></span> &#123;<span class="hljs-keyword">for</span>-body&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>特殊用法</strong>：能够遍历数组中的元素</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">for</span><span class="hljs-params">(var in array)</span></span> &#123;<span class="hljs-keyword">for</span>-body&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-12-continue-和-break"><a href="#3-3-12-continue-和-break" class="headerlink" title="3.3.12 continue 和 break"></a>3.3.12 <strong>continue</strong> <strong>和</strong> <strong>break</strong></h3><ul>
+<li>continue 中断本次循环</li>
+<li>break 中断整个循环</li>
+</ul>
+<p><strong>格式</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">continue</span> [n]<br><span class="hljs-keyword">break</span> [n]<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-13-next"><a href="#3-3-13-next" class="headerlink" title="3.3.13 next"></a>3.3.13 <strong>next</strong></h3><p>next 可以提前结束对本行处理而直接进入下一行处理（awk自身循环）</p>
+<h3 id="3-3-14-数组"><a href="#3-3-14-数组" class="headerlink" title="3.3.14  数组"></a>3.3.14  <strong>数组</strong></h3><p>awk的数组为关联数组</p>
+<p><strong>格式</strong></p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-built_in">array</span>_name[index-expression]<br></code></pre></td></tr></table></figure>
+
+<p><strong>index-expression</strong></p>
+<ul>
+<li>利用数组，实现 k/v 功能</li>
+<li>可使用任意字符串；字符串要使用双引号括起来</li>
+<li>如果某数组元素事先不存在，在引用时，awk会自动创建此元素，并将其值初始化为“空串”</li>
+<li>若要判断数组中是否存在某元素，要使用“index in array”格式进行遍历</li>
+</ul>
+<p><strong>判断数组索引是否存在</strong></p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">awk <span class="hljs-symbol">&#x27;BEGIN</span>&#123;<span class="hljs-keyword">array</span>[<span class="hljs-string">&quot;i&quot;</span>]=<span class="hljs-string">&quot;x&quot;</span>;<span class="hljs-keyword">array</span>[<span class="hljs-string">&quot;j&quot;</span>]=<span class="hljs-string">&quot;y&quot;</span> ; print <span class="hljs-string">&quot;i&quot;</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">array</span>, <span class="hljs-string">&quot;y&quot;</span> <span class="hljs-keyword">in</span> <span class="hljs-keyword">array</span>&#125;&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>若要遍历数组中的每个元素，要使用 for 循环</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">for</span><span class="hljs-params">(var in array)</span></span> &#123;<span class="hljs-keyword">for</span>-body&#125;<br></code></pre></td></tr></table></figure>
+
+<p>注意：var会遍历array的每个索引</p>
+<h3 id="3-3-15-awk-函数"><a href="#3-3-15-awk-函数" class="headerlink" title="3.3.15 awk 函数"></a><strong>3.3.15 awk</strong> <strong>函数</strong></h3><p>awk 的函数分为内置和自定义函数</p>
+<p><strong>官方文档</strong> <a target="_blank" rel="noopener" href="https://www.gnu.org/software/gawk/manual/gawk.html#Functions">https://www.gnu.org/software/gawk/manual/gawk.html#Functions</a></p>
+<h4 id="3-3-15-1-常见内置函数"><a href="#3-3-15-1-常见内置函数" class="headerlink" title="3.3.15.1 常见内置函数"></a><strong>3.3.15.1 常见内置函数</strong></h4><ul>
+<li>数值处理</li>
+</ul>
+<figure class="highlight verilog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs verilog"><span class="hljs-keyword">rand</span>()：返回<span class="hljs-number">0</span>和<span class="hljs-number">1</span>之间一个随机数<br>srand()：配合<span class="hljs-keyword">rand</span>() 函数,生成随机数的种子<br>***<br>awk <span class="hljs-number">&#x27;BE</span>GIN&#123;srand();print <span class="hljs-keyword">rand</span>()&#125;&#x27;<br>***<br><br><span class="hljs-keyword">int</span>()：返回整数<br>***<br>awk <span class="hljs-number">&#x27;BE</span>GIN&#123;srand();print <span class="hljs-keyword">int</span>(<span class="hljs-keyword">rand</span>()*<span class="hljs-number">100</span>)&#125;&#x27;<br>***<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>字符串处理</li>
+</ul>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">length</span>([s])：返回指定字符串的长度<br><span class="hljs-built_in">sub</span>(r,s,[t])：对t字符串搜索r表示模式匹配的内容，并将第一个匹配内容替换为s,*懒惰模式*<br><span class="hljs-built_in">gsub</span>(r,s,[t])：对t字符串进行搜索r表示的模式匹配的内容，并全部替换为s所表示的内容，*贪婪模式*<br><span class="hljs-built_in">split</span>(s,array,[r])：以r为分隔符，切割字符串s，并将切割后的结果保存至array所表示的数组中，第一个索引值为<span class="hljs-number">1</span>,第二个索引值为<span class="hljs-number">2</span>,…<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>可以awk中调用shell命令</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">system</span><span class="hljs-params">(<span class="hljs-string">&#x27;cmd&#x27;</span>)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>空格是awk中的字符串连接符，如果system中需要使用awk中的变量可以使用空格分隔，或者说除了awk的变量外其他一律用””引用起来</p>
+<ul>
+<li>时间函数</li>
+</ul>
+<p>官方文档: 时间函数  <a target="_blank" rel="noopener" href="https://www.gnu.org/software/gawk/manual/gawk.html#Time-Functions">https://www.gnu.org/software/gawk/manual/gawk.html#Time-Functions</a></p>
+<figure class="highlight erlang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs erlang"><span class="hljs-function"><span class="hljs-title">systime</span><span class="hljs-params">()</span> 当前时间到1970年1月1日的秒数</span><br><span class="hljs-function"><span class="hljs-title">strftime</span><span class="hljs-params">()</span> 指定时间格式 </span><br><span class="hljs-function">***</span><br><span class="hljs-function"><span class="hljs-title">awk</span> <span class="hljs-title">&#x27;BEGIN</span>&#123;<span class="hljs-title">print</span> <span class="hljs-title">strftime</span><span class="hljs-params">(<span class="hljs-string">&quot;%Y-%m-%d %H:%M&quot;</span>,systime())</span>&#125;<span class="hljs-title">&#x27;</span></span><br><span class="hljs-function">***</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="3-3-15-2-自定义函数"><a href="#3-3-15-2-自定义函数" class="headerlink" title="3.3.15.2 自定义函数"></a>3.3.15.2 <strong>自定义函数</strong></h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">awk -v <span class="hljs-attribute">var1</span>=value1  -v <span class="hljs-attribute">var2</span>=value2... -f awkfile<br></code></pre></td></tr></table></figure>
+
+<p><strong>自定义函数格式</strong></p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs actionscript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">name</span> <span class="hljs-params">( parameter, parameter, <span class="hljs-rest_arg">... ) &#123;</span></span><br><span class="hljs-rest_arg"><span class="hljs-params">   statements</span></span><br><span class="hljs-params">   return expression</span><br><span class="hljs-params">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-3-16-awk-脚本"><a href="#3-3-16-awk-脚本" class="headerlink" title="3.3.16 awk 脚本"></a>3.3.16 <strong>awk</strong> <strong>脚本</strong></h3><p>将awk程序写成脚本，直接调用或执行</p>
+<figure class="highlight d"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs d"><span class="hljs-meta">#!/bin/awk -f</span><br>#<span class="hljs-keyword">this</span> <span class="hljs-keyword">is</span> a awk script<br>filename<br></code></pre></td></tr></table></figure>
+
+<p><strong>向awk脚本传递参数</strong></p>
+<p>格式</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">awkfile  <span class="hljs-attribute">var</span>=value  <span class="hljs-attribute">var2</span>=value2... Inputfile<br></code></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li><strong>在BEGIN过程中不可用</strong>。</li>
+<li>直到首行输入完成以后，变量才可用。</li>
+<li>可以通过-v 参数，让awk在执行BEGIN之前得到变量的值。</li>
+<li>命令行中每一个指定的变量都需要一个-v参数</li>
+</ul>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/22/Linux-%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux-文本处理工具</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/16/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-%E5%9B%BE%E8%AE%BA%E6%A8%A1%E5%9E%8B/">
+                        <span class="hidden-mobile">数学建模-图论模型</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

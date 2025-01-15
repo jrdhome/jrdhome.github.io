@@ -1,0 +1,471 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 PostgreSQL安装1.1 二进制安装包安装https:&#x2F;&#x2F;www.postgresql.org&#x2F;download&#x2F;linux&#x2F;redhat&#x2F;        https:&#x2F;&#x2F;www.postgresql.org&#x2F;download&#x2F;linux&#x2F;ubuntu&#x2F; 12[root@Rocky8 ~]# yum info postgresqlroot@ubuntu2004:~# apt list p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-PostgreSQL1">
+<meta property="og:url" content="http://example.com/2024/02/16/Linux-PostgreSQL1/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 PostgreSQL安装1.1 二进制安装包安装https:&#x2F;&#x2F;www.postgresql.org&#x2F;download&#x2F;linux&#x2F;redhat&#x2F;        https:&#x2F;&#x2F;www.postgresql.org&#x2F;download&#x2F;linux&#x2F;ubuntu&#x2F; 12[root@Rocky8 ~]# yum info postgresqlroot@ubuntu2004:~# apt list p">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-02-16T15:30:45.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.350Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Linux-PostgreSQL1 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-PostgreSQL1">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-02-16 15:30" pubdate>
+        February 16, 2024 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      26 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-PostgreSQL1</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-PostgreSQL安装"><a href="#1-PostgreSQL安装" class="headerlink" title="1 PostgreSQL安装"></a>1 PostgreSQL安装</h1><h2 id="1-1-二进制安装包安装"><a href="#1-1-二进制安装包安装" class="headerlink" title="1.1 二进制安装包安装"></a>1.1 二进制安装包安装</h2><p><a target="_blank" rel="noopener" href="https://www.postgresql.org/download/linux/redhat/">https://www.postgresql.org/download/linux/redhat/</a><br>        <a target="_blank" rel="noopener" href="https://www.postgresql.org/download/linux/ubuntu/">https://www.postgresql.org/download/linux/ubuntu/</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></div></td><td class="code"><pre><code class="hljs shell">[root@Rocky8 ~]# yum info postgresql<br>root@ubuntu2004:~# apt list postgresql<br></code></pre></td></tr></table></figure>
+
+<p><strong>以Rocky8为例</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">安装指定版本 postgresql-15</span><br>[root@Rocky8 ~]# vim install_postgresql_15.sh<br>sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm<br>sudo dnf -qy module disable postgresql<br>sudo dnf install -y postgresql15-server<br>sudo /usr/pgsql-15/bin/postgresql-15-setup initdb<br>sudo systemctl enable postgresql-15<br>sudo systemctl start postgresql-15<br>[root@Rocky8 ~]# bash install_postgresql_15.sh<br>[root@Rocky8 ~]# vim -y install postgresql<br><br>[root@ubuntu2004 ~]# pg_createcluster 12 main --start<br><br>[root@Rocky8 ~]# systemctl enable --now postgresql-15<br>[root@rocky8 ~]# sudo -u postgres psql -c &quot;SELECT version();&quot;<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-源码编译安装"><a href="#1-2-源码编译安装" class="headerlink" title="1.2 源码编译安装"></a>1.2 源码编译安装</h2><p><a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/install-procedure.html">https://www.postgresql.org/docs/current/install-procedure.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.postgresql.org/docs/current/installation.html">https://www.postgresql.org/docs/current/installation.html</a> </p>
+<p><a target="_blank" rel="noopener" href="http://www.postgres.cn/v2/download">http://www.postgres.cn/v2/download</a></p>
+<p><strong>安装依赖包</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs elixir"><span class="hljs-comment">#Ubuntu</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~</span><span class="hljs-comment"># apt update</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~</span><span class="hljs-comment"># apt install -y  gcc make libreadline-dev zlib1g-dev</span><br><br><span class="hljs-comment">#RHEL系统</span><br>yum install-y gcc make readline-devel zlib-dev<br></code></pre></td></tr></table></figure>
+
+<p><strong>源码编译安装</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs elixir">root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~</span><span class="hljs-comment"># tar xf postgresql-14.2.tar.gz</span><br><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># ./configure --prefix=/apps/pgsql</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># make -j 2 world</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># make install-world</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>初始化</strong></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><code class="hljs ruby">root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># useradd -s /bin/bash -m -d /home/postgres postgres</span><br><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># echo -e &#x27;123456\n123456&#x27; | passwd postgres</span><br>New <span class="hljs-symbol">password:</span> Retype new <span class="hljs-symbol">password:</span> <span class="hljs-symbol">passwd:</span> password updated successfully<br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># echo postgres:123456|chpasswd</span><br><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># mkdir -pv /pgsql/data/</span><br><span class="hljs-symbol">mkdir:</span> created directory <span class="hljs-string">&#x27;/pgsql&#x27;</span><br><span class="hljs-symbol">mkdir:</span> created directory <span class="hljs-string">&#x27;/pgsql/data/&#x27;</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># chown postgres.postgres /pgsql/data/</span><br><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># vim /etc/profile.d/pgsql.sh</span><br>export <span class="hljs-variable constant_">PGHOME</span>=<span class="hljs-regexp">/apps/pgsql</span> <br>export <span class="hljs-variable constant_">PATH</span>=<span class="hljs-variable">$PGHOME</span>/bin/<span class="hljs-symbol">:</span><span class="hljs-variable">$PATH</span> <br>export <span class="hljs-variable constant_">PGDATA</span>=<span class="hljs-regexp">/pgsql/data</span> <br>export <span class="hljs-variable constant_">PGUSER</span>=postgres <br>export <span class="hljs-variable constant_">MANPATH</span>=<span class="hljs-regexp">/apps/pgsql</span><span class="hljs-regexp">/share/man</span><span class="hljs-symbol">:</span><span class="hljs-variable">$MANPATH</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># . /etc/profile.d/pgsql.sh </span><br><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># su - postgres</span><br><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~/postgresql-</span><span class="hljs-number">14.2</span><span class="hljs-comment"># su - postgres</span><br>postgres<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>initdb<br>postgres<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~</span><span class="hljs-variable">$ </span>pg_ctl -l logfile start<br>waiting <span class="hljs-keyword">for</span> server to start.... done<br>server started<br><br><span class="hljs-comment"># 开机启动</span><br><br><span class="hljs-comment">#第一种方法</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~</span><span class="hljs-comment"># cat /etc/rc.local </span><br><span class="hljs-comment">#!/bin/bash</span><br>su - postgres -c<span class="hljs-string">&quot;/apps/pgsql/bin/pg_ctl -l logfile start&quot;</span><br>root<span class="hljs-variable">@ubuntu2004</span><span class="hljs-symbol">:~</span><span class="hljs-comment"># chmod +x /etc/rc.local </span><br><br><span class="hljs-comment">#第二种方法 建议service设置开机启动</span><br>[root<span class="hljs-variable">@ubuntu2004</span> ~]<span class="hljs-comment">#cat&gt; /lib/systemd/system/postgresql.service &lt;&lt;EOF </span><br>[Unit] <br>Description=PostgreSQL database server <br>After=network.target <br><br>[Service] <br>User=postgres <br>Group=postgres <br><br>ExecStart=<span class="hljs-regexp">/apps/pgsql</span><span class="hljs-regexp">/bin/postmaster</span> -D /pgsql/data <br>ExecReload=<span class="hljs-regexp">/bin/kill</span> -<span class="hljs-variable constant_">HUP</span> <br><br>[Install] <br>WantedBy=multi-user.target <br><span class="hljs-variable constant_">EOF</span> <br><br>[root<span class="hljs-variable">@ubuntu2004</span> ~] <span class="hljs-comment"># systemctl daemon-reload </span><br>[root<span class="hljs-variable">@ubuntu2004</span> ~] <span class="hljs-comment"># systemctl enable --now postgresql.service</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>查看编译和相关信息</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">[postgres@postgresql ~]$ pg_config<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-3-pg-ctl-命令管理PostgreSQL"><a href="#1-3-pg-ctl-命令管理PostgreSQL" class="headerlink" title="1.3 pg_ctl 命令管理PostgreSQL"></a>1.3 pg_ctl 命令管理PostgreSQL</h2><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">root@ubuntu2004:~# pg_ctl <span class="hljs-comment">--help</span><br><br><br></code></pre></td></tr></table></figure>
+
+<p> <strong>Mysql 一个主进程开多个线程   Postgresql 一个主进程里有多个子线程</strong></p>
+<h1 id="2-PostgreSQL-管理"><a href="#2-PostgreSQL-管理" class="headerlink" title="2 PostgreSQL 管理"></a>2 PostgreSQL 管理</h1><span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/03/24/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">软件工程概论</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/15/Linux-OpenVPN/">
+                        <span class="hidden-mobile">Linux-OpenVPN</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

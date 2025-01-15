@@ -1,0 +1,613 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实验概述   本实验用户将完整体验一次如何将本地开发好的网站安全地发布到阿里云的云服务器ECS之上，最终用户可以使用服务器的IP地址访问到自己的网站。 实验目标  完成此实验后，可以掌握的能力有： \1. 在Linux操作系统中，使用Apache搭建基础网站环境； \2. 使用FileZilla通过SFTP安全传输文件到云服务器ECS； \3. 本地网站安全发布到云服务器ECS中； \4. 添加L">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clouder-部署ECS环境并使用FileZilla上传">
+<meta property="og:url" content="http://example.com/2023/07/27/Clouder-%E9%83%A8%E7%BD%B2ECS%E7%8E%AF%E5%A2%83%E5%B9%B6%E4%BD%BF%E7%94%A8FileZilla%E4%B8%8A%E4%BC%A0/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="实验概述   本实验用户将完整体验一次如何将本地开发好的网站安全地发布到阿里云的云服务器ECS之上，最终用户可以使用服务器的IP地址访问到自己的网站。 实验目标  完成此实验后，可以掌握的能力有： \1. 在Linux操作系统中，使用Apache搭建基础网站环境； \2. 使用FileZilla通过SFTP安全传输文件到云服务器ECS； \3. 本地网站安全发布到云服务器ECS中； \4. 添加L">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307281058342.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1610093635397-772CTz">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1610093670947-3DCF6w">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1648871501717-wvjSP7">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1610093735569-QDi1dG">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492759770031-nzd21n">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492759842255-UbBz2m">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760211907-MAUpC2">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492764212954-tkaMKo">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760429820-G8ItrA">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760520387-4BqM6E">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760637682-xLHx0K">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307281058273.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1492764542241-kuLrdP">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1492764599960-wFeBS6">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1492764832096-JTQaDN">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1493089846596-G3cfR4">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1493086386934-I0FMQZ">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089718404-nwrCIB">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089736124-ZPMhSQ">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089013768-T7b6So">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089615797-OZmz6n">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089698754-5SdBPb">
+<meta property="article:published_time" content="2023-07-27T17:24:58.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.349Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="Clouder">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307281058342.png">
+  
+  
+  <title>Clouder-部署ECS环境并使用FileZilla上传 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Clouder-部署ECS环境并使用FileZilla上传">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-07-27 17:24" pubdate>
+        July 27, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      2.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      20 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clouder-部署ECS环境并使用FileZilla上传</h1>
+            
+            <div class="markdown-body">
+              <p><strong>实验概述</strong></p>
+<p>  本实验用户将完整体验一次如何将本地开发好的网站<strong>安全</strong>地发布到阿里云的云服务器ECS之上，最终用户可以使用服务器的IP地址访问到自己的网站。</p>
+<p><strong>实验目标</strong></p>
+<p> 完成此实验后，可以掌握的能力有：</p>
+<p>\1. 在Linux操作系统中，使用Apache搭建基础网站环境；</p>
+<p>\2. 使用FileZilla通过SFTP安全传输文件到云服务器ECS；</p>
+<p>\3. 本地网站安全发布到云服务器ECS中；</p>
+<p>\4. 添加Linux用户；</p>
+<p>\5. 修改Linux用户密码；</p>
+<p><strong>学前建议</strong></p>
+<p>\1. 了解Linux操作系统的基本命令。 </p>
+<h1 id="部署ECS环境"><a href="#部署ECS环境" class="headerlink" title="部署ECS环境"></a>部署ECS环境</h1><p>\1. 在实验室页面右侧，单击单击<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307281058342.png" srcset="/img/loading.gif" lazyload alt="img"  /> 图标，打开Web Terminal。</p>
+<p>备注：若Web Terminal界面没有打开，请尝试刷新页面重新连接。</p>
+<p>\2. 使用yum方式，下载并安装Apache。</p>
+<p>在Linux系统中使用yum工具可以帮助用户方便的安装软件包。修改yum更新源为CentOS官网。</p>
+<p>执行命令：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs awk">mv <span class="hljs-regexp">/etc/yum</span>.repos.d<span class="hljs-regexp">/CentOS-* /</span>etc<span class="hljs-regexp">/yum.repos.d/</span>epel.repo <span class="hljs-regexp">/etc/yum</span>.repos.d/backup<br></code></pre></td></tr></table></figure>
+
+<p>然后输入 y，如图所示</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1610093635397-772CTz" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>执行命令：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/yum</span>.repos.d/base.repo<br></code></pre></td></tr></table></figure>
+
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1610093670947-3DCF6w" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>写入下面内容：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[base]</span><br><span class="hljs-attr">name</span>=base<br><span class="hljs-attr">baseurl</span>=https://mirrors.aliyun.com/centos-vault/<span class="hljs-number">6.5</span>/os/x<span class="hljs-number">86_64</span>/<br><span class="hljs-attr">enabled</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1648871501717-wvjSP7" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 67%;" />
+
+<p>点击ECS，输入:wq ，保存并退出。</p>
+<p>执行命令：</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">yum clean <span class="hljs-keyword">all</span><br></code></pre></td></tr></table></figure>
+
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1610093735569-QDi1dG" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+
+
+<p>执行命令安装Apache环境：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> httpd<br></code></pre></td></tr></table></figure>
+
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492759770031-nzd21n" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>等待一段时间后，页面显示 <strong>Complete！</strong>证明Apache环境安装完成。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492759842255-UbBz2m" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>\3. 执行如下命令，添加一个Linux用户 <strong>siteadmin</strong> 并指定新增用户的远程登录默认访问路径为 <strong>/var/www/html，</strong>忽略警告信息即可。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">adduser -d <span class="hljs-regexp">/var/</span>www/html siteadmin<br></code></pre></td></tr></table></figure>
+
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760211907-MAUpC2" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+
+
+<p>\4. 执行如下命令，设置新建用户 <strong>siteadmin</strong> 的登录密码：</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">passwd siteadmin</span><br></code></pre></td></tr></table></figure>
+
+<p>自定义登录密码，例如：<strong>siteadmin</strong></p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492764212954-tkaMKo" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>备注：输入密码时Web Terminal里不会明文显示，输入完成回车确认即可。</p>
+<p>\5. 执行如下命令，授予 <strong>siteadmin</strong> 用户权限：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">chown  -Rf  siteadmin.siteadmin  <span class="hljs-regexp">/var/</span>www/html<br></code></pre></td></tr></table></figure>
+
+<p>其中代码：siteadmin.&lt;自定义用户密码&gt;</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760429820-G8ItrA" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>\6. 执行如下命令，启动Apache服务：</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">service httpd <span class="hljs-literal">start</span><br></code></pre></td></tr></table></figure>
+
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760520387-4BqM6E" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>\7. 本地打开浏览器，并输入实验资源中提供的 <strong>Linux服务器</strong> 的 <strong>弹性公网IP</strong> 。若页面显示 <strong>Apache 2 Test Page，</strong>则证明Apache已部署成功。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/ba70fc3a856948459ee8792994f23447/content/images/course-129136057c2a4d50af22490b5ce8f878-section-ba70fc3a856948459ee8792994f23447-content-image-1492760637682-xLHx0K" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<h1 id="（Mac系统）使用FileZilla上传本地"><a href="#（Mac系统）使用FileZilla上传本地" class="headerlink" title="（Mac系统）使用FileZilla上传本地"></a>（Mac系统）使用FileZilla上传本地</h1><p>\1. 请通过如下步骤，<strong>下载并安装</strong> <strong>FileZilla软件。</strong></p>
+<p>1）<a target="_blank" rel="noopener" href="https://university-labfileapp.oss-cn-hangzhou.aliyuncs.com/FileZilla_3.61.0_macosx-x86.app.tar.bz2">点击下载FileZilla</a></p>
+<p>2）解压已下载的文件到当前或其他路径中。</p>
+<p>3）此时，在FileZilla的解压路径中，双击并打开 <strong>FileZilla</strong> 软件。</p>
+<p>\2. 通过如下操作，<strong>连接到ECS服务器。</strong></p>
+<p>1）点击“文件-站点管理器”，新建站点</p>
+<ul>
+<li>主机：输入本实验资源中分配的ECS Linux服务器 的 弹性公网IP；</li>
+<li>用户名：输入ECS服务器中新建用户 siteadmin；</li>
+<li>密码：输入上一步骤中 siteadmin 用户的自定义登录密码，例如：siteadmin；</li>
+<li>端口：输入 22；</li>
+<li>协议：SSH</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307281058273.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+
+<p>2）弹出记住密码对话框，选择 <strong>不要保存密码</strong> ，完成后，点击 <strong>确定 。</strong></p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1492764542241-kuLrdP" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>3）弹出 <strong>是否信任主机</strong> 的提示，点击 <strong>确定 。</strong></p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1492764599960-wFeBS6" srcset="/img/loading.gif" lazyload alt="img" style="zoom:80%;" />
+
+<p>4）此时，右侧页面显示ECS的访问路径 <strong>/var/www/html，</strong>且当前路径下无文件。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1492764832096-JTQaDN" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 50%;" />
+
+
+
+<p>\3. 通过如下步骤，<strong>将本地的站点文件上传到ECS服务器中。</strong></p>
+<p>1）点击 <a target="_blank" rel="noopener" href="https://university-labfileapp.oss-cn-hangzhou.aliyuncs.com/web-demo.zip"><strong>附件下载</strong></a> ，下载并保存 <strong>web-demo.zip</strong> 示例站点到本地。</p>
+<p>2）解压 <strong>web-demo.zip</strong> 到当前目录。</p>
+<p>3）选中解压后的 <strong>web-demo</strong> 文件夹中的 <strong>所有文件</strong>，并拖拽文件到ECS的 <strong>/var/www/html</strong> 路径的 <strong>空目录列表</strong> 处。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1493089846596-G3cfR4" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+
+
+
+<p>4）完成后，在浏览器中，再次访问ECS服务器的 <strong>弹性公网IP</strong> ，或者刷新已访问ECS服务器的公网IP页面。此时，将从Apache的测试页面变为 <strong>LAB ROOM</strong> 的示例网站。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/eabc66a10c91439faaf2e608bdadda59/content/images/course-129136057c2a4d50af22490b5ce8f878-section-eabc66a10c91439faaf2e608bdadda59-content-image-1493086386934-I0FMQZ" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 33%;" />
+
+<h1 id="（Windows系统）使用FileZilla上传"><a href="#（Windows系统）使用FileZilla上传" class="headerlink" title="（Windows系统）使用FileZilla上传"></a>（Windows系统）使用FileZilla上传</h1><p>\1. 请通过如下步骤，下载并安装 <strong>FileZilla软件。</strong></p>
+<p>1）点击下载FileZilla：<a target="_blank" rel="noopener" href="http://tansy01.oss-cn-hangzhou.aliyuncs.com/%E4%BA%91%E4%B8%AD%E6%B2%99%E7%AE%B1%E9%99%84%E4%BB%B6%E7%AE%A1%E7%90%86/Filezilla_for_win64.zip">FileZilla_for_Win64</a></p>
+<p>2）解压已下载的文件到当前或其他路径中。</p>
+<p>3）在FileZilla的解压路径中，双击并打开FileZilla软件。</p>
+<p>\2. 通过如下操作，连接到ECS服务器。</p>
+<p>1）点击“文件-站点管理器”，新建站点，或在快速连接中输入如下信息，并点击<strong>连接</strong>，连接到ECS服务器。</p>
+<ul>
+<li>主机：输入本实验资源中分配的ECS Linux服务器 的 公网IP；</li>
+<li>用户名：输入ECS服务器中新建用户 siteadmin；</li>
+<li>密码：输入 siteadmin 用户的自定义登录密码，例如：siteadmin；</li>
+<li>端口：22 ；</li>
+<li>协议：SSH；</li>
+</ul>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089718404-nwrCIB" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+
+
+
+<p>2）页面弹出 <strong>是否信任主机</strong> 提示。点击 <strong>确定</strong> 。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089736124-ZPMhSQ" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+
+
+
+<p>3）此时，页面右侧部分显示ECS的访问路径 <strong>/var/www/html，</strong>且当前路径下无文件。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089013768-T7b6So" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 50%;" />
+
+<p>\3. 通过如下步骤，将本地的站点文件上传到ECS服务器中。</p>
+<p>1）点击 <a target="_blank" rel="noopener" href="https://university-labfileapp.oss-cn-hangzhou.aliyuncs.com/web-demo.zip"><strong>附件下载</strong></a> ，下载并保存 <strong>web-demo.zip</strong> 示例站点到本地。</p>
+<p>2）解压 <strong>web-demo.zip</strong> 到当前或其他目录中。</p>
+<p>3）选中解压后的 <strong>web-demo</strong> 文件夹中的所有文件，并拖拽文件到ECS的 <strong>/var/www/html</strong> 路径的 <strong>空目录列表</strong> 中。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089615797-OZmz6n" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+
+
+
+<p>4）完成后，在浏览器中，再次访问ECS服务器的 <strong>公网IP</strong>，或者刷新已访问ECS服务器的 <strong>公网IP</strong> 页面。此时，将从Apache的测试页面变为 <strong>LAB ROOM</strong> 的示例网站。</p>
+<img src="https://edu.aliyun.com/lab/files/courses/129136057c2a4d50af22490b5ce8f878/sections/2d318b95ee774a99ace71bbdcc6db16e/content/images/course-129136057c2a4d50af22490b5ce8f878-section-2d318b95ee774a99ace71bbdcc6db16e-content-image-1493089698754-5SdBPb" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Clouder/">Clouder</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/07/29/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-Python%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1%E5%87%BD%E6%95%B0%E5%BA%93/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数学建模-Python数学建模函数库</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

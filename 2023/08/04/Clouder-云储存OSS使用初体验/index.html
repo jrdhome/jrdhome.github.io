@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实验概述  开始实验后，系统会自动去创建一台Linux ECS。其中，创建的ECS中已经部署了web应用和OSS python SDK。在本实验中，已创建的ECS作为web服务器，浏览器中直接访问其IP地址会显示包含四个小图片的页面，并且四个图片都保存在ECS本地。通过调用OSS API将四个图片上传到OSS中，同时删除保存在ECS本地的四个图片，此时访问ECS IP将会看到页面中没有图片可以显示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clouder-云储存OSS使用初体验">
+<meta property="og:url" content="http://example.com/2023/08/04/Clouder-%E4%BA%91%E5%82%A8%E5%AD%98OSS%E4%BD%BF%E7%94%A8%E5%88%9D%E4%BD%93%E9%AA%8C/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="实验概述  开始实验后，系统会自动去创建一台Linux ECS。其中，创建的ECS中已经部署了web应用和OSS python SDK。在本实验中，已创建的ECS作为web服务器，浏览器中直接访问其IP地址会显示包含四个小图片的页面，并且四个图片都保存在ECS本地。通过调用OSS API将四个图片上传到OSS中，同时删除保存在ECS本地的四个图片，此时访问ECS IP将会看到页面中没有图片可以显示">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/intro/bbc64b08cb864318a26042065923c0a7/images/course-bbc64b08cb864318a26042065923c0a7-intro-image-1472544039736-R3HSOT">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651122.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/06cb5c4059a840598c41e02e29ac5e24.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651652.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651826.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651563.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651889.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/fe5161851db442c9a17fe84342e650b0.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/acdfa609cf8b41bdb8845b4081b8182a.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/8dbd6691102049739815bdf5e5933eef.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651938.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651970.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651059.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651077.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651044.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/6ee6eaf7c3e54c54bd1904fc12b94106.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651967.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651147.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651012.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/6fcf17b99cbf4a0da5076063c0e847fa.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651103.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/5813d7df4bc84c358b8eb58cdf54acaf.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651975.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651105.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/648a4930537e4d0ca6ae5bdfa3777246.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651912.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/b8a486b214c44de2b4b14b515ad0ffb2.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651313.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/d050875fd89b4b719b60237482d64cc1.png">
+<meta property="article:published_time" content="2023-08-04T16:37:59.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.349Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="Clouder">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://edu.aliyun.com/lab/files/courses/intro/bbc64b08cb864318a26042065923c0a7/images/course-bbc64b08cb864318a26042065923c0a7-intro-image-1472544039736-R3HSOT">
+  
+  
+  <title>Clouder-云储存OSS使用初体验 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Clouder-云储存OSS使用初体验">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-04 16:37" pubdate>
+        August 4, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      33 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clouder-云储存OSS使用初体验</h1>
+            
+            <div class="markdown-body">
+              <p><strong>实验概述</strong></p>
+<p> 开始实验后，系统会自动去创建一台Linux ECS。其中，创建的ECS中已经部署了web应用和OSS python SDK。在本实验中，已创建的ECS作为web服务器，浏览器中直接访问其IP地址会显示包含四个小图片的页面，并且四个图片都保存在ECS本地。通过调用OSS API将四个图片上传到OSS中，同时删除保存在ECS本地的四个图片，此时访问ECS IP将会看到页面中没有图片可以显示。为了在页面中显示原有的四个图片，实验中需要修改web应用服务器根目录下默认访问页面中的图片地址，将图片地址修改为四个图片分别在OSS中的访问地址。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/intro/bbc64b08cb864318a26042065923c0a7/images/course-bbc64b08cb864318a26042065923c0a7-intro-image-1472544039736-R3HSOT" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>实验目标</strong></p>
+<p> 完成此实验后，可以掌握的能力有：</p>
+<p>\1. 通过阿里云管理控制台管理对象存储服务OSS</p>
+<p>\2. 在实际的web开发中使用对象存储服务OSS存储页面中的图片</p>
+<p>\3. 调用OSS API上传图片</p>
+<p><strong>学前建议</strong></p>
+<p>\1. 掌握Linux基本命令；</p>
+<p>\2. 了解OSS的基本概念</p>
+<p>阿里云对象存储（Object Storage Service，简称OSS），是阿里云对外提供的海量、安全、低成本、高可靠的云存储服务。用户可以通过调用API，在任何应用、任何时间、任何地点上传和下载数据，也可以通过用户Web控制台对数据进行简单的管理。OSS适合存放任意文件类型，适合各种网站、开发企业及开发者使用。</p>
+<p>​    阿里云OSS图片处理服务（Image Service，简称 IMG） ，是阿里云OSS对外提供的海量、安全、低成本、高可靠的图片处理服务。用户将原始图片上传保存在OSS上，通过简单的 RESTful 接口，在任何时间、任何地点、任何互联网设备上对图片进行处理。图片处理服务提供图片处理接口，图片上传请使用OSS上传接口。基于IMG，用户可以搭建出跟图片相关的服务。图片服务处理的图片来自于OSS，所以图片的上传实际是上传到OSS的同名Bucket中。 </p>
+<p>​    在真实的工作场景中，一般将图片、音频、视频等存储到OSS服务中，这样可以极大的提高用户的页面访问速度。</p>
+<h1 id="查看图片分享网站"><a href="#查看图片分享网站" class="headerlink" title="查看图片分享网站"></a>查看图片分享网站</h1><p>\1. 本小节将展示一个在ECS“图片分享网站”上已搭建的图片分享网站，以及图片分享网站的源码。</p>
+<p>\2. 首先，在浏览器中新建一个页面。然后，在浏览器的地址栏中，输入本次实验分配的ECS实例 <strong>弹性IP</strong>。查看到当前页面中显示1张“花园”的图片，该图片实际是由4张小图片组成的。</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651122.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\3. 远程登录到ECS服务器，查看图片并分享网站的源码。登录信息请使用本实验 <strong>实验资源</strong> 提供的ECS服务器的 <strong>外网地址</strong>，<strong>用户名和</strong> <strong>密码</strong>。</p>
+<p><strong>说明</strong>：本实验ECS服务器为 <strong>Linux操作系统</strong>，因此远程登录ECS实例的详细步骤，请参考云中沙箱<a target="_blank" rel="noopener" href="https://edu.aliyun.com/lab/help?menuId=2-0&docName=doc-remote-connect">帮助文档</a>远程连接Linux系统</p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/06cb5c4059a840598c41e02e29ac5e24.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>4.登录到ECS服务器后，执行如下命令，进入网站系统的根目录。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs gradle"># cd <span class="hljs-regexp">/alidata/</span>www/<span class="hljs-keyword">default</span> <br></code></pre></td></tr></table></figure>
+
+<p>然后，使用如下查看命令，查看保存在根目录下的四张图片<strong>01.png，02.png，03.png和04.png</strong>，也就是图片分享网站所展示的4张小图片。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">ls</span></span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651652.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>​    在浏览器中，新建一个页面，并在地址栏中输入 <strong>&lt;ECS实例外网地址&gt;/01.png</strong>，可以查看到01.png的图片内容。同理，可以查看”02.png”,”03.png”以及“04.png”的图片内容。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651826.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>5.使用如下命令，查看网站首页的源码，可以看到图片分享网页中显示的图片，是从网站根目录 <strong>/alidata/www/default</strong> 中，读取图片 <strong>01.png，02.png，03.png 和 04.png</strong>拼接的。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">cat</span> <span class="hljs-built_in">index</span>.html<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651563.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="上传图片文件"><a href="#上传图片文件" class="headerlink" title="上传图片文件"></a>上传图片文件</h1><p>\1. 本小节将存储在本地的图片上传到OSS Bucket中，从而，图片分享网站将从OSS Bucket中读取图片，本地无需保存图片。</p>
+<p>\2. 在ECS实例的 <strong>/alidata/www/default</strong> 目录中，执行如下命令，进入 <strong>cfg.json</strong> 的编辑页面，并修改OSS的配置信息。</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c"><span class="hljs-meta"># vim cfg.json</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651889.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在编辑页面中，修改如下参数信息。</p>
+<p>•  <strong>id</strong>：云中沙箱 <strong>实验资源</strong> 分配的 <strong>AK ID</strong> 值；</p>
+<p>•  <strong>secret</strong>：云中沙箱 <strong>实验资源</strong> 分配的 <strong>AK</strong> <strong>Secret</strong> 值</p>
+<p>•  <strong>endpoint</strong>：请根据下面的 <strong>OSS地域与Endpoint对应关系表</strong>，输入 <strong>实验资源</strong> 所分配 <strong>地域</strong> 相对应的 <strong>外网Endpoint</strong> 。例如：分配的 地域 为 <strong>华东2（上海）</strong>，则输入 <strong>oss-cn-shanghai.aliyuncs.com</strong>。</p>
+<p>•  <strong>bucket</strong>：云中沙箱 <strong>实验资源</strong> 分配的 <strong>OSS资源</strong> <strong>Bucket 名称</strong></p>
+<p>•  <strong>object_dir</strong>：云中沙箱 <strong>实验资源</strong> 分配的 <strong>OSS资源</strong> <strong>Object路径</strong>。</p>
+<p>完成后，首先按 <strong>esc键</strong> 退出编辑状态，然后输入下面命令保存并退出编辑页面。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">：<span class="hljs-keyword">wq</span> <br></code></pre></td></tr></table></figure>
+
+<p>OSS地域与外网Endpoint对应关系表：</p>
+<p><strong>地域</strong>         <strong>外网Endpoint</strong></p>
+<p>华东 1 (杭州)  oss-cn-hangzhou.aliyuncs.com</p>
+<p>华东 2 (上海)  oss-cn-shanghai.aliyuncs.com</p>
+<p>华北 1 (青岛)  oss-cn-qingdao.aliyuncs.com</p>
+<p>华北 2 (北京)  oss-cn-beijing.aliyuncs.com</p>
+<p>华南 1 (深圳)  oss-cn-shenzhen.aliyuncs.com</p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/fe5161851db442c9a17fe84342e650b0.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\3.   执行如下命令，将01.png上传到OSS，该脚本使用OSS 提供的API接口put_object_from_file()将本地文件上传到 <strong>实验资源</strong> 分配的 <strong>Object路径</strong> 中。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">python</span> oss_upload.<span class="hljs-keyword">py</span> <span class="hljs-number">01</span>.png<br></code></pre></td></tr></table></figure>
+
+<p>然后，执行相同命令，只把 01.png 改为 02.png 等，将02.png、03.png 和 04.png三个图片分别上传到OSS。接下来，用户将访问OSS管理控制台，并查看上传到OSS的文件。</p>
+<p>说明：通过 Python SDK 的方式上传本地文件到OSS的具体方法，请参考<a target="_blank" rel="noopener" href="https://edu.cloudcare.cn/courses/afd734bef0c04ce6a192b8fe68acdb86/detail">实验 SL003 使用OSS API上传和下载文件</a>。</p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/acdfa609cf8b41bdb8845b4081b8182a.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\4.   首先，请复制左侧的<strong>子用户名称</strong>和<strong>子用户密码</strong>，打开桌面上的Chromium浏览器。</p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/8dbd6691102049739815bdf5e5933eef.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在用户名文本框输入<strong>子用户名称</strong></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651938.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在用户密码文本框输入<strong>子用户密码</strong>，点击<strong>登陆</strong></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651970.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>登陆成功后，点击左上角 <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651059.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651077.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在搜索框输入<strong>OSS</strong>，并点击<strong>对象存储OSS</strong></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651044.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>5.从而进入OSS管理控制台。</p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/6ee6eaf7c3e54c54bd1904fc12b94106.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\6. 进入OSS管理控制台后，在<strong>Bucket列表</strong> 栏中，点击 <strong>实验资源</strong> 提供的 <strong>Bucket名称</strong>，例如 <strong>lab-oss-898hd2</strong>，进入 <strong>lab-oss-898hd2 Bucket</strong>管理页面。</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651967.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651147.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>7.点击<strong>文件管理–文件列表</strong>，可以查看到当前Object列表中存在一个或多个文件夹。点击 <strong>实验资源</strong> 分配的一级 <strong>Object路径</strong>。例如：用户分配的 <strong>Object路径</strong> 为 **SL01097/u-xxx/**，则 <strong>SL01097</strong> 为一级Object路径。点击 <strong>SL01097</strong>，进入Object “SL01097” 路径中。</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651012.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>在“SL01097”的Object路径中，点击云中沙箱分配的二级 <strong>Object路径</strong>。例如：用户分配的 <strong>Object路径</strong> 为 <strong>SL01097/u-xxx/<strong>，则 <strong>u-xxx</strong> 为二级Object路径。点击 <strong>u-xxx</strong> 进入</strong>Object SL01097/u-xxx</strong> 路径中。</p>
+<p>此时，在<strong>Object管理</strong>的列表的第一行中，用户可以查看到当前Object路径信息。在 <strong>Object管理</strong> 的Object列表中，展示已上传并保存到“SL 01097/u-xxx/”路径下的4张图片：<strong>01.png，02.png，03.png，04.png。</strong></p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/6fcf17b99cbf4a0da5076063c0e847fa.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651103.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="使用OSS存储图片分享网站"><a href="#使用OSS存储图片分享网站" class="headerlink" title="使用OSS存储图片分享网站"></a>使用OSS存储图片分享网站</h1><p>\1.  本小节中，搭建的图片分享网站将图片等静态资源，存储在OSS中，并直接从OSS中读取。</p>
+<p>\2.  返回ECS实例终端页面，执行下面命令进入alidata/www/default目录。</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle"># cd <span class="hljs-regexp">/alidata/</span>www/<span class="hljs-keyword">default</span><br></code></pre></td></tr></table></figure>
+
+<p>然后执行如下命令，删除当前目录中的所有“.png”文件，也就是，图片分享网站中读取的4张图片<strong>01.png， 02.png, 03.png 和 04.png</strong>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">rm</span> -rf *.png</span><br></code></pre></td></tr></table></figure>
+
+<p>执行查看文件命令，查看当前目录中无图片文件，证明图片已删除。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">ls</span></span><br></code></pre></td></tr></table></figure>
+
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/5813d7df4bc84c358b8eb58cdf54acaf.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\3.  打开（在浏览器的地址栏中，输入 <strong>实验资源</strong> 分配的<strong>ECS 外网地址</strong> 并访问）或刷新图片分享网站主页面，查看到当前页面中所有图片均无法正常显示。这是因为图片分享网站读取的是本地图片文件，而本地存储的图片文件已被删除，因此无法读取到图片信息。</p>
+<p>注意：若访问页面仍旧可以显示图片，可能是由于浏览器缓存问题，建议清理下浏览器的缓存或者换一个浏览器查看ECS服务器主页。</p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651975.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\4.   接下来，将重新配置index.html中的图片访问信息，按照以下步骤将图片链接修改为上传到OSS的图片的URL访问地址：</p>
+<p>\1)  返回OSS管理控制台，进入云中沙箱 <strong>实验资源</strong> 分配的 <strong>Object路径</strong> 中，获取图片的URL访问地址。点击 <strong>01.png。</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651105.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>点击<strong>设置读写权限</strong></p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/648a4930537e4d0ca6ae5bdfa3777246.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>选择<strong>公共读</strong>，在点击<strong>确定</strong></p>
+<p> <img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651912.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>找到并点击右侧弹出框的 <strong>复制文件URL</strong>。</p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/b8a486b214c44de2b4b14b515ad0ffb2.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>按照以上步骤依次设置02.png、03.png、04.png</p>
+<p>2)执行如下命令返回ECS服务器的**/alidata/www/default**目录下，并进入服务器访问首页 <strong>index.html</strong> 的编辑界面。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_"># </span><span class="language-bash"><span class="hljs-built_in">cd</span> /alidata/www/default</span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">vim index.html</span><br></code></pre></td></tr></table></figure>
+
+<p> \3)  在**<!-- 图片1 -->**下，找到第一张图片的链接参数 <strong>src=”01.png</strong>“，删除01.png，并粘贴上面步骤中复制的上传到OSS <strong>01.png</strong> 图片的访问 地址。 同理，修改 <strong>02.png，03.png，04.png</strong>的链接地址为OSS的存储地址。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041651313.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\4)  完成所有图片的修改后，点击 esc键 退出编辑状态，执行以下命令保存并退出编辑页面。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">：<span class="hljs-keyword">wq</span><br></code></pre></td></tr></table></figure>
+
+<p>\5.   在浏览器中，刷新 ECS实例的 <strong>外网地址</strong> 的访问页面，页面将再次显示 <strong>花园</strong> 的图片，说明现在网站可以使用存储在OSS上的图片来显示页面。</p>
+<p> <img src="https://ucc.alicdn.com/pic/developer-ecology/d050875fd89b4b719b60237482d64cc1.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Clouder/">Clouder</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E4%BD%BF%E7%94%A8%E4%BA%91%E5%82%A8%E5%AD%98OSS%E7%9A%84API%E4%B8%8A%E4%BC%A0%E5%92%8C%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Clouder-使用云储存OSS的API上传和下载文件</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8A%E4%BA%91%E8%BF%81%E7%A7%BB%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+                        <span class="hidden-mobile">Clouder-数据库上云迁移的实现</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,847 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="网络通信过程 12345路由ARP三次握手数据通信四次挥手    1 网络基础 网络功能和优点  数据和应用程序 资源 网络存储 备份设备  作用范围分类  广域网WAN 城域网MAN 局域网LAN  常见物理组件：路由器、交换机、PC 1.1 网络应用程序 Web浏览器 即时消息（微信） 电子邮件 协作（视频会议、VNC） web网络服务（apache、nginx） 文件网络服务（ftp、nfs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-网络协议和管理配置">
+<meta property="og:url" content="http://example.com/2023/09/28/Linux-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%92%8C%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="网络通信过程 12345路由ARP三次握手数据通信四次挥手    1 网络基础 网络功能和优点  数据和应用程序 资源 网络存储 备份设备  作用范围分类  广域网WAN 城域网MAN 局域网LAN  常见物理组件：路由器、交换机、PC 1.1 网络应用程序 Web浏览器 即时消息（微信） 电子邮件 协作（视频会议、VNC） web网络服务（apache、nginx） 文件网络服务（ftp、nfs">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310182246919.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310200014912.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310200022834.png">
+<meta property="og:image" content="http://example.com/2023/09/28/Linux-%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE%E5%92%8C%E7%AE%A1%E7%90%86%E9%85%8D%E7%BD%AE/%E6%88%AA%E5%9B%BE__2023-10-21-16-02-34.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310221927909.png">
+<meta property="article:published_time" content="2023-09-28T00:18:16.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.350Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310182246919.png">
+  
+  
+  <title>Linux-网络协议和管理配置 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-网络协议和管理配置">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-09-28 00:18" pubdate>
+        September 28, 2023 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      10k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      86 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-网络协议和管理配置</h1>
+            
+            <div class="markdown-body">
+              <p><strong>网络通信过程</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></div></td><td class="code"><pre><code class="hljs">路由<br>ARP<br>三次握手<br>数据通信<br>四次挥手<br></code></pre></td></tr></table></figure>
+
+
+
+<h1 id="1-网络基础"><a href="#1-网络基础" class="headerlink" title="1 网络基础"></a>1 网络基础</h1><p> <strong>网络功能和优点</strong></p>
+<ul>
+<li>数据和应用程序</li>
+<li>资源</li>
+<li>网络存储</li>
+<li>备份设备</li>
+</ul>
+<p><strong>作用范围分类</strong></p>
+<ul>
+<li>广域网WAN</li>
+<li>城域网MAN</li>
+<li>局域网LAN</li>
+</ul>
+<p><strong>常见物理组件</strong>：路由器、交换机、PC</p>
+<h2 id="1-1-网络应用程序"><a href="#1-1-网络应用程序" class="headerlink" title="1.1 网络应用程序"></a><strong>1.1 网络应用程序</strong></h2><ul>
+<li>Web浏览器</li>
+<li>即时消息（微信）</li>
+<li>电子邮件</li>
+<li>协作（视频会议、VNC）</li>
+<li>web网络服务（apache、nginx）</li>
+<li>文件网络服务（ftp、nfs）</li>
+<li>数据库服务（MySQL）</li>
+<li>中间件服务（Tomcat）</li>
+<li>安全服务</li>
+</ul>
+<p><strong>应用程序对网络的要求</strong></p>
+<ul>
+<li>批处理应用程序<ul>
+<li>FTP、TFTP、库存更新</li>
+<li>无需直接人工交互</li>
+<li>宽带很重要，但并非关键性因素</li>
+</ul>
+</li>
+<li>交互式应用程序<ul>
+<li>库存查询、数据库更新</li>
+<li>人机交互</li>
+<li>因为用户需等待响应，所以响应时间很重要，但并非关键性因素，除非要等待时间较长</li>
+</ul>
+</li>
+<li>实时应用程序<ul>
+<li>视频</li>
+<li>人与人交互</li>
+<li>端到端的延时至关重要</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-2-网络的特性"><a href="#1-2-网络的特性" class="headerlink" title="1.2 网络的特性"></a>1.2 网络的特性</h2><ul>
+<li>速度</li>
+<li>成本</li>
+<li>安全性</li>
+<li>可靠性</li>
+<li>可用性</li>
+<li>可拓展性</li>
+<li>拓扑：计算机网络的拓扑结构是指一个网络的通信链路和计算机结点相互连接构成的几何图形<ul>
+<li>拓扑分类：<ul>
+<li>物理拓扑：物理设备的布线方式</li>
+<li>逻辑拓扑：信息在网络中流动的方式</li>
+</ul>
+</li>
+<li>拓扑结构：<ul>
+<li>总线拓扑</li>
+<li>（拓展）星型拓扑</li>
+<li>环状拓扑</li>
+<li>双环拓扑</li>
+<li>全网状拓扑</li>
+<li>部分网状拓扑</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="1-3-网络标准"><a href="#1-3-网络标准" class="headerlink" title="1.3 网络标准"></a>1.3 网络标准</h2><p>OSI七层结构：“<strong>物数网传会表应</strong>”</p>
+<p>物理层 -&gt; 数据链路层 -&gt; 网络层 -&gt; 传输层 -&gt; 会话层 -&gt; 表示层 -&gt; 应用层</p>
+<p><strong>PDU：协议数据单元是指对等层次之间传递的数据单位</strong></p>
+<ul>
+<li>物理层PDU：数据位 bit</li>
+<li>数据链路层PDU：数据帧 frame</li>
+<li>网络层PDU：数据包 packet</li>
+<li>传输层PDU：数据段 segment</li>
+<li>其他更高层次PDU：消息 message</li>
+</ul>
+<p><strong>三种通讯模式：</strong>单播、广播、多播            注意：冲突域、广播域</p>
+<p><strong>三种通讯机制：</strong>单工通信(收音机)、半双工通信(对讲机)、全双工通信(手机)</p>
+<h1 id="2-局域网"><a href="#2-局域网" class="headerlink" title="2 局域网"></a>2 局域网</h1><p><strong>特点</strong>：网络为一个单位所拥有；地理范围和站点数目有限。</p>
+<p><strong>主要功能</strong>：资源共享和数据通信。</p>
+<p><strong>优点：</strong>  能方便地共享昂贵的外部设备,主机以及软件、数据，从一个站点可以访问全网；便于系统的扩展和逐渐演变,各设备的位置可灵活的调整和改变；提高系统的可靠性、可用性和易用性。</p>
+<p>中国国家无线网络标准：WAPI</p>
+<p>Wi-Fi：无线保真（无线保真度），是Wi-Fi联盟制造商的商标做为产品的品牌认证，是一个创建于IEEE 802.11标准的无线局域网技术，Wi-Fi联盟成立于1999年，当时的名称叫做Wireless以太网兼容性联盟（WECA）。在2002年10月，正式改名为Wi-Fi联盟。</p>
+<p>超五类线 — 当前应用最广泛的网线。</p>
+<p><strong>中继器 repeater</strong> — 实际上是一种信号放大器。</p>
+<p><strong>集线器 hub</strong> — 共享宽带、半双工。（基本淘汰）</p>
+<p><strong>网桥 Bridge</strong> — 物理层</p>
+<p><strong>交换机 switch</strong> — 数据链路层</p>
+<p><strong>路由器 router</strong> — 网络层、分隔广播域和冲突域、选择路由表中到达目标最好的路径、连接广域网</p>
+<p><strong>以太网技术</strong></p>
+<p>各大厂商MAC识别码：<a target="_blank" rel="noopener" href="http://standards-oui.ieee.org/oui/oui.txt">http://standards-oui.ieee.org/oui/oui.txt</a></p>
+<p><strong>VLAN 技术</strong>— 虚拟局域网、隔离广播域  trunk干道</p>
+<p><strong>VXLAN技术</strong> — 云环境虚拟局域网</p>
+<p>分层的网络架构：访问层(终端接入)-&gt;分布层(广播域、路由、安全、远程接入、访问层汇聚)-&gt;核心层(快速转发) </p>
+<h1 id="3-TCP-IP-协议栈"><a href="#3-TCP-IP-协议栈" class="headerlink" title="3 TCP/IP 协议栈"></a>3 TCP/IP 协议栈</h1><p>TCP/IP是一个Protocol Stack，包括TCP、IP、UDP、ICMP、RIP、TELNET、FTP、SMTP、ARP等许多协议。</p>
+<p>TCP/IP 4层模型：网络接口层、互联网层、<strong>传输层</strong>、应用层</p>
+<p>TCP/IP 5层模型：物理层、数据链路层、互联网层、<strong>传输层</strong>、应用层</p>
+<p>OSI 7层模型：物理层、数据链路层、网络层、<strong>传输层</strong>、会话层、表示层、应用层</p>
+<p>RFC 文档: <a target="_blank" rel="noopener" href="https://www.ietf.org/rfc/rfc1122#section-1.3.3">https://www.ietf.org/rfc/rfc1122#section-1.3.3</a></p>
+<p>传输层：TCP(可靠的)   UDP(高效的)</p>
+<p><strong>TCP/IP和OSI模型的比较</strong> </p>
+<ul>
+<li>相同点 <ul>
+<li>两者都是以协议栈的概念为基础 </li>
+<li>协议栈中的协议彼此相互独立 </li>
+<li>下层对上层提供服务 </li>
+</ul>
+</li>
+<li>不同点 <ul>
+<li>OSI是先有模型；TCP/IP是先有协议,后有模型 </li>
+<li>OSI是国际标准,适用于各种协议栈；TCP/IP实际标准,只适用于TCP/IP网络 </li>
+<li>层次数量不同</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-1-TCP-transport层"><a href="#3-1-TCP-transport层" class="headerlink" title="3.1 TCP  transport层"></a>3.1 TCP  transport层</h2><h3 id="3-1-1-TCP特性"><a href="#3-1-1-TCP特性" class="headerlink" title="3.1.1 TCP特性"></a>3.1.1 TCP特性</h3><ul>
+<li>工作在传输层 </li>
+<li>面向连接协议 </li>
+<li>全双工协议 </li>
+<li>半关闭 </li>
+<li>将数据打包成段,排序 </li>
+<li>确认机制 </li>
+<li>数据恢复,重传 </li>
+<li>错误检查 </li>
+<li>流量控制,滑动窗口 </li>
+<li>拥塞控制,慢启动和拥塞避免算法 </li>
+<li>更多关于tcp的内核参数,可参看man 7 tcp</li>
+</ul>
+<h3 id="3-1-2-TCP包头结构"><a href="#3-1-2-TCP包头结构" class="headerlink" title="3.1.2 TCP包头结构"></a>3.1.2 TCP包头结构</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310182246919.png" srcset="/img/loading.gif" lazyload alt="屏幕截图 2023-10-18 223123"></p>
+<p><strong>ACK</strong>：表示是否前面确认号字段是否有效.只有当ACK=1时,前面的确认号字段才有效.TCP规 定,连接建立后,ACK必须为1,带ACK标志的TCP报文段称为确认报文段</p>
+<p><strong>SYN</strong>：在建立连接时使用,用来同步序号.当SYN=1,ACK=0时,表示这是一个请求建立连接的报 文段；当SYN=1,ACK=1时,表示对方同意建立连接.SYN=1,说明这是一个请求建立连接或同意 建立连接的报文.只有在前两次握手中SYN才置为1,带SYN标志的TCP报文段称为同步报文段</p>
+<p><strong>seq</strong>：序列号（seq）用于标记数据段的顺序。占4个字节，TCP把连接中发送的所有数据字节都编上一个序号，第一个字节的编号由本地随机产生；给字节编上序号后，就给每一个报文段指派一个序号；序列号seq就是这个报文段中的第一个字节的数据编号。</p>
+<h3 id="3-1-3-TCP协议PORT"><a href="#3-1-3-TCP协议PORT" class="headerlink" title="3.1.3 TCP协议PORT"></a>3.1.3 TCP协议PORT</h3><ul>
+<li>0-1023    系统端口或特权端口（仅root）[ 22/tcp(ssh)    80/tcp(http)    433/tcp(https)]</li>
+<li>1024-49151    用户端口或注册端口 [1433/tcp(SqlSever)    1521/tcp(oracle)   3306/tcp(mysql)    11211/tcp/udp(memcached)]</li>
+<li>49152-65535   动态或私有端口，客户端随机使用端口 范围定义：/proc/sys/net/ipv4/ip_local_portZ_range</li>
+</ul>
+<p><strong>查看常见服务端口号</strong>  </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">cat <span class="hljs-regexp">/etc/</span>services<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-1-4-三次握手和四次挥手"><a href="#3-1-4-三次握手和四次挥手" class="headerlink" title="3.1.4 三次握手和四次挥手"></a>3.1.4 三次握手和四次挥手</h3><h4 id="3-1-4-1-三次握手"><a href="#3-1-4-1-三次握手" class="headerlink" title="3.1.4.1 三次握手"></a><strong>3.1.4.1 三次握手</strong></h4><ol>
+<li><strong>第一次握手</strong>：客户端发送一个连接请求消息到服务端。服务端收到这个消息后，知道客户端和自己可以连接，但此时客户端并不知道服务端是否已经接收到了它的请求。</li>
+<li><strong>第二次握手</strong>：服务端收到消息后的应答，客户端得到服务端的反馈后，才确定自己与服务端是可以连接上的。</li>
+<li><strong>第三次握手</strong>：客户端再次向服务端发送一个确认消息，确认服务端已经收到了自己的连接请求，这时才正式建立连接。</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310200014912.png" srcset="/img/loading.gif" lazyload alt="截图__2023-10-20-00-13-43"></p>
+<h4 id="3-1-4-2-四次挥手"><a href="#3-1-4-2-四次挥手" class="headerlink" title="3.1.4.2 四次挥手"></a>3.1.4.2 四次挥手</h4><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310200022834.png" srcset="/img/loading.gif" lazyload alt="截图__2023-10-20-00-21-57"></p>
+<h3 id="3-1-5-sync半连接和accept全连接队列"><a href="#3-1-5-sync半连接和accept全连接队列" class="headerlink" title="3.1.5 sync半连接和accept全连接队列"></a>3.1.5 sync半连接和accept全连接队列</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/net/i</span>pv4/tcp_max_syn_backlog			<span class="hljs-comment">#未完成连接队列大小，默认值128，建议调整大小为1024以上</span><br><span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/net/</span>core/somaxconn					<span class="hljs-comment">#完成连接队列大小，默认值128，建议调整大小为1024以上</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-1-6-TCP超时重传"><a href="#3-1-6-TCP超时重传" class="headerlink" title="3.1.6 TCP超时重传"></a>3.1.6 TCP超时重传</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/net/i</span>pv4/tcp_retries1 	<span class="hljs-comment">#指定在底层IP接管之前TCP最少执行的重传次数,默认值是 3 </span><br><span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/net/i</span>pv4/tcp_retries2 	<span class="hljs-comment">#指定连接放弃前TCP最多可以执行的重传次数,默认值15 (一般对应13~30min)</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-1-7-拥塞控制"><a href="#3-1-7-拥塞控制" class="headerlink" title="3.1.7 拥塞控制"></a>3.1.7 拥塞控制</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/proc/</span>sys<span class="hljs-regexp">/net/i</span>pv4/tcp_congestion_control<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-1-8-内核TCP参数优化"><a href="#3-1-8-内核TCP参数优化" class="headerlink" title="3.1.8 内核TCP参数优化"></a>3.1.8 内核TCP参数优化</h3><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">man</span> <span class="hljs-number">7</span> tcp<br></code></pre></td></tr></table></figure>
+
+<p><strong>编辑文件/etc/sysctl.conf</strong>，加入以下内容</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs stylus">net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_fin_timeout</span> = <span class="hljs-number">2</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_tw_reuse</span> = <span class="hljs-number">1</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_tw_recycle</span> = <span class="hljs-number">1</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_syncookies</span> = <span class="hljs-number">1</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_keepalive_time</span> = <span class="hljs-number">600</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.ip_local_port_range</span> = <span class="hljs-number">2000</span> <span class="hljs-number">65000</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_max_syn_backlog</span> = <span class="hljs-number">16384</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_max_tw_buckets</span> = <span class="hljs-number">36000</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.route</span><span class="hljs-selector-class">.gc_timeout</span> = <span class="hljs-number">100</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_syn_retries</span> = <span class="hljs-number">1</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_synack_retries</span> = <span class="hljs-number">1</span> <br>net<span class="hljs-selector-class">.ipv4</span><span class="hljs-selector-class">.tcp_max_orphans</span> = <span class="hljs-number">16384</span> <br>net<span class="hljs-selector-class">.core</span><span class="hljs-selector-class">.somaxconn</span> = <span class="hljs-number">16384</span> <br>net<span class="hljs-selector-class">.core</span><span class="hljs-selector-class">.netdev_max_backlog</span> = <span class="hljs-number">16384</span><br></code></pre></td></tr></table></figure>
+
+<p>执行</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">sysctl -<span class="hljs-selector-tag">p</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-UDP-transport层"><a href="#3-2-UDP-transport层" class="headerlink" title="3.2 UDP  transport层"></a>3.2 UDP  transport层</h2><ul>
+<li>工作在传输层 </li>
+<li>提供不可靠的网络访问 </li>
+<li>非面向连接协议 </li>
+<li>有限的错误检查 </li>
+<li>传输性能高 </li>
+<li>无数据恢复特性 </li>
+</ul>
+<p>更多关于udp的内核参数,可参看</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">man</span> <span class="hljs-number">7</span> udp<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-ICMP-Internet层"><a href="#3-3-ICMP-Internet层" class="headerlink" title="3.3  ICMP Internet层"></a>3.3  ICMP Internet层</h2><p>控制消息协议——探测网络状态</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autoit"><span class="hljs-built_in">ping</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-4-ARP-Internet层"><a href="#3-4-ARP-Internet层" class="headerlink" title="3.4 ARP Internet层"></a>3.4 ARP Internet层</h2><p>地址解析协议——将IP地址解析成MAC地址</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-comment">#查看arp表</span><br><span class="hljs-attribute">arp</span> -n<br></code></pre></td></tr></table></figure>
+
+<p><strong>ARP静态绑定可以防止ARP欺骗</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">arp</span> -s <span class="hljs-number">10.0.0.6</span> <span class="hljs-number">00</span>:<span class="hljs-number">0</span>c:<span class="hljs-number">29</span>:<span class="hljs-number">32</span>:<span class="hljs-number">80</span>:<span class="hljs-number">38</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-5-Gratuitious-ARP-Internet层"><a href="#3-5-Gratuitious-ARP-Internet层" class="headerlink" title="3.5 Gratuitious ARP  Internet层"></a>3.5 Gratuitious ARP  Internet层</h2><p>免费ARP——检查地址冲突</p>
+<h2 id="3-6-RARP-Internet层"><a href="#3-6-RARP-Internet层" class="headerlink" title="3.6 RARP Internet层"></a>3.6 RARP Internet层</h2><p>反向地址解析协议——将MAC转化成IP</p>
+<h2 id="3-7-internet协议-Internet层"><a href="#3-7-internet协议-Internet层" class="headerlink" title="3.7 internet协议  Internet层"></a>3.7 internet协议  Internet层</h2><ul>
+<li>运行于OSI网络层</li>
+<li>面向无连接的协议</li>
+<li>独立处理数据包</li>
+<li>分层编址</li>
+<li>尽力而为传输</li>
+<li>无数据恢复功能</li>
+</ul>
+<p><img src="%E6%88%AA%E5%9B%BE__2023-10-21-16-02-34.png" srcset="/img/loading.gif" lazyload alt="截图__2023-10-21-16-02-34"></p>
+<p><strong>查看IP冲突的主机</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">arping</span> <span class="hljs-built_in">IP</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="4-IP地址"><a href="#4-IP地址" class="headerlink" title="4 IP地址"></a>4 IP地址</h1><ul>
+<li>网络ID：标识网络。每个网段分配一个网络ID，处于高位</li>
+<li>主机ID：标识单个主机，由组织分配给各设备，处于低位</li>
+</ul>
+<p>IP地址唯一标识网络设备，可以实现逻辑的管理功能</p>
+<p>IP = 网络ID + 主机ID</p>
+<p>网络ID ：标识网络地址</p>
+<p>主机ID ：标识主机</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs armasm">网络数 = <span class="hljs-number">2</span>^可变的网络ID位数<br>主机数 = <span class="hljs-number">2</span>^主机ID位数 - <span class="hljs-number">2</span><br>网络ID = <span class="hljs-built_in">IP</span>地址“与”子网掩码netmask<br></code></pre></td></tr></table></figure>
+
+<p>网络计算器：<a target="_blank" rel="noopener" href="https://www.sojson.com/convert/subnetmask.html">https://www.sojson.com/convert/subnetmask.html</a></p>
+<h2 id="4-1-IP地址分类"><a href="#4-1-IP地址分类" class="headerlink" title="4.1 IP地址分类"></a>4.1 IP地址分类</h2><p>A类：0-127.X.X.X             高8位是网络ID             0开头表示未知地址，127开头表示回环地址    </p>
+<p>0XXXXXXX    126个A类网络</p>
+<p>最多的主机数 = 2^24 - 2 = 16777214</p>
+<p>B类：128-191.X.X.X        高16位是网络ID</p>
+<p>10XXXXXX.XXXXXXXX    网络数 = 2^14 = 16384    </p>
+<p>最多的主机数 = 2^16 - 2 = 65534    </p>
+<p>C类：192-223.X.X.X        高24位是网络ID</p>
+<p>110XXXXX.XXXXXXXX.XXXXXXXX    网络数 = 2^21 = 2097152</p>
+<p>最多的主机数 = 2^8 - 2 = 254</p>
+<p>D类：224-239.X.X.X        </p>
+<p><strong>不分类的IP地址</strong></p>
+<p>网咯ID的位数按需分配——CIDR表示法，可以表示网络ID的位数，格式：IP/网络ID的位数</p>
+<p>netmask子网掩码：可以表示网络ID位数，32bit二进制，对应于网络ID的位为1，对应于主机ID的位为0</p>
+<h2 id="4-2-公共和私有IP地址"><a href="#4-2-公共和私有IP地址" class="headerlink" title="4.2 公共和私有IP地址"></a>4.2 公共和私有IP地址</h2><p><strong>私有IP地址</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center"><strong>A</strong></th>
+<th align="center">10.0.0.0 ~ 10.255.255.255</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>B</strong></td>
+<td align="center"><strong>172.16.0.0 ~ 172.31.255.255</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>C</strong></td>
+<td align="center"><strong>192.168.0.0 ~ 192.168.255.255</strong></td>
+</tr>
+</tbody></table>
+<h2 id="4-3-特殊地址"><a href="#4-3-特殊地址" class="headerlink" title="4.3 特殊地址"></a>4.3 特殊地址</h2><ul>
+<li><p>0.0.0.0      表示所有不清楚的主机和目的网络</p>
+</li>
+<li><p>255.255.255.2555</p>
+<p>  限制广播地址。对本机来说，这个地址值本网段内(同一广播域)的所有主机</p>
+</li>
+<li><p>127.0.0.1 ~ 172.255.255.254</p>
+<p>  本机回环地址，主要用于测试。</p>
+</li>
+<li><p>224.0.0.0 ~ 239.255.255.255</p>
+<p>  组播地址，224.0.0.1特指所有主机，224.0.0.2特指所有路由器。224.0.0.5指OSPF路由器，地址多用于一些特定的程序以及多媒体程序</p>
+</li>
+<li><p>169.254.x.x</p>
+<p>  Windows主机使用DHCP自动分配IP地址</p>
+</li>
+</ul>
+<h2 id="4-4-划分子网"><a href="#4-4-划分子网" class="headerlink" title="4.4 划分子网"></a>4.4 划分子网</h2><p>划分子网：网络ID向主机借位，如果借N位，则划分2^N个子网。</p>
+<p>合并超网：将多个小网络合并成一个大网，主机ID向网络ID借位，主要实现路由聚合功能</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs dns">中国移动<span class="hljs-number">10.0.0.0</span>/<span class="hljs-number">8</span> 给<span class="hljs-number">32</span>个各省公司划分对应的子网 <br><span class="hljs-number">1</span>)每个省公司的子网的netmask?<br><span class="hljs-number">2</span>^<span class="hljs-number">5</span>&gt;=<span class="hljs-number">32</span> 借<span class="hljs-number">5</span>位网络ID <br><span class="hljs-number">8</span>+<span class="hljs-number">5</span>=<span class="hljs-number">13</span> <br><span class="hljs-number">255.248.0.0</span> <br><br><span class="hljs-number">2</span>)每个省公司的子网的主机数有多少?<br><span class="hljs-number">2</span>^(<span class="hljs-number">32</span>-<span class="hljs-number">13</span>)-<span class="hljs-number">2=524286</span> <br><br><span class="hljs-number">3</span>)河南省得到第<span class="hljs-number">10</span>个子网,网络ID?<br><span class="hljs-number">10.00000</span> <span class="hljs-number">000.0.0</span>/<span class="hljs-number">13</span> <br><span class="hljs-number">10.01001</span> <span class="hljs-number">000.0.0</span>/<span class="hljs-number">13</span> <br><span class="hljs-number">10.72.0.0</span>/<span class="hljs-number">13</span> <br><br><span class="hljs-number">4</span>)河南省得到第<span class="hljs-number">10</span>个子网的最小IP和最大的IP?<br><span class="hljs-number">10.01001</span> <span class="hljs-number">000.0.1</span> <br><span class="hljs-number">10.01001 111</span>.<span class="hljs-number">11111111</span>.<span class="hljs-number">11111110</span> <br><br><span class="hljs-number">10.72.0.1</span>---<span class="hljs-number">10.79.255.254</span> <br><br><span class="hljs-number">5</span>)所有子网中最大,最小的子网的netid?<br><span class="hljs-number">10.00000</span> <span class="hljs-number">000.0.0</span>/<span class="hljs-number">13 10.0.0</span>.<span class="hljs-number">0</span>/<span class="hljs-number">13</span> <br><span class="hljs-number">10.11111</span> <span class="hljs-number">000.0.0</span>/<span class="hljs-number">13 10.248.0</span>.<span class="hljs-number">0</span>/<span class="hljs-number">13</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="4-5-动态主机配置协议-DHCP"><a href="#4-5-动态主机配置协议-DHCP" class="headerlink" title="4.5 动态主机配置协议 DHCP"></a>4.5 动态主机配置协议 DHCP</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202310221927909.png" srcset="/img/loading.gif" lazyload alt="截图__2023-10-22-19-26-50"></p>
+<h1 id="5-网络配置"><a href="#5-网络配置" class="headerlink" title="5 网络配置"></a>5 网络配置</h1><h2 id="5-1-基本网络配置"><a href="#5-1-基本网络配置" class="headerlink" title="5.1 基本网络配置"></a>5.1 基本网络配置</h2><ul>
+<li>主机名</li>
+</ul>
+<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-comment">#Centos7以后</span><br><span class="hljs-string">hostnamectl</span> <span class="hljs-built_in">set-hostname</span> 主机名<br>或<br><span class="hljs-string">vim</span> /<span class="hljs-string">etc</span>/<span class="hljs-string">hostname</span><br><span class="hljs-comment">#Centos6</span><br><span class="hljs-string">vim</span> /<span class="hljs-string">etc</span>/<span class="hljs-string">sysconfig</span>/<span class="hljs-string">network</span><br><span class="hljs-string">hostname</span> 主机名<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>IP/netmask</p>
+</li>
+<li><p>路由：默认网关</p>
+</li>
+<li><p>DNS服务器</p>
+<p>  主DNS服务器</p>
+<p>  次DNS服务器</p>
+<p>  第三个DNS服务器</p>
+</li>
+</ul>
+<h2 id="5-2-网卡名称"><a href="#5-2-网卡名称" class="headerlink" title="5.2 网卡名称"></a>5.2 网卡名称</h2><h3 id="5-2-1-Centos6之前"><a href="#5-2-1-Centos6之前" class="headerlink" title="5.2.1 Centos6之前"></a>5.2.1 Centos6之前</h3><p>默认为eth0</p>
+<p><strong>网卡名储存文件</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/ etc/u</span>dev<span class="hljs-regexp">/rules.d/</span><span class="hljs-number">70</span>-persistent-net.rules<br></code></pre></td></tr></table></figure>
+
+<p><strong>临时修改网卡名称</strong></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">ip link <span class="hljs-built_in">set</span> eth0 down  <span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>link <span class="hljs-built_in">set</span> eth0 name abc <span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>link <span class="hljs-built_in">set</span> abc up<span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>a a 10.0.0.6/24 dev eth0<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-2-2-Centos7以上网络配置"><a href="#5-2-2-Centos7以上网络配置" class="headerlink" title="5.2.2 Centos7以上网络配置"></a>5.2.2 Centos7以上网络配置</h3><p><strong>更改为传统命名机制</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim /etc/default/grub<br>添加GRUB_CMDLINE_LINUX=<span class="hljs-string">&quot;net.ifnames=0 biosdevname=0&quot;</span><br><br>On a system with UEFI boot mode: <br><span class="hljs-comment"># grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg </span><br><br>On a system with legacy boot mode: <br><span class="hljs-comment"># grub2-mkconfig -o /boot/grub2/grub.cfg （***）</span><br><span class="hljs-comment"># grub2-mkconfig -o /etc/grub2.cfg</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="5-3-网络配置命令"><a href="#5-3-网络配置命令" class="headerlink" title="5.3 网络配置命令"></a>5.3 网络配置命令</h2><h3 id="5-3-1-网络配置方式"><a href="#5-3-1-网络配置方式" class="headerlink" title="5.3.1 网络配置方式"></a>5.3.1 网络配置方式</h3><ul>
+<li><p>静态指定</p>
+<p>  ifconfig  route  natstat</p>
+<p>  ip:  object {link addr route}  ss  tc</p>
+<p>  system-config-network-tui  setup</p>
+</li>
+<li><p>动态分配</p>
+<p>  DHCP</p>
+</li>
+</ul>
+<p><strong>Centos网卡配置文件生效方法</strong></p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-meta">#Centos6</span><br>service network <span class="hljs-keyword">restart</span><br><span class="hljs-meta">#Centos7</span><br>systemctl <span class="hljs-keyword">restart</span> network<br><span class="hljs-meta">#Centos8/Rocky</span><br>nmcli <span class="hljs-keyword">connection</span> reload<br>nmcli <span class="hljs-keyword">connection</span> up etho<br></code></pre></td></tr></table></figure>
+
+<p><strong>验证网关</strong></p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">route -n</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>验证DNS</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">cat <span class="hljs-regexp">/etc/</span>resolv.conf<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-2-ifconfig"><a href="#5-3-2-ifconfig" class="headerlink" title="5.3.2 ifconfig"></a>5.3.2 ifconfig</h3><p>来自于net-tools包，建议使用 ip 代替</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment">#查看网卡</span><br><span class="hljs-attribute">ifconfig</span><span class="hljs-meta"> [-a]</span><br><br><span class="hljs-comment">#启用和禁用网卡</span><br><span class="hljs-attribute">ifconfig</span> eth0 down<br><span class="hljs-attribute">ifconfig</span> eth0 up<br><br><span class="hljs-comment">#对一个网卡设置多个IP地址（网卡别名）</span><br><span class="hljs-attribute">ifconfig</span> eth0:<span class="hljs-number">1</span> <span class="hljs-number">172.16.0.8</span>/<span class="hljs-number">24</span><br><br><span class="hljs-comment">#统计网卡流量</span><br><span class="hljs-attribute">ifconfig</span> -s<br><br><span class="hljs-comment">#清除eth0上面的IP地址</span><br><span class="hljs-attribute">ifconfig</span> eth0 <span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-3-route"><a href="#5-3-3-route" class="headerlink" title="5.3.3 route"></a>5.3.3 route</h3><p>路由：路径的选择</p>
+<p>路由表（导航、地图，在任何可通信的主机上都有）管理命令</p>
+<p><strong>查看路由表</strong></p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs excel">route -<span class="hljs-built_in">n</span><br>目标网络	geteway网关	子网掩码	Metric花费	iface接口<br></code></pre></td></tr></table></figure>
+
+<p>gateway网关：到达非直连的网络,将数据发送到临近(下一个)路由器的临近本主机的接口的IP地址,如果 是直连网络,gateway是0.0.0.0</p>
+<p>iface: 到达对应网络,应该从当前主机哪个网卡发送出来</p>
+<p><strong>添加/删除路由</strong></p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dos">route add -<span class="hljs-built_in">net</span> 目标网络ID gw geteway网关 dev 接口<br>route <span class="hljs-built_in">del</span> -<span class="hljs-built_in">net</span> 目标网络ID gw geteway网关 dev 接口<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-4-配置动态路由"><a href="#5-3-4-配置动态路由" class="headerlink" title="5.3.4 配置动态路由"></a>5.3.4 配置动态路由</h3><p>通过守护进程获取动态路由，安装quagga包，通过命令vtysh配置</p>
+<ul>
+<li>RIP：路由信息协议</li>
+<li>OSPF：开放式最短路径优先</li>
+<li>BGP：边界网关协议</li>
+</ul>
+<h3 id="5-3-5-netstat"><a href="#5-3-5-netstat" class="headerlink" title="5.3.5 netstat"></a>5.3.5 netstat</h3><p>来自于net-tools包，建议使用ss代替</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-t：tcp协议相关</span><br><span class="hljs-deletion">-u：udp协议相关</span><br><span class="hljs-deletion">-w：原始socket相关</span><br><span class="hljs-deletion">-l：处于监听状态</span><br><span class="hljs-deletion">-a：所有状态</span><br><span class="hljs-deletion">-n：以数字显示IP和端口</span><br><span class="hljs-deletion">-e：扩展格式</span><br><span class="hljs-deletion">-p：显示相关进程及PID</span><br><br><span class="hljs-deletion">-r: 显示内核路由表 </span><br><span class="hljs-deletion">-n: 数字格式</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>常见组合</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">-<span class="hljs-built_in">tan</span>，-uan，-tnl，-<span class="hljs-keyword">unl</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-6-ip"><a href="#5-3-6-ip" class="headerlink" title="5.3.6 ip"></a>5.3.6 ip</h3><p>来自于 iproute 包，建议使用</p>
+<h4 id="5-3-6-1-配置LInux网络属性"><a href="#5-3-6-1-配置LInux网络属性" class="headerlink" title="5.3.6.1 配置LInux网络属性"></a><strong>5.3.6.1 配置LInux网络属性</strong></h4><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#禁用网卡</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>link <span class="hljs-built_in">set</span> eth1 down<br><br><span class="hljs-comment">#网卡改名</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>link sey eth1 name wangnet<br><br><span class="hljs-comment">#启用网卡</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>link <span class="hljs-built_in">set</span> wangnet up<br><br><span class="hljs-comment">#网卡别名</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>addr <span class="hljs-built_in">add</span> 172.16.100.100/16 dev eth0 label wth0:0<span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>addr del 172.16.100.100/16 dev eth0 label wth0:0<br><br><span class="hljs-comment">#清除网络地址</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip </span>addr flush dev eth0<br><br><span class="hljs-comment">#添加/删除网卡</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip address </span><span class="hljs-built_in">add</span> 10.0.0.88/24 dev eth0<span class="hljs-built_in"></span><br><span class="hljs-built_in">ip address </span>del 10.0.0.88/24 dev eth0<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="5-3-6-2-管理路由"><a href="#5-3-6-2-管理路由" class="headerlink" title="5.3.6.2 管理路由"></a>5.3.6.2 管理路由</h4><p>ip route</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-comment">#添加路由</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip route </span><span class="hljs-built_in">add</span> TARGET via GW IFACE src SOURCE_IP<br>		TARGET:<br>			主机路由：IP<br>			网络路由：NETWORK/MASK<br><span class="hljs-comment">#添加网关</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip route </span><span class="hljs-built_in">add</span><span class="hljs-built_in"> default </span>via GW dev IFACE<br><span class="hljs-comment">#删除路由</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip route </span>del TARGET<br><span class="hljs-comment">#显示路由</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip route </span>show|list<br><span class="hljs-comment">#清空路由表</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip route </span>flush [dev IFACE] [via PREFIX]<br><span class="hljs-comment">#查看路由过程</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">ip route </span><span class="hljs-built_in">get</span> 10.0.0.7<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-7-ss"><a href="#5-3-7-ss" class="headerlink" title="5.3.7 ss"></a>5.3.7 ss</h3><p>来自于iproute包，代替netstat，网络通过遍历/proc来获取socket信息，使用netlink与内核tcp_diag模块通信获取socket信息</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-t: tcp协议相关 </span><br><span class="hljs-deletion">-u: udp协议相关 </span><br><span class="hljs-deletion">-w: 裸套接字相关 </span><br><span class="hljs-deletion">-x：unix sock相关 </span><br><span class="hljs-deletion">-l: listen状态的连接 </span><br><span class="hljs-deletion">-a: 所有 </span><br><span class="hljs-deletion">-n: 数字格式 </span><br><span class="hljs-deletion">-p: 相关的程序及PID </span><br><span class="hljs-deletion">-e: 扩展的信息 </span><br><span class="hljs-deletion">-m：内存用量 </span><br><span class="hljs-deletion">-o：计时器信息</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>常有组合</strong></p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">-<span class="hljs-built_in">tan</span>, -tanl, -tanlp, -uan<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-3-8-nmcli"><a href="#5-3-8-nmcli" class="headerlink" title="5.3.8 nmcli"></a>5.3.8 nmcli</h3><p>图形工具：nm-connection-editor</p>
+<p>字符配置tui工具：</p>
+<ul>
+<li>nmtui</li>
+<li>nmtui-connect</li>
+<li>nmtui-edit</li>
+<li>nmtui-hostname</li>
+</ul>
+<p>命令行工具：nmcli</p>
+<p><strong>nmcli命令相关术语</strong> </p>
+<ul>
+<li>设备即网络接口 </li>
+<li>连接是对网络接口的配置,一个网络接口可有多个连接配置,但同时只有一个连接配置生效</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment">#查看帮助</span><br><span class="hljs-attribute">nmcli</span> con add help<br><span class="hljs-comment">#显示网络配置</span><br><span class="hljs-attribute">nmcli</span> con show<br><span class="hljs-comment">#显示所有活动连接</span><br><span class="hljs-attribute">nmcli</span> con show --active<br><span class="hljs-comment">#显示网络连接配置</span><br><span class="hljs-attribute">nmcli</span> con show <span class="hljs-string">&quot;System eth0&quot;</span><br><span class="hljs-comment">#显示设备状态</span><br><span class="hljs-attribute">nmcli</span> dev status<br><span class="hljs-comment">#显示网络接口属性</span><br><span class="hljs-attribute">nmcli</span> dev show eth0<br><span class="hljs-comment">#创建新连接default,IP自动通过dhcp获取</span><br><span class="hljs-attribute">nmcli</span> con add con-name default type Ethernet ifname eth0<br><span class="hljs-comment">#删除连接</span><br><span class="hljs-attribute">nmcli</span> con del default<br><br><span class="hljs-comment">#创建静态连接static，制定静态IP，不自动连接</span><br><span class="hljs-attribute">nmcli</span> con add con-name static   ifname eth0 autoconnect no type Ethernet  ipv4.addresses <span class="hljs-number">172</span>.<span class="hljs-number">25</span>.X.<span class="hljs-number">10</span>/<span class="hljs-number">24</span> ipv4.gateway   <span class="hljs-number">172</span>.<span class="hljs-number">25</span>.X.<span class="hljs-number">254</span><br><span class="hljs-comment">#启动static连接配置</span><br><span class="hljs-attribute">nmcli</span> con up static<br><span class="hljs-comment">#启用default连接配置</span><br><span class="hljs-attribute">nmcli</span> con up default<br><br><span class="hljs-comment">#修改连接设置</span><br><span class="hljs-attribute">nmcli</span> con mod “static” connection.autoconnect no <br><span class="hljs-attribute">nmcli</span> con mod “static” ipv4.dns <span class="hljs-number">172</span>.<span class="hljs-number">25</span>.X.<span class="hljs-number">254</span> <br><span class="hljs-attribute">nmcli</span> con mod “static”  +ipv4.dns  <span class="hljs-number">8.8.8.8</span> <br><span class="hljs-attribute">nmcli</span> con mod “static”  -ipv4.dns  <span class="hljs-number">8.8.8.8</span> <br><span class="hljs-attribute">nmcli</span> con mod “static” ipv4.addresses “<span class="hljs-number">172</span>.<span class="hljs-number">16</span>.X.<span class="hljs-number">10</span>/<span class="hljs-number">24</span>  <span class="hljs-number">172</span>.<span class="hljs-number">16</span>.X.<span class="hljs-number">254</span>” <br><span class="hljs-attribute">nmcli</span> con mod “static”  +ipv4.addresses <span class="hljs-number">10.10.10.10</span>/<span class="hljs-number">16</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="5-4-网络配置文件"><a href="#5-4-网络配置文件" class="headerlink" title="5.4 网络配置文件"></a>5.4 网络配置文件</h2><h3 id="5-4-1-网络基本配置文件"><a href="#5-4-1-网络基本配置文件" class="headerlink" title="5.4.1 网络基本配置文件"></a>5.4.1 网络基本配置文件</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>sysconfig<span class="hljs-regexp">/network-scripts/i</span>fcfg-IFACE<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-4-2-主机名配置文件"><a href="#5-4-2-主机名配置文件" class="headerlink" title="5.4.2 主机名配置文件"></a>5.4.2 主机名配置文件</h3><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">/etc/sysconfig/network<br><span class="hljs-attribute">HOSTNAME</span><span class="hljs-operator">=</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-4-3-主机名数据库和IP地址的映射"><a href="#5-4-3-主机名数据库和IP地址的映射" class="headerlink" title="5.4.3 主机名数据库和IP地址的映射"></a>5.4.3 主机名数据库和IP地址的映射</h3><p>getent hosts 查看/etc/hosts内容，优先于使用DNS前检查</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>hosts<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-4-4-DNS域名解析"><a href="#5-4-4-DNS域名解析" class="headerlink" title="5.4.4 DNS域名解析"></a>5.4.4 DNS域名解析</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>resolv.conf<br>nameserber DNS_SERVER_IP1<br>nameserber DNS_SERVER_IP2<br>nameserber DNS_SERVER_IP3<br>search DOMAIN<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-4-5-修改-etc-hosts-和-DNS的优先级"><a href="#5-4-5-修改-etc-hosts-和-DNS的优先级" class="headerlink" title="5.4.5 修改/etc/hosts 和 DNS的优先级"></a>5.4.5 修改/etc/hosts 和 DNS的优先级</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>nsswitch.conf<br>hosts: files dns<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-4-6-路由相关配置文件"><a href="#5-4-6-路由相关配置文件" class="headerlink" title="5.4.6 路由相关配置文件"></a>5.4.6 路由相关配置文件</h3><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>sysconfig<span class="hljs-regexp">/network-scripts/</span>route-IFACE<br><br>两种风格<br>(<span class="hljs-number">1</span>) TARGET via GW <br>如: <span class="hljs-number">10.0</span>.<span class="hljs-number">0.0</span>/<span class="hljs-number">8</span> via <span class="hljs-number">172.16</span>.<span class="hljs-number">0.1</span> <br><br>(<span class="hljs-number">2</span>)每三行定义一个路由<br>ADDRESS <span class="hljs-comment"># =TARGET </span><br>NETMASK <span class="hljs-comment"># =mask </span><br>GATEWAY <span class="hljs-comment"># =GW</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="5-5-网卡别名"><a href="#5-5-网卡别名" class="headerlink" title="5.5  网卡别名"></a>5.5  网卡别名</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ifconfig</span> eth0:<span class="hljs-number">0</span> <span class="hljs-number">192.168.1.100</span>/<span class="hljs-number">24</span> up<br><span class="hljs-attribute">ifconfig</span> eth0:<span class="hljs-number">0</span> down<br><br><span class="hljs-attribute">ip</span> addr add <span class="hljs-number">172.16.1.1</span>/<span class="hljs-number">16</span> dev eth0 <br><span class="hljs-attribute">ip</span> addr add <span class="hljs-number">172.16.1.2</span>/<span class="hljs-number">16</span> dev eth0 label eth0:<span class="hljs-number">0</span> <br><span class="hljs-attribute">ip</span> addr del <span class="hljs-number">172.16.1.2</span>/<span class="hljs-number">16</span> dev eth0 label eth0:<span class="hljs-number">0</span> <br><span class="hljs-attribute">ip</span> addr flush dev eth0 label eth0:<span class="hljs-number">0</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="5-6-bonding-多网卡"><a href="#5-6-bonding-多网卡" class="headerlink" title="5.6 bonding 多网卡"></a>5.6 bonding 多网卡</h2><h3 id="5-6-1-bonding配置"><a href="#5-6-1-bonding配置" class="headerlink" title="5.6.1 bonding配置"></a>5.6.1 bonding配置</h3><p><strong>创建bonding设备的配置文件</strong></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs abnf">/etc/sysconfig/network-scripts/ifcfg-bond0<br><span class="hljs-attribute">NAME</span><span class="hljs-operator">=</span>bond0 <br><span class="hljs-attribute">TYPE</span><span class="hljs-operator">=</span>bond <br><span class="hljs-attribute">DEVICE</span><span class="hljs-operator">=</span>bond0 <br><span class="hljs-attribute">BOOTPROTO</span><span class="hljs-operator">=</span>none <br><span class="hljs-attribute">IPADDR</span><span class="hljs-operator">=</span><span class="hljs-number">10.0</span>.<span class="hljs-number">0.100</span> <br><span class="hljs-attribute">PREFIX</span><span class="hljs-operator">=</span><span class="hljs-number">8</span><br>BONDING_OPTS<span class="hljs-operator">=</span><span class="hljs-string">&quot;mode=1 miimon=100 fail_over_mac=1&quot;</span><br><br>/etc/sysconfig/network-scripts/ifcfg-eth0 <br><span class="hljs-attribute">NAME</span><span class="hljs-operator">=</span>eth0 <br><span class="hljs-attribute">DEVICE</span><span class="hljs-operator">=</span>eth0 <br><span class="hljs-attribute">BOOTPROTO</span><span class="hljs-operator">=</span>none <br><span class="hljs-attribute">MASTER</span><span class="hljs-operator">=</span>bond0 <br><span class="hljs-attribute">SLAVE</span><span class="hljs-operator">=</span>yes <br><span class="hljs-attribute">ONBOOT</span><span class="hljs-operator">=</span>yes <br><br>/etc/sysconfig/network-scripts/ifcfg-eth1 <br><span class="hljs-attribute">NAME</span><span class="hljs-operator">=</span>eth1 <br><span class="hljs-attribute">DEVICE</span><span class="hljs-operator">=</span>eth1 <br><span class="hljs-attribute">BOOTPROTO</span><span class="hljs-operator">=</span>none <br><span class="hljs-attribute">MASTER</span><span class="hljs-operator">=</span>bond0 <br><span class="hljs-attribute">SLAVE</span><span class="hljs-operator">=</span>yes <br><span class="hljs-attribute">ONBOOT</span><span class="hljs-operator">=</span>yes<br></code></pre></td></tr></table></figure>
+
+<p><strong>查看bond0状态</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/proc/</span>net<span class="hljs-regexp">/bonding/</span>bond0<br></code></pre></td></tr></table></figure>
+
+<p><strong>删除bond0</strong></p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">ifconfig <span class="hljs-keyword">bond0 </span>down<br>rmmod <span class="hljs-keyword">bonding</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="5-6-2-nmcli-实现-bonding"><a href="#5-6-2-nmcli-实现-bonding" class="headerlink" title="5.6.2 nmcli 实现 bonding"></a>5.6.2 nmcli 实现 bonding</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs crmsh"><span class="hljs-comment">#添加bonding接口</span><br>nmcli con add <span class="hljs-keyword">type</span> bond con-name mybond0 ifname bond0 mode active-backup  ipv4.method manual ipv4.addresses <span class="hljs-number">10.0</span>.<span class="hljs-number">0.100</span>/<span class="hljs-number">24</span><br><br><span class="hljs-comment">#添加从属接口</span><br>nmcli con add <span class="hljs-keyword">type</span> bond-<span class="hljs-literal">slave</span> ifname ens7 <span class="hljs-keyword">master</span> <span class="hljs-title">bond0</span> <br>nmcli con add <span class="hljs-keyword">type</span> bond-<span class="hljs-literal">slave</span> ifname ens3 <span class="hljs-keyword">master</span> <span class="hljs-title">bond0</span><br><br><span class="hljs-comment">#要启动绑定，必须启动从属接口</span><br>nmcli con up bond-<span class="hljs-literal">slave</span>-eth0 <br>nmcli con up bond-<span class="hljs-literal">slave</span>-eth1<br><br><span class="hljs-comment">#启动绑定</span><br>nmcli con up mybond0<br></code></pre></td></tr></table></figure>
+
+<h2 id="5-7-网络组-Network-Teaming"><a href="#5-7-网络组-Network-Teaming" class="headerlink" title="5.7 网络组 Network Teaming"></a>5.7 网络组 Network Teaming</h2><h2 id="5-8-网桥（交换机）"><a href="#5-8-网桥（交换机）" class="headerlink" title="5.8 网桥（交换机）"></a>5.8 网桥（交换机）</h2><h2 id="5-9-网络测试诊断工具"><a href="#5-9-网络测试诊断工具" class="headerlink" title="5.9 网络测试诊断工具"></a>5.9 网络测试诊断工具</h2><h1 id="6-Ubuntu网络配置"><a href="#6-Ubuntu网络配置" class="headerlink" title="6 Ubuntu网络配置"></a>6 Ubuntu网络配置</h1><p><strong><span id="more"></span></strong></p>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/10/09/Linux-%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux-软件管理</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/21/Linux-%E7%A3%81%E7%9B%98%E5%92%8C%E5%AD%98%E5%82%A8%E7%AE%A1%E7%90%86/">
+                        <span class="hidden-mobile">LinuxLinux-磁盘和存储管理</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

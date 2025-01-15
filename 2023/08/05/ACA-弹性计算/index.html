@@ -1,0 +1,738 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 虚拟化技术概述1.1 虚拟化在计算机领域，虚拟化指创建某事物的虚拟版本，包括虚拟机的硬件平台、存储设备源、以及计算机网络资源。 可见，虚拟化是一种资源管理技术。他将计算机的各种实体资源（CPU、内存、存储、网络等）予以抽象和转化出来，并提供分割、重组，以达到最大化物理资源的目的。 1.2 虚拟化技术简单说，虚拟化技术就是将物理资源虚拟化。在传统架构当中，一个物理主机只能支持一个操作系及上层应用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACA-弹性计算">
+<meta property="og:url" content="http://example.com/2023/08/05/ACA-%E5%BC%B9%E6%80%A7%E8%AE%A1%E7%AE%97/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 虚拟化技术概述1.1 虚拟化在计算机领域，虚拟化指创建某事物的虚拟版本，包括虚拟机的硬件平台、存储设备源、以及计算机网络资源。 可见，虚拟化是一种资源管理技术。他将计算机的各种实体资源（CPU、内存、存储、网络等）予以抽象和转化出来，并提供分割、重组，以达到最大化物理资源的目的。 1.2 虚拟化技术简单说，虚拟化技术就是将物理资源虚拟化。在传统架构当中，一个物理主机只能支持一个操作系及上层应用">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071834455.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071834053.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071838768.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071846296.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071847040.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071849489.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071849380.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080155555.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080155543.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080203519.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080204029.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080217717.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080218081.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080219910.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080219684.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080220013.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080223388.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080224613.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080226010.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080227280.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080238951.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401182357171.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080241772.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080242344.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081450025.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081624857.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081624487.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081625936.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081627336.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081629562.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190154838.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190153102.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190155812.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190200869.png">
+<meta property="article:published_time" content="2023-08-05T22:28:33.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.348Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="ACA">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071834455.png">
+  
+  
+  <title>ACA-弹性计算 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="ACA-弹性计算">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-05 22:28" pubdate>
+        August 5, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      9.2k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      77 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ACA-弹性计算</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-虚拟化技术概述"><a href="#1-虚拟化技术概述" class="headerlink" title="1 虚拟化技术概述"></a>1 虚拟化技术概述</h1><h2 id="1-1-虚拟化"><a href="#1-1-虚拟化" class="headerlink" title="1.1 虚拟化"></a>1.1 虚拟化</h2><p>在计算机领域，虚拟化指创建某事物的虚拟版本，包括虚拟机的硬件平台、存储设备源、以及计算机网络资源。</p>
+<p>可见，虚拟化是一种资源管理技术。他将计算机的各种实体资源（CPU、内存、存储、网络等）予以抽象和转化出来，并提供分割、重组，以达到最大化物理资源的目的。</p>
+<h2 id="1-2-虚拟化技术"><a href="#1-2-虚拟化技术" class="headerlink" title="1.2 虚拟化技术"></a>1.2 虚拟化技术</h2><p>简单说，<strong>虚拟化技术就是将物理资源虚拟化</strong>。在传统架构当中，一个物理主机只能支持一个操作系及上层应用。但是有了虚拟化技术，一个物理主机可以被分割成多个虚拟机，向上支撑多个操作系统及应用程序。</p>
+<h2 id="1-3-虚拟化执行层面分类"><a href="#1-3-虚拟化执行层面分类" class="headerlink" title="1.3 虚拟化执行层面分类"></a>1.3 虚拟化执行层面分类</h2><p>从<strong>实现的方式</strong>上划分：<strong>硬件虚拟化</strong>、<strong>软件虚拟化</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071834455.png" srcset="/img/loading.gif" lazyload></p>
+<p>从<strong>虚拟化的程度</strong>上划分：<strong>半虚拟化</strong>、<strong>全虚拟化</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071834053.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-4-虚拟化技术层面分类"><a href="#1-4-虚拟化技术层面分类" class="headerlink" title="1.4 虚拟化技术层面分类"></a>1.4 虚拟化技术层面分类</h2><p>虚拟化是云计算的入门技术，从<strong>云计算资源的角度</strong>，可以将虚拟划分为：<strong>计算虚拟化</strong>、<strong>存储虚拟化</strong>、<strong>网络虚拟化。</strong></p>
+<h3 id="1-4-1-计算虚拟化"><a href="#1-4-1-计算虚拟化" class="headerlink" title="1.4.1 计算虚拟化"></a>1.4.1 计算虚拟化</h3><p>计算虚拟化主要包括<strong>CPU虚拟化</strong>、<strong>内存虚拟化</strong>、<strong>I/O虚拟化</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071838768.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-4-2-存储虚拟化"><a href="#1-4-2-存储虚拟化" class="headerlink" title="1.4.2 存储虚拟化"></a>1.4.2 存储虚拟化</h3><p>存储虚拟化主要涉及<strong>RAID</strong>、<strong>分布式存储</strong>、<strong>分布式文件系统</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071846296.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="1-4-3-网络虚拟化"><a href="#1-4-3-网络虚拟化" class="headerlink" title="1.4.3 网络虚拟化"></a>1.4.3 网络虚拟化</h3><p>网络虚拟化主要包含了<strong>网络虚拟化</strong>和<strong>软件定义网络</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071847040.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-5-虚拟化管理工具-–-VMM"><a href="#1-5-虚拟化管理工具-–-VMM" class="headerlink" title="1.5 虚拟化管理工具 – VMM"></a>1.5 虚拟化管理工具 – VMM</h2><p>VMM，虚拟机监控器，也称Hypervidor，为了达到虚拟化而引入的一个软件层。VMM向下能够掌握实际的各种护理资源，向上可以给虚拟机划分逻辑资源，实现虚拟机独享物理资源的假象。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071849489.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-6-虚拟化技术优势"><a href="#1-6-虚拟化技术优势" class="headerlink" title="1.6 虚拟化技术优势"></a>1.6 虚拟化技术优势</h2><ul>
+<li>性价比高</li>
+<li>灵活性强</li>
+<li>稳定性强</li>
+<li>利用率高</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308071849380.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="1-7-思考"><a href="#1-7-思考" class="headerlink" title="1.7 思考"></a>1.7 思考</h2><h3 id="1-7-1-虚拟化技术未来发展趋势？"><a href="#1-7-1-虚拟化技术未来发展趋势？" class="headerlink" title="1.7.1 虚拟化技术未来发展趋势？"></a>1.7.1 虚拟化技术未来发展趋势？</h3><figure class="highlight llvm"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></div></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-number">1</span>.更高效的资源管理<br>随着数据中心规模的扩大和计算需求的增长，更高效的资源管理变得尤为重要。虚拟化技术将进一步优化资源调度，提高利用率，降低能耗，使得计算资源能够更好地适应各种应用需求。<br><br><span class="hljs-number">2</span>.容器化技术的普及<br>容器化技术如Docker和Kubernetes已经成为现代化应用部署的主流方式。随着容器技术的成熟和生态系统的完善，更多的企业和组织将采用容器化方式进行应用部署和管理，进一步简化应用的部署和运维。<br><br><span class="hljs-number">3</span>.增强现实与虚拟现实的融合<br>增强现实（AR）和虚拟现实（VR）技术的发展将促进现实世界与虚拟世界的进一步融合。通过虚拟化技术，可以实现更为逼真的虚拟环境，为AR/VR应用提供更好的用户体验。<br><br><span class="hljs-number">4</span>.安全性增强<br>随着虚拟化技术的广泛应用，安全问题也日益突出。未来的虚拟化技术将更加注重安全性，通过加密、隔离、访问控制等手段提高虚拟化环境的安全性，保护用户数据和隐私。<br><br><span class="hljs-number">5</span>.智能化的管理<br>人工智能和机器学习技术的发展将为虚拟化技术提供新的管理手段。通过机器学习和人工智能技术，可以实现智能化的资源调度、故障诊断和预测性维护，提高虚拟化环境的稳定性和可用性。<br><br><span class="hljs-number">6</span>.开源技术的进一步发展<br>开源技术已经成为现代软件发展的重要趋势。未来，随着更多企业和组织参与开源社区，虚拟化技术将得到更广泛的开发和改进，推动虚拟化技术的快速发展。<br><br><span class="hljs-number">7</span>.边缘计算的兴起<br>随着物联网和<span class="hljs-number">5</span>G技术的发展，数据处理和分析的需求将更多地转移到边缘设备上。虚拟化技术将与边缘计算相结合，为物联网设备提供更高效、更安全的数据处理和管理能力。<br><br><span class="hljs-number">8</span>.硬件辅助虚拟化技术的进步<br>硬件辅助虚拟化技术如Intel VT-<span class="hljs-keyword">x</span>和AMD-V已经得到了广泛应用。未来，随着硬件技术的进步，硬件辅助虚拟化技术将进一步提高虚拟机的性能和安全性。<br><br><span class="hljs-number">9</span>.云原生应用的普及<br>云原生应用是现代化应用的重要组成部分，它能够更好地适应云计算环境，提高应用的可用性和可维护性。随着云原生技术的成熟和普及，更多的企业将采用云原生架构构建应用，进一步简化应用的部署和管理。<br><br><span class="hljs-number">10</span>.区块链技术的应用<br>区块链技术为数据的安全和可信提供了新的解决方案。未来，虚拟化技术将与区块链技术相结合，实现更为安全、可信的计算环境，保护用户数据和隐私。<br><br>总之，虚拟化技术的未来发展将呈现出更加多元化、智能化和安全化的趋势。它将为云计算、容器化、AR/VR、物联网等新兴技术的发展提供有力支持，促进计算技术的进一步革新和发展。<br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="2-虚拟化技术产品介绍"><a href="#2-虚拟化技术产品介绍" class="headerlink" title="2 虚拟化技术产品介绍"></a>2 虚拟化技术产品介绍</h1><h2 id="2-1-KVM虚拟化解决方案"><a href="#2-1-KVM虚拟化解决方案" class="headerlink" title="2.1 KVM虚拟化解决方案"></a>2.1 KVM虚拟化解决方案</h2><p>KVM全称是Kernel-based Virtual Machine，基于内核的虚拟机,KVM是采用<strong>硬件虚拟化</strong>技术的<strong>全虚拟化</strong>解决方案。</p>
+<ul>
+<li>包含在Linux内核当中</li>
+<li>它需要支持虚拟化拓展的CPU</li>
+<li>完全开源</li>
+</ul>
+<h2 id="2-2-KVM功能概述"><a href="#2-2-KVM功能概述" class="headerlink" title="2.2 KVM功能概述"></a>2.2 KVM功能概述</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080155555.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>KVM功能特性</strong></p>
+<ul>
+<li>内存管理</li>
+<li>存储和客户机镜像格式</li>
+<li>实时迁移</li>
+<li>性能</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080155543.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-3-KVM发展状况及未来趋势"><a href="#2-3-KVM发展状况及未来趋势" class="headerlink" title="2.3 KVM发展状况及未来趋势"></a>2.3 KVM发展状况及未来趋势</h2><p><strong>KVM现状</strong></p>
+<p>KVM已经成为Openstack用户主流的Hypervisor选择。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080203519.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>KVM未来发展趋势</strong></p>
+<ul>
+<li>大规模部署有挑战</li>
+<li>实时性方面受到的挑战</li>
+<li>安全性有进一步加强空间</li>
+<li>性能调优</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080204029.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-4-其他虚拟化解决方案"><a href="#2-4-其他虚拟化解决方案" class="headerlink" title="2.4 其他虚拟化解决方案"></a>2.4 其他虚拟化解决方案</h2><p><strong>XEN</strong>、<strong>VMware</strong>、<strong>HyperV</strong>、<strong>Container</strong></p>
+<h3 id="2-4-1-XEN"><a href="#2-4-1-XEN" class="headerlink" title="2.4.1 XEN"></a>2.4.1 XEN</h3><p>Xen早于KVM，可以追溯到20世纪90年代。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080217717.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080218081.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080219910.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>半虚拟化</strong></p>
+<p>半虚拟化被称作”超虚拟化”（PV），是一种以Xen为主导的虚拟化技术。此项技术是虚拟机操作系统可以辨别在三个Xen虚拟机管理程序上运行，而不是在硬件运行的虚拟机，并鉴别在同样环境里运行的多个虚拟机。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080219684.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>全虚拟化</strong></p>
+<p>完全虚拟化，又称“硬件虚拟化”（HVM），运行在虚拟环境里的虚拟机总是感觉自己运行在硬件上，并且感知不到在相同环境下运行着其他虚拟技术。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080220013.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-4-2-VMware"><a href="#2-4-2-VMware" class="headerlink" title="2.4.2 VMware"></a>2.4.2 VMware</h3><p>VMware产品非常齐全，。既有PaaS产品，也有IaaS产品；既有运行与Linux平台上的产品，也有Windows和Mac平台上的产品。</p>
+<p><strong>代表产品：</strong>VMware Workstation （桌面级虚拟化产品）          VMware ESXi（服务器级的虚拟化软件）</p>
+<h3 id="2-4-3-HyperV"><a href="#2-4-3-HyperV" class="headerlink" title="2.4.3 HyperV"></a>2.4.3 HyperV</h3><p>微软公司的服务器虚拟化产品</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080223388.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>架构</strong>：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080224613.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2-4-4-Container"><a href="#2-4-4-Container" class="headerlink" title="2.4.4 Container"></a>2.4.4 Container</h3><p>容器严格来说与虚拟化软件并不是一个大类，容器不是某个虚拟化软件，而是某类软件的统称，包括Doctor和LXC等。另外，容器不是硬件平台级的虚拟化技术，而是软件运行环境的虚拟化，是一种操作系统级的虚拟化技术。</p>
+<p>Linux Container容器技术的诞生（2008年）就解决了IT世界里“集装箱运输”的问题。<strong>Linux Container（LXC）</strong>它是一种内核轻量级的<strong>操作系统层虚拟化技术</strong>。Linux Container主要由<strong>Namespace</strong>和<strong>Cgroup</strong>两大机制。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080226010.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>技术特点</strong></p>
+<ul>
+<li>极其轻量</li>
+<li>秒级部署</li>
+<li>易于移植</li>
+<li>弹性伸缩</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080227280.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="2-5-思考"><a href="#2-5-思考" class="headerlink" title="2.5 思考"></a>2.5 思考</h2><h3 id="2-5-1-你认为哪个虚拟化产品更好用？"><a href="#2-5-1-你认为哪个虚拟化产品更好用？" class="headerlink" title="2.5.1 你认为哪个虚拟化产品更好用？"></a>2.5.1 你认为哪个虚拟化产品更好用？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="3-阿里云云服务器ECS实战"><a href="#3-阿里云云服务器ECS实战" class="headerlink" title="3 阿里云云服务器ECS实战"></a>3 阿里云云服务器ECS实战</h1><h2 id="3-1-阿里云ECS"><a href="#3-1-阿里云ECS" class="headerlink" title="3.1 阿里云ECS"></a>3.1 阿里云ECS</h2><p>云服务器ECS（Elastic Compute Service）是阿里云提供的性能卓越、稳定可靠、弹性扩展的IaaS（Infrastructure as a Service）级别云计算服务。云服务器ECS免去了采购IT硬件的前期准备，可以想使用水、电、天然气等公共资源一样，便捷高效的使用服务器，实现计算资源的即开即用和弹性伸缩。</p>
+<h2 id="3-2阿里云ECS原理和架构"><a href="#3-2阿里云ECS原理和架构" class="headerlink" title="3.2阿里云ECS原理和架构"></a>3.2阿里云ECS原理和架构</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080238951.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401182357171.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="3-3-如何购买使用ECS"><a href="#3-3-如何购买使用ECS" class="headerlink" title="3.3 如何购买使用ECS"></a>3.3 如何购买使用ECS</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080241772.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="3-4-如何管理和配置ECS"><a href="#3-4-如何管理和配置ECS" class="headerlink" title="3.4 如何管理和配置ECS"></a>3.4 如何管理和配置ECS</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308080242344.png" srcset="/img/loading.gif" lazyload></p>
+<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081450025.png" srcset="/img/loading.gif" lazyload style="zoom:80%;" />
+
+<h2 id="3-5-思考"><a href="#3-5-思考" class="headerlink" title="3.5 思考"></a>3.5 思考</h2><h3 id="3-5-1-阿里云ECS实例包含哪些组件？"><a href="#3-5-1-阿里云ECS实例包含哪些组件？" class="headerlink" title="3.5.1 阿里云ECS实例包含哪些组件？"></a>3.5.1 阿里云ECS实例包含哪些组件？</h3><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs x86asm"><span class="hljs-number">1</span>.实例<br>等同于一台虚拟服务器，内含<span class="hljs-meta">CPU</span>、内存、操作系统、网络配置、磁盘等基础的计算组件。用户可以选择不同的实例规格，例如计算能力、内存、存储和网络带宽等，以适应不同应用场景的需求。<br><br><span class="hljs-number">2</span>.镜像<br>提供实例的操作系统、初始化应用数据及预装的软件。操作系统支持多种Linux发行版和多种Windows Server版本。用户也可以创建自己的镜像，以满足特定业务需求。<br><br><span class="hljs-number">3</span>.块存储<br>块设备类型产品，具备高性能和低时延的特性。提供基于分布式存储架构的云盘、共享块存储以及基于物理机本地存储的本地盘。<br><br><span class="hljs-number">4</span>.安全组<br>一种虚拟防火墙，用于控制实例的入口和出口流量。用户可以设置安全组规则，允许或拒绝特定的<span class="hljs-built_in">IP</span>地址或端口访问实例。<br><br><span class="hljs-number">5</span>.快照<br>对磁盘数据的定期备份，用户可以创建、管理和恢复快照。快照可以用于数据备份、灾难恢复和数据迁移等场景。<br><br><span class="hljs-number">6</span>.网络<br>主要是专有网络VPC，在逻辑上可彻底隔离的云上私有网络。<br><br><span class="hljs-number">7</span>.弹性<span class="hljs-built_in">IP</span><br>一种公网<span class="hljs-built_in">IP</span>地址，可以与实例关联，并且在实例的生命周期内保持不变。用户可以将弹性<span class="hljs-built_in">IP</span>分配给实例，实现与外部网络的通信。<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-2-阿里云ECS释放支持按量付费？"><a href="#3-5-2-阿里云ECS释放支持按量付费？" class="headerlink" title="3.5.2 阿里云ECS释放支持按量付费？"></a>3.5.2 阿里云ECS释放支持按量付费？</h3><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs gcode">阿里云ECS释放支持按量付费，即用户可以根据实际需求按需开通和释放资源，无需提前购买大量资源。<br>按量付费是一种先使用后付费的计费方式，成本比传统主机降低<span class="hljs-number">30</span><span class="hljs-meta">%</span>~<span class="hljs-number">80</span><span class="hljs-meta">%</span>。阿里云ECS的按量付费资源包括计算资源（<span class="hljs-attr">vCPU和内存）、镜像、云盘、公网带宽（按固定带宽）和快照等。用户可以根据具体配置汇总出一定时间内应扣除的总费用。在开通按量付费实例时，用户可以设置使用时限，到时间点后会自动释放。</span><br><span class="hljs-attr">此外，用户可以通过手动释放实例来结束计费。对于专有网络按量付费实例，如果没有启用实例停机不收费功能，只有释放实例才会结束实例计费。在控制台上停止实例不会停止实例计费。欠费后，即使已经设置自动释放时间，按量付费的ECS实例也不会遵循设置的时间释放。自欠费日起15</span>天后，ECS实例及相关数据（包括系统盘、随实例同时释放的数据盘和快照）都将被永久删除，数据无法找回。如果设置了自动释放，计费结束时间以系统实际释放时间为准（精确到秒）。<br></code></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="4-弹性伸缩概述"><a href="#4-弹性伸缩概述" class="headerlink" title="4 弹性伸缩概述"></a>4 弹性伸缩概述</h1><p>弹性伸缩（Auto Scaling）是根据业务需求和策略自动调整计算能力（即实例数量）的服务。</p>
+<h2 id="4-1-弹性伸缩基本概念"><a href="#4-1-弹性伸缩基本概念" class="headerlink" title="4.1 弹性伸缩基本概念"></a>4.1 弹性伸缩基本概念</h2><ul>
+<li><p><strong>弹性伸缩</strong></p>
+<p>  ​    是根据要求和策略<strong>自动调整计算能力（即实例数量）</strong>的服务。可以指定实例的类型，即ECS实例或RCI实例。在业务需求增长时，弹性伸缩自动增加指定类型的实例，来<strong>保证计算能力</strong>；在业务需求下降时，弹性伸缩自动减少指定类型的实例，来<strong>节约成本</strong>。弹性伸缩不仅适合业务量不断波动的应用程序，同时也适合业务量稳定的应用程序。</p>
+</li>
+<li><p><strong>伸缩组</strong></p>
+<p>  ​    <strong>是具有相同应用场景、相同实例类型的实例集合。</strong>伸缩组定义了组内可容纳实例数的最大最小值、关联负载均衡实力、关联RDS实例等属性。</p>
+</li>
+<li><p><strong>伸缩模式</strong></p>
+<p>  ​    对应不同的增加、减少实例的操作，包括<strong>定时模式</strong>、<strong>动态模式</strong>、<strong>固定数量模式</strong>、<strong>自定义模式</strong>、<strong>健康模式</strong>、<strong>多模式并行</strong>。</p>
+</li>
+<li><p><strong>组内实例配置信息来源</strong></p>
+<p>  ​    弹性伸缩从您选择的组内实例配置信息来源获取实例配置信息，并使用这些配置信息创建实例。组内实例配置信息来源支持<strong>伸缩配置</strong>和<strong>实例启动模板</strong>。</p>
+</li>
+<li><p><strong>伸缩配置</strong></p>
+<p>  ​    是一种组内实例配置信息来源，包含了<strong>实例的配置信息</strong>。</p>
+</li>
+<li><p><strong>伸缩规则</strong></p>
+<p>  ​    (1)<strong>步进规则、目标追踪规则、偷单规则</strong>：用于在触发伸缩活动时控制增加、减少实例的数量。</p>
+<p>  ​    (2**)预测规则**：基于历史监控数据预测未来的指标值，并智能设置伸缩组边界值。</p>
+</li>
+<li><p><strong>自动触发任务</strong></p>
+<p>  ​    分为定时任务和报警任务</p>
+<p>  (1)<strong>定时任务</strong>可以在指定的时间扩缩容。</p>
+<p>  (2)<strong>报警任务</strong>基于指定的监控指标动态扩缩容。</p>
+</li>
+<li><p><strong>伸缩活动</strong></p>
+<p>  ​    用于<strong>记录伸缩组内</strong>实例数、伸缩组边界值、期望实例数等<strong>数量的变化情况</strong>。执行伸缩规则、修改伸缩组边界值、修改期望实例数等操作均会触发伸缩活动。</p>
+</li>
+<li><p><strong>期望实例数</strong></p>
+<p>  ​    为伸缩组开启期望实例数功能后，伸缩组会自动将实例数量维持在期望实例数，无须人工千预。</p>
+</li>
+<li><p><strong>并行伸缩活动</strong>——通过以下方式触发的伸缩活动为并行伸缩活动</p>
+<p>  (1)手动执行伸缩规则、通过定时任务执行伸缩规则</p>
+<p>  (2)手动添加ECS实例、手动移出ECS实例</p>
+<p>  (3)期望实例数检查任务、实例健康检查任务、最大最小值检查任务</p>
+<p>  (4)如果有执行中的并行伸缩活动，可以再触发其它并行伸缩活动</p>
+</li>
+<li><p><strong>非并行伸缩活动</strong></p>
+<p>  ​    并行伸缩活动以外的伸缩活动均属于非并行伸缩活动。如果有执行中的非并行伸缩活动，不能再触发其它伸缩活动。</p>
+</li>
+<li><p><strong>稳态实例</strong></p>
+<p>  ​    指伸缩组中处于<strong>服务中、保护中和备用中</strong>状态的ECS实例。</p>
+</li>
+<li><p><strong>伸缩组流程</strong></p>
+<p>  ​    指您可以手动暂停、恢复的流程，包括<strong>扩容流程、缩容流程、健康检查、定时任务、报警任务</strong>，用于更精细地控制仲缩组流程级别的动作。</p>
+</li>
+<li><p><strong>伸缩组内实例的生命周期</strong>——伸缩组内ECS实例或ECI实例从创建开始到释放结束的过程，ECS实例或ECI实例的生命周期管理方式和创建类型有关</p>
+<p>  (1)弹性伸缩自动创建的ECS实例或ECI实例：由伸缩组管理。</p>
+<p>  (2)您手动创建的ECS实例或ECI实例：如果已托管给伸缩组，由伸缩组管理。如果未托管给伸缩组，由您自行管理。</p>
+</li>
+<li><p><strong>生命周期挂钩</strong></p>
+<p>  ​    用于挂起加入或移出中的ECS实例成ECl实例，您可以在挂起期间对ECS实例或EC|实例进行自定义操作。例如，在创建ECS实例或EC实例后延迟一段时间，满试展务正常后两挂载到负数均有实例接收流量，</p>
+</li>
+<li><p><strong>冷却时间</strong></p>
+<p>  ​    是指同一伸缩组内成功完成一个伸缩活动后的一段<strong>锁定时间</strong>。在冷却时间内，伸缩组会拒绝云监控报警任务触发伸缩活动的请求，避免因监控指标值波动导致频繁触发伸缩活动。</p>
+</li>
+</ul>
+<h2 id="4-2-弹性伸缩产品优势"><a href="#4-2-弹性伸缩产品优势" class="headerlink" title="4.2 弹性伸缩产品优势"></a>4.2 弹性伸缩产品优势</h2><p>弹性伸缩具有<strong>自动化</strong>、<strong>降成本</strong>、<strong>高可用</strong>、<strong>灵活智能</strong>以及<strong>易审计</strong>等优势。</p>
+<p><strong>1、自动化</strong></p>
+<p>根据预设的配置信息，弹性伸缩能够自动化实现以下功能，<strong>无需您人工干预，避免因手动操作而可能引入的低错。</strong></p>
+<ul>
+<li><p>弹性扩张时：</p>
+<ul>
+<li><p>自动创建指定数量、指定类型的实例(即ECS实例或ECI实例),确保伸缩内所有实例的计算能力能满足业务需求。</p>
+</li>
+<li><p>如果伸缩组关联了负载均衡，自动为创建的ECS实例或ECl实例关联负载均衡。负载均衡按需将访问请求分发给该ECS实例或ECI实例。</p>
+</li>
+<li><p>如果伸缩组关联了RDS数据库，自动将创建的ECS实例或ECl实例的IP添加到RDS访问白名单。该ECS实例或ECl实例可以将应用数据保存到RDS数据库。</p>
+</li>
+</ul>
+</li>
+<li><p>弹性收缩时：</p>
+<ul>
+<li><p>自动移出指定数量、指定类型的实例(即ECS实例或ECI实例),确保冗余的资源及时得到释放。</p>
+</li>
+<li><p>如果伸缩组关联了负载均衡，自动为移出的ECS实例或ECl实例取消关联负载均衡。负载均衡不再给该ECS实例或ECI实例分发访问请求。</p>
+</li>
+<li><p>如果伸缩组关联了RDS数据库，自动从RDS访问白名单中移出ECS实例或ECl实例的IP。该ECS实例或ECl实例不再保存应用数据到RDS数据库。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>2、降成本</strong></p>
+<p>弹性伸缩按需取用，自动释放，提高资源的利用率，有效降低成本。</p>
+<ul>
+<li>无需提前准备冗余的ECS实例或ECl实例，来防止业务高峰期受到影响；无需担心不能及时<strong>释放冗余资源</strong>，造成成本浪费。弹性伸缩能够适时调整计算能力，降低了资源的拥有成本。</li>
+<li>无需投入大量人力来调整计算资源，<strong>节约了人力成本和时间成本</strong>。</li>
+</ul>
+<p><strong>3、易审计</strong></p>
+<p>弹性伸缩自动记录每一个伸缩活动的详细信息，有助于您<strong>快速定位问题根源，降低了排查难度</strong>。弹性伸缩还提供伸缩组监控功能，可以通过云监控查看伸缩组内的实运行状态。您无需多次查看多台ECS实例或ECI实例的运行状态，有助于您<strong>快速了解整体的业务供给能力</strong>。</p>
+<p><strong>4、高可用</strong></p>
+<p>弹性伸缩支持监测ECS实例或ECI实例的健康状况（即运行状况）。如果发现一台ECS实例或ECl实例未处于运行中状态，则弹性伸缩判定为该ECS实例或ECl实例不健康，并及时自动增加ECS实例替换不健康的ECS实例，或者及时自动增加EC1实例替换不健康的ECI实例，来确保业务的高可用。弹性伸缩可以有效道免因不能及时发现ECS实例或ECl实例的不健康状态，而导致业务连续性受到影响的情况</p>
+<p><strong>5、灵活智能</strong></p>
+<p>弹性伸缩的功能丰富、灵活智能、高可用，可以有效<strong>降低手动配置的复杂度，提高操作效率</strong>。</p>
+<ul>
+<li><p>伸缩模式：支持多模式兼容，可同时配置固定数量、健康、定时、动态、自定义模式。其中，动态模式支持对接云监控服务，可以通过API对接外部的监控系统。</p>
+</li>
+<li><p>实例配置来源(实例使用的模板》:</p>
+<ul>
+<li><p>支持多种配置方式。例如，从已有实例创建伸缩配置，或者新建伸缩配置。如果是ECS实例使用的模板，还支持指定启动模板。</p>
+</li>
+<li><p>支持匹配多个ECS实例或EC实例规格，有效增加模板的灵活性，提高扩容的成功率。比如，ECS实例的模板支持配置多实例规格、多础盘类型等；EC1实例模板支持指定VCPU和内存来匹配多个实例规格。</p>
+</li>
+</ul>
+</li>
+<li><p>弹性伸缩策略：如果伸缩组是ECS类型，弹性伸缩支持丰富的扩缩容策略。如果伸缩组是ECl类型，伸缩策略是默认的。</p>
+<ul>
+<li><p>优先级策略：弹性伸缩会在优先级高的可用区扩缩容。如果无法扩缩容，则自动在下一优先级的可用区进行扩缩容。</p>
+</li>
+<li><p>均衡分布策略：弹性伸缩在多个可用区均衡分布ECS实例，提高可用性。</p>
+</li>
+<li><p>成本优化策略：当您在组内实例来源中指定了多实例规格时，优先创建VCPU单价最低的ECS实例，优先移出伸缩组内vCPU单价最高的ECS实例。</p>
+</li>
+<li><p>实例移出策略：您可以选择移出最早伸缩配置对应的实例，或者最早、最新创建的ECS实例。</p>
+</li>
+<li><p>实例回收模式：移出ECS实例时，您可以直接释放ECS实例，也可以保留部分资源，节省付费。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-3-弹性伸缩应用场景"><a href="#4-3-弹性伸缩应用场景" class="headerlink" title="4.3 弹性伸缩应用场景"></a>4.3 弹性伸缩应用场景</h2><h3 id="4-3-1-无规律的业务量波动"><a href="#4-3-1-无规律的业务量波动" class="headerlink" title="4.3.1 无规律的业务量波动"></a>4.3.1 无规律的业务量波动</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081624857.png" srcset="/img/loading.gif" lazyload alt="image-20230808162428788"></p>
+<h3 id="4-3-2-有规律的业务量波动"><a href="#4-3-2-有规律的业务量波动" class="headerlink" title="4.3.2 有规律的业务量波动"></a>4.3.2 有规律的业务量波动</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081624487.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-3-3-无明显的业务量波动"><a href="#4-3-3-无明显的业务量波动" class="headerlink" title="4.3.3 无明显的业务量波动"></a>4.3.3 无明显的业务量波动</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081625936.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="4-3-4-混合型的业务波动"><a href="#4-3-4-混合型的业务波动" class="headerlink" title="4.3.4 混合型的业务波动"></a>4.3.4 混合型的业务波动</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081627336.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="4-4-弹性伸缩工作原理"><a href="#4-4-弹性伸缩工作原理" class="headerlink" title="4.4 弹性伸缩工作原理"></a>4.4 弹性伸缩工作原理</h2><p><strong>工作原理</strong></p>
+<p>弹性伸缩增加ECS实例的工作流程如下所示，如果某Web应用使用ECS实例处理业务请求，系统架构分为三层(如上图右侧虚线框所示)。其中，最上层的负载均衡负责将客户端的请求转发给伸缩组内的ECS实例，中间层的伸缩组内的ECS实例负责处理客户端请求，最下层的RDS数据库负责存储来自ECS实例的业务数据。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308081629562.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>伸缩模式的配置</strong></p>
+<p>弹性伸缩会自动根据配置适时触发伸缩活动，增加或移出伸缩组内的ECS实例。如果需要弹性伸缩通过某个伸缩模式触发伸缩活动，可以选择其对应的配置方式来实现。</p>
+<p><strong>弹性伸缩示愿图</strong></p>
+<p>弹性伸缩支持为伸缩组关联负载均衡和RDS实例。当您从终端(例如移动端或PC端)发起请求时，负载均衡负责将您的请求转发给伸缩组内的某台ECS实例，ECS实例接收并处理请求，并将应用数据保存在云数据库RDS实例上。弹性伸缩根据业务需求和配置方式自动调整伸缩组内的ECS实例数量，以下分别是扩容、缩容和弹性自愈(即健康检查)场景下弹性伸缩的示意图。</p>
+<p>弹性<strong>扩容</strong>示意图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190154838.png" srcset="/img/loading.gif" lazyload></p>
+<p>弹性<strong>缩容</strong>示意图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190153102.png" srcset="/img/loading.gif" lazyload></p>
+<p>弹性<strong>自愈</strong>示意图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190155812.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="4-5-弹性伸缩分为两个维度"><a href="#4-5-弹性伸缩分为两个维度" class="headerlink" title="4.5 弹性伸缩分为两个维度"></a><strong>4.5 弹性伸缩分为两个维度</strong></h2><ul>
+<li><p><strong>调度层弹性</strong></p>
+<p>  主要是负责修改负载的调度容量变化。例如，HPA是典型的调度层弹性组件，通过HPA可以调整应用的副本数，调整的副本数会改变当前负载占用的调度容量，从而实现调度层的伸缩。</p>
+</li>
+<li><p><strong>资源层弹性</strong></p>
+<p>  主要是集群的容量规划不能满足集群调度容量时，会通过弹出ECS或ECl等资源的方式进行调度容量的补充。</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202401190200869.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="4-6-思考"><a href="#4-6-思考" class="headerlink" title="4.6 思考"></a>4.6 思考</h2><h3 id="4-6-1-是否可以尝试手动基与弹性伸缩搭建相关服务？"><a href="#4-6-1-是否可以尝试手动基与弹性伸缩搭建相关服务？" class="headerlink" title="4.6.1 是否可以尝试手动基与弹性伸缩搭建相关服务？"></a>4.6.1 是否可以尝试手动基与弹性伸缩搭建相关服务？</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs"><br></code></pre></td></tr></table></figure>
+
+<h3 id="4-6-2-弹性伸缩在功能上有哪些限制？"><a href="#4-6-2-弹性伸缩在功能上有哪些限制？" class="headerlink" title="4.6.2 弹性伸缩在功能上有哪些限制？"></a>4.6.2 弹性伸缩在功能上有哪些限制？</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs objectivec">使用弹性伸缩时具有以下功能限制：<br><br>	<span class="hljs-number">1.</span>弹性伸缩只支持自动增加或减少伸缩组内ECS实例的数量，不支持自动提升或降低单台ECS实例的vCPU、内存、带宽等配置。<br>	<span class="hljs-number">2.</span>部署在伸缩组内ECS实例或ECI实例上的应用必须是无状态并且可横向扩展的。<br>	<span class="hljs-number">3.</span>伸缩组内ECS实例或ECI实例可能会被自动释放，因此不适合保存会话记录、应用数据、日志等信息。如有需要，可以将会话记录等状态信息保存到独立的状态服务器，将应用数据保存到云数据库RDS，将日志存储到日志服务。<br>	<span class="hljs-number">4.</span>弹性伸缩不支持自动将ECS实例或ECI实例添加到Memcache实例的访问白名单，需要自行添加。<br>	<span class="hljs-number">5.</span>如果某个伸缩组关联的RDS实例、ALB服务器组、<span class="hljs-built_in">CLB</span>实例或者<span class="hljs-built_in">CLB</span>实例的后端服务器组被删除，则伸缩组自动解除与该资源的关联。<br>	<span class="hljs-number">6.</span>如果某个伸缩组内自动触发的伸缩活动连续失败超过<span class="hljs-number">30</span>天，弹性伸缩系统巡检会暂停该伸缩组自动触发伸缩活动的功能，并通过短信或者邮件向用户发送通知。<br>	<span class="hljs-number">7.</span>弹性伸缩服务的功能项存在以下数量限制：同一个账号一个地域下最多创建<span class="hljs-number">50</span>个伸缩组；一个伸缩组内最多创建<span class="hljs-number">50</span>个伸缩规则；一个伸缩组内最多创建<span class="hljs-number">6</span>个生命周期挂钩；一个伸缩组最多同时关联<span class="hljs-number">5</span>个负载均衡实例；一个账号下最多创建<span class="hljs-number">20</span>个定时任务。<br><br>以上信息仅供参考，具体功能限制还应以实际使用的平台或框架的文档为准。<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-6-3-指标弹性伸缩HPA为什么只支持单一规则？"><a href="#4-6-3-指标弹性伸缩HPA为什么只支持单一规则？" class="headerlink" title="4.6.3 指标弹性伸缩HPA为什么只支持单一规则？"></a>4.6.3 指标弹性伸缩HPA为什么只支持单一规则？</h3><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs x86asm">指标弹性伸缩（Horizontal Pod Autoscaler，HPA）在Kubernetes中用于自动调整Pod的副本数量，以应对工作负载的变化。HPA通过监控Pod的<span class="hljs-meta">CPU</span>利用率、内存利用率或其他自定义指标来决定是否增加或减少Pod的副本数。<br><br>至于为什么HPA通常只支持单一规则，这主要与Kubernetes的设计理念和HPA的初衷有关：<br><br>	<span class="hljs-number">1</span>.简洁性：Kubernetes的设计哲学之一是保持API的简洁和易用。单一规则使得HPA的配置更加直观和易于理解，降低了用户的学习成本。<br>	<span class="hljs-number">2</span>.明确性：单一规则有助于避免配置冲突和模糊性。当存在多个规则时，可能会难以确定哪个规则应该优先执行，或者规则之间如何相互作用。<br>	<span class="hljs-number">3</span>.可扩展性：虽然HPA本身只支持单一规则，但Kubernetes提供了扩展机制，允许用户通过自定义指标和外部适配器来实现更复杂的伸缩逻辑。这样，用户可以在需要时添加额外的伸缩规则，而不必局限于HPA内置的功能。<br><br>然而，随着Kubernetes的发展，社区对HPA的需求也在不断增加。在后续版本中，Kubernetes可能会通过引入更高级别的API或控制器来支持更复杂的伸缩策略，从而满足更多场景的需求。<br><br>需要注意的是，这里所说的“单一规则”可能是指HPA在配置时通常只针对一个特定的指标（如<span class="hljs-meta">CPU</span>利用率）进行伸缩决策。实际上，HPA可以配置多个条件，但这些条件通常是基于同一个指标的不同阈值。例如，可以设置<span class="hljs-meta">CPU</span>利用率超过<span class="hljs-number">80</span>%时增加Pod副本数，低于<span class="hljs-number">20</span>%时减少Pod副本数。这样的配置仍然遵循单一规则的原则，因为它只关注一个指标的变化。<br></code></pre></td></tr></table></figure>
+
+<h3 id="4-6-4-创建定时弹性伸缩CronHPA调度周期类型有几种？"><a href="#4-6-4-创建定时弹性伸缩CronHPA调度周期类型有几种？" class="headerlink" title="4.6.4 创建定时弹性伸缩CronHPA调度周期类型有几种？"></a>4.6.4 创建定时弹性伸缩CronHPA调度周期类型有几种？</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs markdown">在Kubernetes中，定时弹性伸缩可以通过配置CronHPA（基于Cron作业的水平Pod自动伸缩器）来实现。CronHPA允许您根据预定义的计划自动调整Pod的副本数量。关于CronHPA的调度周期类型，Kubernetes支持以下几种：<br><br><span class="hljs-code">	1.分钟：Cron作业的调度周期以分钟为单位。您可以指定在每个小时的第几分钟执行作业。</span><br><span class="hljs-code">	2.小时：Cron作业按小时进行调度。您可以指定在每天的特定小时执行作业。</span><br><span class="hljs-code">	3.天：按天进行调度，通常用于定期的任务，如每日或每周报告。</span><br><span class="hljs-code">	4.月：按月进行调度，用于周期性任务，如每月报告或数据备份。</span><br><span class="hljs-code">	5.年：按年进行调度，用于非常长期的计划任务。</span><br><span class="hljs-code">	</span><br><span class="hljs-code">在配置CronHPA时，您需要指定调度周期的类型（分钟、小时、天、月或年）以及相应的调度时间。例如，如果您希望每天中午12点自动调整Pod的副本数量，您可以配置CronHPA使用“小时”调度周期，并在Cron表达式中指定“0 12 * * *”。</span><br><span class="hljs-code"></span><br>请注意，具体可用的调度周期类型可能取决于您使用的Kubernetes版本和配置。建议查阅Kubernetes的官方文档或相关资源以获取更详细的信息和指导。<br></code></pre></td></tr></table></figure>
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/ACA/">ACA</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/05/ACA-%E5%AE%B9%E5%99%A8%E6%9C%8D%E5%8A%A1/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ACA-容器服务</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/05/ACA-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%9F%BA%E7%A1%80/">
+                        <span class="hidden-mobile">ACA-云计算基础</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

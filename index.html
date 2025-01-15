@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="jrd&#39;s blog">
+<meta property="og:type" content="website">
+<meta property="og:title" content="jrd&#39;s blog">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="jrd&#39;s blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="Jin Runda">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 100vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="jrd&#39;s blog 个人博客 ....">
+              
+            </span>
+
+            
+          </div>
+
+          
+            <div class="scroll-down-bar">
+              <i class="iconfont icon-arrowdown"></i>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div class="py-5" id="board"
+          style=margin-top:0>
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/12/31/%E5%8D%8E%E4%B8%89AC-AP%E9%83%A8%E7%BD%B2%E6%97%A0%E7%BA%BF%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" target="_self">
+          华三AC+AP部署无线基本配置
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/12/31/%E5%8D%8E%E4%B8%89AC-AP%E9%83%A8%E7%BD%B2%E6%97%A0%E7%BA%BF%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/" target="_self">
+          
+          华三AC+AP部署无线基本配置任务描述完成网络的规划和配置，PC和无线终端设备能ping通，各交换机和路由能ping通。 任务要求 掌握交换机VLAN配置 掌握AC配置 掌握AP配置 掌握路由配置 掌握链路聚合 掌握LoopBack配置  实训拓扑本任务的实训拓扑图如图1所示。 本任务具体要求如下： 1、按图示连接好网络设备，AP可以只用一个 2、IP网段地址用自己的学号后两位以及后面的网段（本人
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-12-31 08:20" pubdate>
+              2024-12-31
+            </time>
+          </div>
+        
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/03/24/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA/" target="_self">
+          软件工程概论
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/03/24/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA/" target="_self">
+          
+          1 软件工程概述软件 &#x3D; 程序 + 数据 + 文档 软件工程三要素：方法、工具、过程 软件生命周期一般分为：问题定义、可行性研究、需求分析、设计(总体&#x2F;详细)、编码、测试、运行与维护阶段。   瀑布模型  瀑布模型将软件生命周期的各项活动自上而下如瀑布流水依次连接，逐层反馈，不能跨级反馈。  优点：  有良好的需求确认入口，为后续的开发奠定良好的基础。 强调设计过程。软件是“创造”出来的，不是“制
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-03-24 00:05" pubdate>
+              2024-03-24
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/02/16/Linux-PostgreSQL1/" target="_self">
+          Linux-PostgreSQL1
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/02/16/Linux-PostgreSQL1/" target="_self">
+          
+          1 PostgreSQL安装1.1 二进制安装包安装https:&#x2F;&#x2F;www.postgresql.org&#x2F;download&#x2F;linux&#x2F;redhat&#x2F;        https:&#x2F;&#x2F;www.postgresql.org&#x2F;download&#x2F;linux&#x2F;ubuntu&#x2F; 12[root@Rocky8 ~]# yum info postgresqlroot@ubuntu2004:~# apt list p
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-02-16 15:30" pubdate>
+              2024-02-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/02/15/Linux-OpenVPN/" target="_self">
+          Linux-OpenVPN
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/02/15/Linux-OpenVPN/" target="_self">
+          
+          背景
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-02-15 16:55" pubdate>
+              2024-02-15
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/02/08/Linux-MySQL-%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/" target="_self">
+          Linux-MySQL-集群与压力测试
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/02/08/Linux-MySQL-%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/" target="_self">
+          
+          1 MySQL 集群 Cluster1.1 MySQL主从复制 读写分离 复制：每个节点都有相同的数据集，向外扩展，基于二进制日志的单向复制 负载均衡读操作 备份 高可用和故障切换 数据分布 MySQL升级     12相关线程：dump Thread      I&#x2F;O Thread     SQL Thread相关二进制文件：二进制日志（Bin Log）   中继日志（Relay Log）
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-02-08 16:47" pubdate>
+              2024-02-08
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/02/04/Linux-MySQL-%E8%BF%9B%E9%98%B6/" target="_self">
+          Linux-MySQL-进阶
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/02/04/Linux-MySQL-%E8%BF%9B%E9%98%B6/" target="_self">
+          
+          1 MySQL 架构和性能优化 MySQL是C&#x2F;S 架构的，connectors是连接器；可供Native C API、JDBC、ODBC、NET、PHP、Perl、Python、Ruby、Cobol等连接mysql。 https:&#x2F;&#x2F;docs.oracle.com&#x2F;cd&#x2F;E17952_01&#x2F;mysql-8.0-en&#x2F;storage-engines.html https:&#x2F;&#x2F;docs.oracle
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-02-04 09:31" pubdate>
+              2024-02-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/01/26/Linux-MySQL-%E5%9F%BA%E7%A1%80/" target="_self">
+          Linux-MySQL-基础
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/01/26/Linux-MySQL-%E5%9F%BA%E7%A1%80/" target="_self">
+          
+          1 数据库原理数据分类  结构化数据：固定格式、有限长度 —- Excel 非结构化数据：不定长、无固定格式 —- 网页、图片文件 半结构化数据：— HTML  1.1 数据库概述IT行业核心技术：数据库、芯片、操作系统 文件系统(磁盘文件)  》 第一代数据库(网状&#x2F;层次)  》第二代数据库(关系&#x2F;结构化查询语言)  》新一代数据库(关系-对象) Database数据库     DBMS数据库管
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-01-26 17:10" pubdate>
+              2024-01-26
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/01/19/ACA-%E5%AE%9E%E9%AA%8C2-%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9%E5%AE%9E%E6%88%98/" target="_self">
+          ACA-实验2-弹性伸缩实战
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/01/19/ACA-%E5%AE%9E%E9%AA%8C2-%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9%E5%AE%9E%E6%88%98/" target="_self">
+          
+          本实验从零开始构建Serverless 容器服务 ASK，并在容器服务内创建无状态应用，并设置指标弹性伸缩HPA以及定时弹性伸缩CronHPA，使学生能够熟练掌握的容器集群的创建以及设置阿里云弹性容器实例ECI的方法。  1.ACK集群创建     2.ACK集群基本信息 我们可以点击右侧的【详情】查看集群相关参数：  【基本信息】页面主要包括：集群ID、API Server 公网连接端点、API
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-01-19 16:26" pubdate>
+              2024-01-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ACA/">ACA</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2024/01/19/ACA-%E5%AE%9E%E9%AA%8C1-%E5%BC%80%E9%80%9AECS/" target="_self">
+          ACA-实验1:开通ECS
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2024/01/19/ACA-%E5%AE%9E%E9%AA%8C1-%E5%BC%80%E9%80%9AECS/" target="_self">
+          
+          掌握如何配置ECS安全组 掌握如何连接ECS 掌握如何使用ECS配置Apache服务 掌握如何释放ECS  1.开通ECS   2.远程连接    3.配置Apache服务 3.1 安装Apache 服务 1yum install -y httpd   显示Complete 说明安装完成  3.2 启动 Apache服务 1systemctl start httpd   说明：httpd为apa
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-01-19 00:10" pubdate>
+              2024-01-19
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/ACA/">ACA</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2023/10/09/Linux-%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/" target="_self">
+          Linux-软件管理
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2023/10/09/Linux-%E8%BD%AF%E4%BB%B6%E7%AE%A1%E7%90%86/" target="_self">
+          
+          1 软件运行和编译ABI    应用户程序的二进制接口（ Windows[PE] 与 Linux[ELF] 不兼容） 12#查看文件二进制格式file filename  API    应用程序开发接口  POSIX标准 c语言程序实现过程：源代码 -&gt; 预处理 -&gt; 编译 -&gt; 汇编 -&gt; 链接 12#一步实现编译c语言源代码,生成可执行文件gcc hello.c -o
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-10-09 11:31" pubdate>
+              2023-10-09
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="page-number" href="/page/3/#board">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#board">5</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

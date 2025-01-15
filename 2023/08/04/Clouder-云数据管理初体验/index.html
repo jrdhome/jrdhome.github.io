@@ -1,0 +1,638 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实验概述 本实验将提供一台阿里云RDS数据库，并通过阿里云的管理控制台进行如下操作： 1）创建RDS数据库； 2）创建RDS数据库帐号； 3）将测试数据导入到新建RDS数据库； 4）管理并查看导入数据的信息以及诊断报告； 实验目标 完成此实验后，可以掌握的能力有： \1. RDS的基本概念； \2. 创建数据库和数据库账号； \3. 导入本地数据； \4. 获取诊断报告 学前建议 了解数据库的基本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clouder-云数据管理初体验">
+<meta property="og:url" content="http://example.com/2023/08/04/Clouder-%E4%BA%91%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%88%9D%E4%BD%93%E9%AA%8C/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="实验概述 本实验将提供一台阿里云RDS数据库，并通过阿里云的管理控制台进行如下操作： 1）创建RDS数据库； 2）创建RDS数据库帐号； 3）将测试数据导入到新建RDS数据库； 4）管理并查看导入数据的信息以及诊断报告； 实验目标 完成此实验后，可以掌握的能力有： \1. RDS的基本概念； \2. 创建数据库和数据库账号； \3. 导入本地数据； \4. 获取诊断报告 学前建议 了解数据库的基本">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/bcc23d3173f5411e9dffa883b49507c3/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-bcc23d3173f5411e9dffa883b49507c3-content-image-1640690032448-x4atPf">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/bcc23d3173f5411e9dffa883b49507c3/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-bcc23d3173f5411e9dffa883b49507c3-content-image-1640690081924-xBUMRT">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625235.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625155.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/85a5d59a7c3346a9863e4cada2ffc431.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625101.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625204.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/7f465b86970d481d9280d4af91b5a485.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/2f2d58086f5947279955fa49bf795038.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625402.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/d87190fb78584b98a2947bb711e1d77d.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/296859d5867f4b19b6b647923eb43476/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-296859d5867f4b19b6b647923eb43476-content-image-1648710527681-xkZCQP">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/296859d5867f4b19b6b647923eb43476/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-296859d5867f4b19b6b647923eb43476-content-image-1648709613215-hk0yNR">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041626528.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/296859d5867f4b19b6b647923eb43476/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-296859d5867f4b19b6b647923eb43476-content-image-1648710617850-4RjkOC">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041626493.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041626506.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648710977904-epf358">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711013315-ab5Ud9">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711112567-uzmPVw">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711089713-48NI1n">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711318162-smTRKC">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711351687-mSZANX">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/aa39c685d1dd4ca0990a6c4c00c5a7be/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-aa39c685d1dd4ca0990a6c4c00c5a7be-content-image-1640690692159-cJGUj9">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/aa39c685d1dd4ca0990a6c4c00c5a7be/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-aa39c685d1dd4ca0990a6c4c00c5a7be-content-image-1640690697944-7hCWS8">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627222.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/10d2a6ff2dc64927b01b1dc87d39e1af.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690748715-2gesj2">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690778000-ojTiT1">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690793453-oy3aln">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690807544-uaiQw1">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627087.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690821474-VEDhvn">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/ddaec112f7e44e28ad6a96344e2b53d5.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627678.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/b131e2291eb8411794b770ac7217a5aa.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/4fb4346e163e484e8bc94018190a22c0.png">
+<meta property="og:image" content="https://ucc.alicdn.com/pic/developer-ecology/cbc331cb5a9d4cfcb0612c9de67d0d5a.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627765.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627781.png">
+<meta property="article:published_time" content="2023-08-04T16:19:44.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.349Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="Clouder">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/bcc23d3173f5411e9dffa883b49507c3/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-bcc23d3173f5411e9dffa883b49507c3-content-image-1640690032448-x4atPf">
+  
+  
+  <title>Clouder-云数据管理初体验 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Clouder-云数据管理初体验">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-04 16:19" pubdate>
+        August 4, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      3.6k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      31 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clouder-云数据管理初体验</h1>
+            
+            <div class="markdown-body">
+              <p><strong>实验概述</strong></p>
+<p>本实验将提供一台阿里云RDS数据库，并通过阿里云的管理控制台进行如下操作：</p>
+<p>1）创建RDS数据库；</p>
+<p>2）创建RDS数据库帐号；</p>
+<p>3）将测试数据导入到新建RDS数据库；</p>
+<p>4）管理并查看导入数据的信息以及诊断报告；</p>
+<p><strong>实验目标</strong></p>
+<p>完成此实验后，可以掌握的能力有：</p>
+<p>\1. RDS的基本概念；</p>
+<p>\2. 创建数据库和数据库账号；</p>
+<p>\3. 导入本地数据；</p>
+<p>\4. 获取诊断报告</p>
+<p><strong>学前建议</strong></p>
+<p>了解数据库的基本结构</p>
+<h1 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h1><h2 id="RDS-简介"><a href="#RDS-简介" class="headerlink" title="RDS 简介"></a><strong>RDS 简介</strong></h2><p>  <strong>阿里云关系型数据库</strong>（Relational Database Service，简称 RDS）是一种稳定可靠、可弹性伸缩的在线数据库服务。基于阿里云分布式文件系统和高性能存储，RDS 支持 MySQL、SQL Server、PostgreSQL 和 PPAS（Postgre Plus Advanced Server，一种高度兼容 Oracle 的数据库）引擎，并且提供了容灾、备份、恢复、监控、迁移等方面的全套解决方案，彻底解决数据库运维的烦恼。</p>
+<h2 id="RDS-实例链接方式"><a href="#RDS-实例链接方式" class="headerlink" title="RDS 实例链接方式"></a><strong>RDS 实例链接方式</strong></h2><p>  当RDS实例创建成功后，默认提供 <strong>内网链接地址</strong> ，用户可以通过 <strong>数据传输服务</strong> 或 <strong>相同地域的ECS实例</strong> 连接到RDS实例。若要通过本地服务器 或 不同地域的ECS实例 连接到 RDS实例，用户需 <strong>申请外网地址</strong> ，如下图所示：</p>
+<h2 id="RDS-数据库账号"><a href="#RDS-数据库账号" class="headerlink" title="RDS 数据库账号"></a><strong>RDS 数据库账号</strong></h2><p>  在使用RDS 数据库之前，需要在 RDS 实例中创建账号。同一实例下的数据库共享该实例下的所有资源，其中：</p>
+<p><strong>&gt; MySQL 版实例和 SQL Server 版实例最多可以创建 500 个账号</strong></p>
+<p><strong>&gt; PostgreSQL 版实例和 PPAS 版实例没有账号个数限制</strong></p>
+<p><strong>&gt; RDS for SQL Server 2012 只能创建初始账号</strong></p>
+<h3 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a><strong>注意事项：</strong></h3><p>1）分配数据库账号权限时，请按最小权限原则和业务角色创建账号，并合理分配只读和读写权限。必要时可以把数据库账号和数据库拆分成更小粒度，使每个数据库账号只能访问其业务之内的数据。如果不需要数据库写入操作，请分配只读权限。</p>
+<p>2）请设置数据库账号的密码为强密码，并定期更换</p>
+<h3 id="创建数据库账号："><a href="#创建数据库账号：" class="headerlink" title="创建数据库账号："></a><strong>创建数据库账号：</strong></h3><p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/bcc23d3173f5411e9dffa883b49507c3/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-bcc23d3173f5411e9dffa883b49507c3-content-image-1640690032448-x4atPf" srcset="/img/loading.gif" lazyload alt="2"></p>
+<p>1）<strong>数据库账号</strong>：由 2~16 个字符的小写字母，数字或下划线组成、开头需为字母，结尾需为字母或数字，如 <strong>lab_user</strong> 。</p>
+<p>2）<strong>授权数据库</strong>：该账号授权的数据库，选取左边的 <strong>未授权数据库</strong> ，单击 <strong>授权</strong>，添加数据库到 <strong>已授权数据库</strong> 中。如果尚未创建数据库，该值可以为空。您可以通过 <strong>已授权数据库</strong> 右上角的权限设置按钮将该账号下的数据库权限批量设置为 <strong>全部设读写</strong> 或者 <strong>全部设只读</strong>。</p>
+<p>3）<strong>密码</strong>：该账号对应的密码，由 6~32 个字符的字母、数字、中划线或下划线组成，如 password4example。</p>
+<p>​    <strong>确认密码</strong>：输入与密码一致的字段，如 password4example，以确保密码正确输入。</p>
+<p>4）<strong>备注说明</strong>：可以备注该账号的相关信息，便于后续账号管理，最多支持 256 个字符（1 个汉字等于 3 个字符）。</p>
+<h2 id="RDS-数据库"><a href="#RDS-数据库" class="headerlink" title="RDS 数据库"></a><strong>RDS 数据库</strong></h2><p>  用户可以通过 <strong>RDS 管理控制台</strong> 创建数据库。数据库名称<strong>实例内</strong>唯一，<strong>实例间</strong>互不影响。同一实例下的数据库共享该实例下的所有资源，其中：</p>
+<p>&gt; <strong>MySQL</strong> 版实例最多可以创建 500 个数据库</p>
+<p>&gt; <strong>SQL Server 2008 R2</strong> 版实例最多可以创建 50 个数据库</p>
+<p>&gt; <strong>PostgreSQL</strong> 版实例和 <strong>PPAS</strong> 版实例没有数据库个数限制</p>
+<ul>
+<li><strong>创建数据库：</strong></li>
+</ul>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/bcc23d3173f5411e9dffa883b49507c3/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-bcc23d3173f5411e9dffa883b49507c3-content-image-1640690081924-xBUMRT" srcset="/img/loading.gif" lazyload alt="3"></p>
+<p>1）<strong>数据库(DB)名称</strong>：由 2~64 个字符的小写字母、数字、下划线或中划线组成，开头需为字母，结尾需为字母或数字。</p>
+<p>2）<strong>支持字符集</strong>：设置数据库的字符集：<strong>utf8</strong>、<strong>gbk</strong>、<strong>latin1</strong> 和 <strong>utf8mb4</strong>。</p>
+<p>3）<strong>授权账号</strong>：选择该数据库授权的账号。如果尚未创建账号，该值可以为空。</p>
+<p>4）<strong>账号类型</strong>：选择 <strong>授权账号</strong> 后可见，设置该数据库授权给 <strong>授权账号</strong> 的权限，可以设置为 <strong>读写</strong> 或者 <strong>只读</strong> 。</p>
+<p>5）<strong>备注说明</strong>：可以备注该数据库的相关信息，便于后续数据库管理，最多支持 256 个字符（1 个汉字等于 3 个字符）。</p>
+<h1 id="访问阿里云RDS管理控制台"><a href="#访问阿里云RDS管理控制台" class="headerlink" title="访问阿里云RDS管理控制台"></a>访问阿里云RDS管理控制台</h1><p>在实验室页面，单击<strong>创建资源</strong>。</p>
+<ol>
+<li>（可选）在实验室页面左侧导航栏中，单击<strong>云产品资源</strong>列表，可查看本次实验资源相关信息（例如IP地址、用户信息等）。</li>
+</ol>
+<p><strong>说明：</strong> 资源创建过程需要1~3分钟。</p>
+<p>选择界面中的【<strong>Chromium网页浏览器</strong>】，进入登录页面。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625235.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>输入资源提供的“子用户名称”和“子用户密码”登录。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625155.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/85a5d59a7c3346a9863e4cada2ffc431.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3）顶部导航栏处点击 产品与服务<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625101.png" srcset="/img/loading.gif" lazyload alt="img"> ，下拉菜单中，数据库 中选择 云数据库RDS版 ，进入阿里云RDS管理控制台。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625204.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\2. 通过如下步骤，进入实验资源 云数据库RDS实例 的管理控制台。</p>
+<p>1）在顶部地址栏，选择 实验资源 提供的 地域 信息。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/7f465b86970d481d9280d4af91b5a485.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>2）在搜索栏中，输入 实验资源 提供的 云数据库RDS实例 的 实例ID ，并点击 搜索 。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/2f2d58086f5947279955fa49bf795038.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3）在下方搜索结果中，点击实例右侧的 管理 ，进入RDS实例的管理控制台。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041625402.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="创建RDS数据库"><a href="#创建RDS数据库" class="headerlink" title="创建RDS数据库"></a>创建RDS数据库</h1><p>本小节将介绍：在RDS实例上创建数据库。</p>
+<p>\1. 在RDS实例的管理页面，选择左侧栏的 实例列表 ，再点击右侧的 实例名称 进入实例详情页。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/d87190fb78584b98a2947bb711e1d77d.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>通过如下操作步骤，进入数据库创建页面：</p>
+<p>1）点击左侧栏的 数据库管理 ，进入数据库管理页面。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/296859d5867f4b19b6b647923eb43476/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-296859d5867f4b19b6b647923eb43476-content-image-1648710527681-xkZCQP" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）在左上角点击左侧的 创建数据库 ，进入创建页面。</p>
+<p>\2. 在创建页面中，添加如下信息：</p>
+<p>说明：如下参数的具体说明，烦请参考 背景知识 小节中 RDS 数据库 的 创建数据库 部分。</p>
+<p>1）数据库（DB）名称：请根据 输入框 下端的 命名规则 ，输入 数据库名称，例如：lab_db 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/296859d5867f4b19b6b647923eb43476/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-296859d5867f4b19b6b647923eb43476-content-image-1648709613215-hk0yNR" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）支持字符集：默认设为 utf8 ，最后点击创建。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041626528.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3)创建完成</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/296859d5867f4b19b6b647923eb43476/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-296859d5867f4b19b6b647923eb43476-content-image-1648710617850-4RjkOC" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="创建RDS数据库账号"><a href="#创建RDS数据库账号" class="headerlink" title="创建RDS数据库账号"></a>创建RDS数据库账号</h1><p>本小节主要介绍如何创建RDS数据库账号。</p>
+<p>\1. 通过如下步骤，进入数据库账号创建页面：</p>
+<p>1）在RDS实例的管理页面，点击左侧栏的 账号管理 ，进入数据库账号管理页面。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041626493.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>2）在 用户账号 页面，点击 创建账号。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041626506.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\2. 填写如下信息，完成数据库账号创建：</p>
+<p>说明：如下参数的具体说明，烦请参考 背景知识 小节中 RDS 数据库帐号 的 创建数据库帐号 部分。</p>
+<p>1）数据库账号：请根据 输入框 下端的 命名规则 ，输入 数据库账号名称，例如：lab_user 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648710977904-epf358" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）账号类型 ：选择 普通账号 </p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711013315-ab5Ud9" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\3) 授权数据库: 勾选上一步创建的数据库 lab_db ，再点击中间的箭头，选择读写（DDL+DML）</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711112567-uzmPVw" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711089713-48NI1n" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\4) 密码 ：请根据 输入框 下端的 密码规则 ，输入 密码，例如：Passw0rd</p>
+<p>5）确认密码：再次输入创建的密码。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711318162-smTRKC" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>6）完成如上信息后，点击 确定 。</p>
+<p>\3. 自动返回 账号管理 的 用户账号 页面，查看到新建账号 lab_user 的 状态 为 激活 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/cb489d4579bb4590b105ec9a5060ab56/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-cb489d4579bb4590b105ec9a5060ab56-content-image-1648711351687-mSZANX" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="登录RDS数据库"><a href="#登录RDS数据库" class="headerlink" title="登录RDS数据库"></a>登录RDS数据库</h1><p>本小节主要内容：通过RDS管理控制台，登录到 新建RDS数据库。</p>
+<p>\1. 在 账号管理 页面，点击顶部右侧的 登录数据库 ，弹出数据库登录页面。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/aa39c685d1dd4ca0990a6c4c00c5a7be/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-aa39c685d1dd4ca0990a6c4c00c5a7be-content-image-1640690692159-cJGUj9" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\2. 返回数据库管理控制台，输入如下信息：</p>
+<p>1）第一行：输入 新建数据库账号 ，lab_user 。 </p>
+<p>2）第二行：输入 新建数据库账号密码 ，Passw0rd 。</p>
+<p>3）点击 登录 ，登录到数据库管理系统。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/aa39c685d1dd4ca0990a6c4c00c5a7be/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-aa39c685d1dd4ca0990a6c4c00c5a7be-content-image-1640690697944-7hCWS8" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>注：1）若弹出如下对话框，若无法输入，可按ESC进行输入。若未更新成功，刷新此页面重新进行输入或关闭当前页面重新进入（此时输入的显示名要与上次输入的不同。</p>
+<p>2）若提示需添加白名单，点击确认添加即可。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627222.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/10d2a6ff2dc64927b01b1dc87d39e1af.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\3.  下一小节，将在DMS管理控制台中，导入测试数据，并查看。</p>
+<h1 id="导入测试数据"><a href="#导入测试数据" class="headerlink" title="导入测试数据"></a>导入测试数据</h1><p>复制下方链接至浏览器中打开</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs llvm"><span class="hljs-symbol">https:</span>//university-labfileapp.oss-cn-hangzhou.aliyuncs.com/<span class="hljs-variable">%E4</span><span class="hljs-variable">%BA</span><span class="hljs-variable">%91</span><span class="hljs-variable">%E6</span><span class="hljs-variable">%95</span><span class="hljs-variable">%B0</span><span class="hljs-variable">%E6</span><span class="hljs-variable">%8</span>D<span class="hljs-variable">%AE</span><span class="hljs-variable">%E5</span><span class="hljs-variable">%BA</span><span class="hljs-variable">%93</span><span class="hljs-variable">%E7</span><span class="hljs-variable">%AE</span><span class="hljs-variable">%A1</span><span class="hljs-variable">%E7</span><span class="hljs-variable">%90</span><span class="hljs-variable">%86</span><span class="hljs-variable">%E5</span><span class="hljs-variable">%88</span><span class="hljs-variable">%9</span>D<span class="hljs-variable">%E4</span><span class="hljs-variable">%BD</span><span class="hljs-variable">%93</span><span class="hljs-variable">%E9</span><span class="hljs-variable">%AA</span><span class="hljs-variable">%8</span>C/lab<span class="hljs-variable">%20</span>.sql<br></code></pre></td></tr></table></figure>
+
+
+
+<p>本小节主要内容：导入客户模拟数据到 新建数据库 中，并查看数据。</p>
+<p>\1. 通过如下操作步骤，进入数据库导入的页面：</p>
+<p>1）点击页面顶部的 数据库开发 。</p>
+<p>2）在数据库开发的左侧栏中点击 数据导入 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690748715-2gesj2" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\2. 通过如下操作步骤，导入本地测试数据：</p>
+<p>1）点击本小节最开始的链接进行下载 ，然后将下载文件 lab.sql 作为测试数据到本地。</p>
+<p>2）在 附件 栏右侧，点击 上传文件 ，并选择下载 lab.sql 文件的本地保存路径。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690778000-ojTiT1" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4）完成后，点击底部的 提交申请，导入测试数据。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690793453-oy3aln" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5）提交申请后，点击执行变更，等待执行成功后，即可返回查看数据库信息。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690807544-uaiQw1" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627087.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\2. 通过如下步骤，查看导入表的信息：</p>
+<p>1）点击左侧栏lab_db 数据库，点击表，即可查看到创建完成的表。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/5e10c289fdbb45259f4383c86d0d88c3/sections/f37a02d64c8c484cbbaa8cac21dfeb3e/content/images/course-5e10c289fdbb45259f4383c86d0d88c3-section-f37a02d64c8c484cbbaa8cac21dfeb3e-content-image-1640690821474-VEDhvn" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）点击表名，例如：admin_app_version，可以查看到所有对表的操作，例如：SQL操作数据、打开表等等。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/ddaec112f7e44e28ad6a96344e2b53d5.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\5. 下一小节，将介绍如何查看数据库的诊断报告。</p>
+<h1 id="查看诊断报告"><a href="#查看诊断报告" class="headerlink" title="查看诊断报告"></a>查看诊断报告</h1><p>本小节主要内容：查看实例的诊断报告。</p>
+<p>\1. 通过如下步骤，进入诊断报告页面：</p>
+<p>1）进入实例，点击左侧栏诊断报告。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627678.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\2. 通过如下步骤，发起实例诊断：</p>
+<p>1）在诊断报告的主页面中，点击左侧的 发起诊断 。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/b131e2291eb8411794b770ac7217a5aa.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）弹出提示，点击 确认 。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/4fb4346e163e484e8bc94018190a22c0.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>3）重新加载 页面（刷新），查看诊断报告的 状态 变为 诊断完成 。</p>
+<p><img src="https://ucc.alicdn.com/pic/developer-ecology/cbc331cb5a9d4cfcb0612c9de67d0d5a.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\3. 通过如下步骤，查看诊断报告，并进行分析：</p>
+<p>1）点击诊断报告右侧的 查看报告 ，弹出诊断报告页面。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627765.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）可以在页面中，查看到如下的诊断报告信息：   实例规格 、健康状况 、SQL优化 、空间诊断、会话列表 、慢SQL汇总  、性能趋势图</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308041627781.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Clouder/">Clouder</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8A%E4%BA%91%E8%BF%81%E7%A7%BB%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Clouder-数据库上云迁移的实现</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/02/Clouder-%E7%BD%91%E4%B8%8A%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAWordPress%E7%BD%91%E7%AB%99/">
+                        <span class="hidden-mobile">Clouder-网上快速搭建WordPress网站</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

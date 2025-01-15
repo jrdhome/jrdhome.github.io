@@ -1,0 +1,726 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实验概述   本实验开始后，平台提供一台基础环境的CentOS 6.5 64位的ECS（云服务器）实例。我们将会在这台服务器上搭建和部署LAMP环境，然后安装WordPress网站，最后向大家展示如何在WordPress网站使用微博挂件和网站统计平台CNZZ。  实验目标 完成此实验后，可以掌握的能力有： \1. Apache服务器的安装和部署 \2. MySQL数据库的安装 \3. PHP语言环">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clouder-网上快速搭建WordPress网站">
+<meta property="og:url" content="http://example.com/2023/08/02/Clouder-%E7%BD%91%E4%B8%8A%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAWordPress%E7%BD%91%E7%AB%99/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="实验概述   本实验开始后，平台提供一台基础环境的CentOS 6.5 64位的ECS（云服务器）实例。我们将会在这台服务器上搭建和部署LAMP环境，然后安装WordPress网站，最后向大家展示如何在WordPress网站使用微博挂件和网站统计平台CNZZ。  实验目标 完成此实验后，可以掌握的能力有： \1. Apache服务器的安装和部署 \2. MySQL数据库的安装 \3. PHP语言环">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/intro/24d0e20f6d794183bce217ba72d34e9e/images/course-24d0e20f6d794183bce217ba72d34e9e-intro-image-1498447728424-8ivQcn">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308021730604.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308021730533.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308021730569.png">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1668418215626-AhPJz3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1668418051006-1hHeqG">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1668418244121-jRUR1o">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1498448630046-G5DSwN">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1498458785459-2DaioL">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418287426-tSpxb6">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418311652-IET0YK">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418351707-WGJhKS">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418370142-NIRj7G">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455480664-JBBa1L">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455557446-1473XP">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455568087-V8ietv">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455579527-NkeTc6">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498457347391-lDIeaA">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498457874311-0hRT4K">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498458162065-NzVtyH">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1499439025654-pYlAIq">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1668418526712-EqmBGA">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1668418538231-p9Mpkf">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1668418548205-LCB0sM">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1498458436774-2YNQZM">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1640685474199-x03yrU">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1498619458196-ykwKTO">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1668418714790-Kn01Mf">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1668418734863-O6oX7f">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499393155209-2uZmKx">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499393334252-QDaG7k">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1640685739524-hu0FnN">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499394881885-2ihEBr">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499393885759-D2rGBc">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419045114-0qr8yB">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419087927-lGBzzd">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419103972-eqW8q2">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419144601-a1yTuQ">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419159023-slIUeS">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419182808-hC4GOj">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419202335-H3wzyS">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419213038-lbndNL">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419244072-9dXCrx">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419255973-pQh3FR">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419269052-yvHvIs">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419280447-REnHTz">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419289401-YeXa3u">
+<meta property="article:published_time" content="2023-08-02T17:24:49.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.349Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="Clouder">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://edu.aliyun.com/lab/files/courses/intro/24d0e20f6d794183bce217ba72d34e9e/images/course-24d0e20f6d794183bce217ba72d34e9e-intro-image-1498447728424-8ivQcn">
+  
+  
+  <title>Clouder-网上快速搭建WordPress网站 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Clouder-网上快速搭建WordPress网站">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-02 17:24" pubdate>
+        August 2, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      57 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clouder-网上快速搭建WordPress网站</h1>
+            
+            <div class="markdown-body">
+              <p><strong>实验概述</strong></p>
+<p>  本实验开始后，平台提供一台基础环境的CentOS 6.5 64位的ECS（云服务器）实例。我们将会在这台服务器上搭建和部署LAMP环境，然后安装WordPress网站，最后向大家展示如何在WordPress网站使用微博挂件和网站统计平台CNZZ。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/intro/24d0e20f6d794183bce217ba72d34e9e/images/course-24d0e20f6d794183bce217ba72d34e9e-intro-image-1498447728424-8ivQcn" srcset="/img/loading.gif" lazyload></p>
+<p><strong>实验目标</strong></p>
+<p>完成此实验后，可以掌握的能力有：</p>
+<p>\1. Apache服务器的安装和部署</p>
+<p>\2. MySQL数据库的安装</p>
+<p>\3. PHP语言环境的安装和部署</p>
+<p>\4. 安装WordPress网站</p>
+<p>\5. 在WordPress网站使用网站分析平台CNZZ</p>
+<p><strong>学前建议</strong></p>
+<p>\1. 了解Linux的基本命令；</p>
+<p>\2. 了解基本的网站搭建知识</p>
+<h1 id="实验背景"><a href="#实验背景" class="headerlink" title="实验背景"></a>实验背景</h1><h2 id="关于LAMP"><a href="#关于LAMP" class="headerlink" title="关于LAMP"></a><strong>关于LAMP</strong></h2><p>   <strong>LAMP</strong>是指 <strong>Linux</strong>（操作系统），<strong>Apache HTTP</strong> 服务器，<strong>MySQL</strong>（有时也指MariaDB）数据库软件和 <strong>PHP</strong>（有时也指Perl或Python）的首字母，一般用来建立web应用平台。和Java/J2EE架构相比，LAMP具有Web资源丰富、轻量、快速开发等特点；与微软的 .NET 架构相比，LAMP具有通用、跨平台、高性能、低价格的优势。因此LAMP无论是性能、质量还是价格都是企业搭建网站的首选平台。</p>
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a><strong>Linux</strong></h3><p>是一种自由和开发源代码的类UNIX操作系统，目前运用最广泛使用人数最多的操作系统。本实验为大家提供的就是 Linux 操作系统。</p>
+<h3 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a><strong>Apache</strong></h3><p>是LAMP架构最核心的Web Server，开源、稳定、模块丰富是Apache的优势。但Apache的缺点是有些臃肿，内存和CPU开销大，性能上有损耗，不如一些轻量级的Web服务器（例如nginx）高效，轻量级的Web服务器对于静态文件的响应能力来说远高于Apache服务器。Apache做为Web Server是负载PHP的最佳选择，如果流量很大的话，可以采用nginx来负载非PHP的Web请求。</p>
+<h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a><strong>PHP</strong></h3><p> 是一种通用开源脚本语言。语法吸收了C语言、Java和Perl的特点，利于学习，使用广泛，主要适用于Web开发领域。PHP 独特的语法混合了C、Java、Perl以及PHP自创的语法。它可以比CGI或者Perl更快速地执行动态网页。用PHP做出的动态页面与其他的编程语言相比，PHP是将程序嵌入到HTML（标准通用标记语言下的一个应用）文档中去执行，执行效率比完全生成HTML标记的CGI要高许多；PHP还可以执行编译后代码，编译可以达到加密和优化代码运行，使代码运行更快。</p>
+<p>  开源的数据库中，<strong>MySQL</strong> 在性能、稳定性和功能上是首选，可以达到百万级别的数据存储，网站初期可以将MySQL和Web服务器放在一起，但是当访问量达到一定规模后，应该将MySQL数据库从Web Server上独立出来，在单独的服务器上运行，同时保持Web Server和MySQL服务器的稳定连接。</p>
+<h2 id="关于WordPress"><a href="#关于WordPress" class="headerlink" title="关于WordPress"></a><strong>关于WordPress</strong></h2><p>  <strong>WordPress</strong> 是一种使用PHP语言开发的博客平台，用户可以在支持PHP和MySQL数据库的服务器上架设WordPress 。你可以使用WordPress搭建一个简单的独立博客，也可以把WordPress当作一个内容管理系统（CMS），用来搭建一个小门户网站，总之，现在的WordPress已经强大到几乎可以搭建目前所有常见类型的网站，比如门户、下载站、淘宝客、论坛、多博客等等。</p>
+<h2 id="关于CNZZ"><a href="#关于CNZZ" class="headerlink" title="关于CNZZ"></a><strong>关于CNZZ</strong></h2><p>  <strong>CNZZ</strong> 是一个进行网页统计的平台，可以帮助站长收集网站上用户的浏览器分布、IP分布、流量等公开信息，方便网站管理。使得站长可以了解访问量变化、是不是被搜索引擎封杀等情况，即时作出应对。</p>
+<h1 id="安装Apache-HTTP服务"><a href="#安装Apache-HTTP服务" class="headerlink" title="安装Apache HTTP服务"></a>安装Apache HTTP服务</h1><p>\1. 首先，通过本地软件远程访问 Linux 系统，也就是登录到 <strong>LAMP基础环境</strong> 的 ECS 实例。点击【<strong>创建资源</strong>】，创建成功后可获取本实验ECS实例的 <strong>弹性IP</strong> ， <strong>用户</strong> 和 <strong>密码</strong> 等登录信息。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308021730604.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>点击右侧按钮<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308021730533.png" srcset="/img/loading.gif" lazyload alt="img"> 【<strong>切换至 Web Termina</strong>】。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308021730569.png" srcset="/img/loading.gif" lazyload alt="img"> </p>
+<p>\2. 登陆到Linux ECS之后，执行如下命令，先修改YUM源，然后下载并安装 <strong>Apache HTTP</strong> 服务。</p>
+<p>YUM源更新：</p>
+<p>（1）运行以下命令编辑CentOS-Base.repo文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/yum</span>.repos.d/CentOS-Base.repo<br></code></pre></td></tr></table></figure>
+
+<p>键盘输入ggdG，删除文件中原有内容，然后按 i 进入编辑模式，输入以下文本</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[base]</span><br><span class="hljs-attr">name</span>=CentOS-<span class="hljs-number">6.10</span><br><span class="hljs-attr">enabled</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">failovermethod</span>=priority<br><span class="hljs-attr">baseurl</span>=http://mirrors.cloud.aliyuncs.com/centos-vault/<span class="hljs-number">6.10</span>/os/<span class="hljs-variable">$basearch</span>/<br><span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">gpgkey</span>=http://mirrors.cloud.aliyuncs.com/centos-vault/RPM-GPG-KEY-CentOS-<span class="hljs-number">6</span> <br><span class="hljs-section">[updates]</span><br><span class="hljs-attr">name</span>=CentOS-<span class="hljs-number">6.10</span><br><span class="hljs-attr">enabled</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">failovermethod</span>=priority<br><span class="hljs-attr">baseurl</span>=http://mirrors.cloud.aliyuncs.com/centos-vault/<span class="hljs-number">6.10</span>/updates/<span class="hljs-variable">$basearch</span>/<br><span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">gpgkey</span>=http://mirrors.cloud.aliyuncs.com/centos-vault/RPM-GPG-KEY-CentOS-<span class="hljs-number">6</span> <br><span class="hljs-section">[extras]</span><br><span class="hljs-attr">name</span>=CentOS-<span class="hljs-number">6.10</span><br><span class="hljs-attr">enabled</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">failovermethod</span>=priority<br><span class="hljs-attr">baseurl</span>=http://mirrors.cloud.aliyuncs.com/centos-vault/<span class="hljs-number">6.10</span>/extras/<span class="hljs-variable">$basearch</span>/<br><span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">gpgkey</span>=http://mirrors.cloud.aliyuncs.com/centos-vault/RPM-GPG-KEY-CentOS-<span class="hljs-number">6</span><br></code></pre></td></tr></table></figure>
+
+<p>编辑完成后，按 Esc 键，并输入:wq保存退出文件。</p>
+<p>（2）运行以下命令编辑epel.repo 文件</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/etc/yum</span>.repos.d/epel.repo<br></code></pre></td></tr></table></figure>
+
+<p>键盘输入ggdG，删除文件中原有内容，然后按 i 进入编辑模式，输入以下文本</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-section">[epel]</span><br><span class="hljs-attr">name</span>=Extra Packages for Enterprise Linux <span class="hljs-number">6</span> - <span class="hljs-variable">$basearch</span><br><span class="hljs-attr">enabled</span>=<span class="hljs-number">1</span><br><span class="hljs-attr">failovermethod</span>=priority<br><span class="hljs-attr">baseurl</span>=http://mirrors.cloud.aliyuncs.com/epel-archive/<span class="hljs-number">6</span>/<span class="hljs-variable">$basearch</span><br><span class="hljs-attr">gpgcheck</span>=<span class="hljs-number">0</span><br><span class="hljs-attr">gpgkey</span>=http://mirrors.cloud.aliyuncs.com/epel-archive/RPM-GPG-KEY-EPEL-<span class="hljs-number">6</span><br></code></pre></td></tr></table></figure>
+
+<p>编辑完成后，按 Esc 键，并输入:wq保存退出文件</p>
+<p><strong>说明</strong>：本实验中所有运行命令，均可点击下载附件 <a target="_blank" rel="noopener" href="https://university-labfileapp.oss-cn-hangzhou.aliyuncs.com/%E4%BA%91%E4%B8%8A%E5%BF%AB%E9%80%9F%E6%90%AD%E5%BB%BAWordPress%E7%BD%91%E7%AB%99.txt.zip"><strong>云上快速搭建WordPress网站.txt.zip</strong></a> 。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> httpd<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1668418215626-AhPJz3" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>  当页面显示 <strong>Complete!</strong> ，表示安装完成。</p>
+<p>\3. 执行如下命令，安装 apache 的扩展文件。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> httpd-manual mod_ssl mod_perl mod_auth_mysql<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1668418051006-1hHeqG" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>当页面显示 <strong>Complete!</strong> ，表示安装完成。</p>
+<p>\4. 执行如下命令，启动 apache http 服务。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">service httpd <span class="hljs-literal">start</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1668418244121-jRUR1o" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\5. 执行如下命令，设置开机自动启动 apache http 服务。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">chkconfig</span> httpd <span class="hljs-literal">on</span> <br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1498448630046-G5DSwN" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\6. 打开本地浏览器，并访问 <strong>实验资源</strong> 提供的 ECS实例的 <strong>弹性IP</strong> ，可以查看到 Apache 的测试页面。证明 <strong>Apache HTTP</strong> 服务部署启动成功。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/1c8810f2bbdf4134ac3efd8f91f5be64/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-1c8810f2bbdf4134ac3efd8f91f5be64-content-image-1498458785459-2DaioL" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="下载和安装MySQL数据库"><a href="#下载和安装MySQL数据库" class="headerlink" title="下载和安装MySQL数据库"></a>下载和安装MySQL数据库</h1><p>\1. 执行如下命令，下载并安装 <strong>MySQL</strong> 数据库：</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs axapta">yum -y install mysql mysql-<span class="hljs-keyword">server</span><br></code></pre></td></tr></table></figure>
+
+<p>  当页面显示 <strong>Complete!</strong> ，表示安装完成。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418287426-tSpxb6" srcset="/img/loading.gif" lazyload alt="Image 56"></p>
+<p>\2.  执行如下命令，启动 MySQL 数据库。当页面显示 <strong>Starting mysqld  [OK]</strong> ，表示MySQL已启动。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">service mysqld <span class="hljs-literal">start</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418311652-IET0YK" srcset="/img/loading.gif" lazyload alt="Image 57"></p>
+<p>\3. 执行如下命令，修改 MySQL 数据库 <strong>root</strong> 用户的密码，并提高 MySQL 数据库的安全性。</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">mysql_secure_installation</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>默认密码为空，所以提示 <strong>Enter current password for root (enter for none)</strong> 时，输入 <strong>回车（enter）</strong> 就可以。</p>
+<p>  <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418351707-WGJhKS" srcset="/img/loading.gif" lazyload alt="Image 58"></p>
+</li>
+<li><p>提示 <strong>Set root password? [Y/n]</strong> ，输入 <strong>y</strong> 。输入新的密码，例如： <strong>123123</strong> 。</p>
+</li>
+</ul>
+<p><strong>注意</strong>：</p>
+<p>1.输入的密码不会显示出来。为了便于演示，我们设置的密码很简单，在真实的生产环境中一定要设置复杂度高的密码，以免被暴力破解。</p>
+<p>2.设置 MySQL 根密码仅是保护数据库的最基本措施。在构建或安装数据库驱动的应用程序时，用户通常可以为该应用程序创建数据库服务用户，并避免使用根账户执行除数据库管理以外的操作。<br><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1668418370142-NIRj7G" srcset="/img/loading.gif" lazyload alt="Image 59"></p>
+<ul>
+<li><p>输入 <strong>y</strong> ，删除匿名用户账户。</p>
+<p>  <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455480664-JBBa1L" srcset="/img/loading.gif" lazyload alt="img"></p>
+</li>
+<li><p>输入 <strong>y</strong> ，禁止远程root登录。</p>
+<p>  <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455557446-1473XP" srcset="/img/loading.gif" lazyload alt="img"></p>
+</li>
+<li><p>输入 <strong>y</strong> ，删除测试数据库。</p>
+<p>  <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455568087-V8ietv" srcset="/img/loading.gif" lazyload alt="img"></p>
+</li>
+<li><p>输入 <strong>y</strong> ，重新加载权限表并保存您的更改。</p>
+<p>  <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498455579527-NkeTc6" srcset="/img/loading.gif" lazyload alt="img"></p>
+</li>
+</ul>
+<p>\4. 输入如下命令，进入 MySQL 数据库；然后，查看root账号下的数据库信息。</p>
+<p><strong>注意</strong>：<strong>show databases;</strong> 中的 ；分号不能忘记 <strong>。</strong></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs abnf">mysql -uroot -p123123<br><br>show databases<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498457347391-lDIeaA" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5.输入以下命令，创建数据库 wordpress ；然后，再次验证数据库信息，可以看到刚才创建新增的数据库 wordpress 。说明 MySQL中成功创建一个新的数据库wordpress。</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> wordpress;<br><br><span class="hljs-keyword">show</span> databases;<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498457874311-0hRT4K" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>6.输入 <strong>exit</strong> ，点击回车退出数据库。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1498458162065-NzVtyH" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\7. 最后，输入如下命令，设置开机自动启动MySQL服务。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">chkconfig</span> mysqld <span class="hljs-literal">on</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/c4f8fc7e1a09416e85da64dc4213bf26/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-c4f8fc7e1a09416e85da64dc4213bf26-content-image-1499439025654-pYlAIq" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="安装PHP语言环境"><a href="#安装PHP语言环境" class="headerlink" title="安装PHP语言环境"></a>安装PHP语言环境</h1><p>\1. 执行如下命令，安装 <strong>php</strong> 以及 php 支持 MySQL 的 <strong>php-mysql</strong> 软件包。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">yum -y <span class="hljs-keyword">install</span> php php-mysql<br></code></pre></td></tr></table></figure>
+
+<p>出现 <strong>Complete!</strong> 说明安装成功。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1668418526712-EqmBGA" srcset="/img/loading.gif" lazyload alt="Image 66"></p>
+<p>\2. 执行如下命令，安装 php 常用扩展包。</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">yum -y install gd php-gd gd-devel php-<span class="hljs-keyword">xml</span> <span class="hljs-title">php-common</span> php-mbstring php-ldap php-pear php-xmlrpc php-imap<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1668418538231-p9Mpkf" srcset="/img/loading.gif" lazyload alt="Image 67"></p>
+<p>\3. 执行如下命令，重启 Apache 服务。</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">service httpd restart</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1668418548205-LCB0sM" srcset="/img/loading.gif" lazyload alt="Image 68"></p>
+<p><strong>注意</strong>：必须重启，此步很重要。</p>
+<p>\4. 最后，执行如下命令，创建一个 php 页面，测试 PHP 环境。</p>
+<figure class="highlight php-template"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs php-template"><span class="language-xml">echo &quot;</span><span class="language-php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-title function_ invoke__">phpinfo</span>(); <span class="hljs-meta">?&gt;</span></span><span class="language-xml">&quot; &gt; /var/www/html/phpinfo.php</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1498458436774-2YNQZM" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\5. 返回浏览器，并在新建页面中，访问 <strong><a target="_blank" rel="noopener" href="http://xxx.xxx.xx.x/phpinfo.php">http://xxx.xxx.xx.x/phpinfo.php</a></strong> ，其中 xxx.xxx.xx.x 表示 <strong>实验资源</strong> 中的 ECS实例 <strong>弹性IP</strong> ，可以查看到如下 PHP 信息页面：</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/0a0e31fe0430468a9f5cd2257e6908d7/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-0a0e31fe0430468a9f5cd2257e6908d7-content-image-1640685474199-x03yrU" srcset="/img/loading.gif" lazyload alt="14"></p>
+<h1 id="安装部署WordPress"><a href="#安装部署WordPress" class="headerlink" title="安装部署WordPress"></a>安装部署WordPress</h1><p>\1. 本小节将实现：在已搭建好的 <strong>LAMP</strong> 环境中，安装部署 <strong>WordPress</strong> 。</p>
+<p>\2. 实验提供的实例中已经下载 <strong>WordPress</strong> <strong>安装包</strong> ，执行如下命令，解压安装包；然后查看当前有哪些文件或文件夹。</p>
+<p><strong>说明</strong>：如需下载中文版WordPress安装包，请点击链接 <a target="_blank" rel="noopener" href="https://cn.wordpress.org/%EF%BC%8C%E8%BF%99%E4%B8%AA%E6%98%AFWordPress%E4%B8%AD%E6%96%87%E5%AE%98%E7%BD%91%EF%BC%8C%E5%8F%AF%E4%BB%A5%E6%89%BE%E5%88%B0%E6%9C%80%E6%96%B0%E7%9A%84%E7%89%88%E6%9C%AC%E5%B9%B6%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%EF%BC%9B">https://cn.wordpress.org/，这个是WordPress中文官网，可以找到最新的版本并下载安装；</a> </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">tar</span> -xzf wordpress-<span class="hljs-number">4</span>.<span class="hljs-number">7</span>.<span class="hljs-number">4</span>-zh_CN.tar.gz<br><br><span class="hljs-attribute">ls</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1498619458196-ykwKTO" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\3. 创建和修改 WordPress 配置文件</p>
+<p>1）备份 WordPress 配置文件，并将原有的示例配置文件样本保留。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">cd</span> wordpress<br><span class="hljs-keyword">cp</span> <span class="hljs-keyword">wp</span>-config-sample.php <span class="hljs-keyword">wp</span>-config.php<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1668418714790-Kn01Mf" srcset="/img/loading.gif" lazyload alt="Image 69"></p>
+<p>2）进入 <strong>wp-config.php</strong> 的编辑页面：</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">vim</span> <span class="hljs-keyword">wp</span>-config.php<br></code></pre></td></tr></table></figure>
+
+<p>3） 按键盘 <strong>i</strong> ，进入编辑状态，修改配置文件的数据库信息：</p>
+<ul>
+<li>修改 <strong>DB_NAME</strong> 的参数值 <strong>database_name_here</strong> 为之前创建的数据库 <strong>wordpress</strong>：</li>
+</ul>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lasso"><span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">&#x27;DB_NAME&#x27;</span>, <span class="hljs-string">&#x27;wordpress&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>修改 <strong>DB_USER</strong> 的参数值 <strong>username_here</strong> 为 <strong>root</strong> :</li>
+</ul>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs lasso"><span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">&#x27;DB_USER&#x27;</span>, <span class="hljs-string">&#x27;root&#x27;</span>);<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>修改 <strong>DB_PASSWORD</strong> 的参数值 <strong>password_here</strong> 为 <strong>123123</strong> :</li>
+</ul>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs 1c">define(&#x27;DB_PASSWORD&#x27;, &#x27;<span class="hljs-number">123123</span>&#x27;);<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1668418734863-O6oX7f" srcset="/img/loading.gif" lazyload alt="Image 70"></p>
+<p>4）修改完毕后，点击 <strong>esc</strong> ，退出编辑状态，然后输入 <strong>:wq</strong> ，保存修改信息并退出配置文件。</p>
+<p>\4. 输入以下命令，移动 wordpress 到 Apache 服务根目录。</p>
+<p>1）在 Apache 的根目录 /var/www/html 下，创建一个 <strong>wp-blog</strong> 文件夹。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mkdir <span class="hljs-regexp">/var/</span>www<span class="hljs-regexp">/html/</span>wp-blog<br></code></pre></td></tr></table></figure>
+
+<p>2）然后，将 wordpress 迁移到这个新建文件夹中。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mv * <span class="hljs-regexp">/var/</span>www<span class="hljs-regexp">/html/</span>wp-blog/<br></code></pre></td></tr></table></figure>
+
+<p>\5. 完成如上配置后，返回浏览器，并访问 <strong><a target="_blank" rel="noopener" href="http://xxx.xxx.xx.x/wp-blog/wp-admin/install.php">http://xxx.xxx.xx.x/wp-blog/wp-admin/install.php</a></strong> ，其中 xxx.xxx.xx.x 为 ECS 实例的 <strong>弹性IP</strong> ，填写如下信息，完成后，点击页面底部的 <strong>安装WordPress</strong> ，开始安装 WordPress 。</p>
+<ul>
+<li><p>站点标题： 输入站点名称，例如： <strong>HelloWorld</strong></p>
+</li>
+<li><p>用户名： 输入管理员的用户名，例如： <strong>admin</strong></p>
+</li>
+<li><p>密码：输入管理员的访问密码，例如： <strong>admin123</strong> </p>
+</li>
+<li><p>确认密码：由于密码设置过于简单，提示 <strong>非常弱</strong> , 勾选 <strong>确认使用弱密码 ；</strong>在真实的使用中，请使用复杂的管理密码</p>
+</li>
+<li><p>你的电子邮件：email地址，建议为真实有效的地址。若没有，可以填写虚拟 email 地址，但将无法接收信息，例如： <strong><a href="mailto:&#97;&#100;&#x6d;&#105;&#x6e;&#64;&#x61;&#x64;&#109;&#105;&#110;&#x2e;&#x63;&#x6f;&#109;">&#97;&#100;&#x6d;&#105;&#x6e;&#64;&#x61;&#x64;&#109;&#105;&#110;&#x2e;&#x63;&#x6f;&#109;</a></strong> </p>
+</li>
+</ul>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499393155209-2uZmKx" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p> 提示安装成功，点击 <strong>登录</strong> 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499393334252-QDaG7k" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>6.输入上一步配置的 <strong>用户名</strong> ，如：<strong>admin</strong>；<strong>密码</strong> ，如：<strong>admin123</strong> ，然后点击 <strong>登录</strong> 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1640685739524-hu0FnN" srcset="/img/loading.gif" lazyload alt="17"></p>
+<p>就可以进入安装好的 WordPress 网站的管理页面，后续所有 WordPress 网站的管理和优化都是在此页面中进行操作的。下图红框中 <strong>HelloWorld</strong> 表示我们设置的 <strong>站点标题</strong> 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499394881885-2ihEBr" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>7.至此，完成 Wordpress 的基础安装和部署，在地址栏中，访问 <strong><a target="_blank" rel="noopener" href="http://xxx.xxx.xx.x/wp-blog/">http://xxx.xxx.xx.x/wp-blog/</a></strong> ，就可以进入如下页面。xxx.xxx.xx.x 表示 <strong>实验资源</strong> 提供的 ECS实例的 <strong>弹性IP</strong> 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/021da282ed024cdb9593f13ac975a21c/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-021da282ed024cdb9593f13ac975a21c-content-image-1499393885759-D2rGBc" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="课后作业"><a href="#课后作业" class="headerlink" title="课后作业"></a>课后作业</h1><p>1.本小节介绍主要：借助 CNZZ 平台观察 WordPress 网站一天有多少 IP 访问，那些 IP 都是从哪个页面进入到自己网站的等内容。</p>
+<p>说明：本部分为课后练习，仅提供ECS服务器，但不提供U-Web网站统计产品。</p>
+<p>2.点击链接 <a target="_blank" rel="noopener" href="https://web.umeng.com/main.php?c=user&amp;a=login">https://web.umeng.com/main.php?c=user&amp;a=login</a> 进行注册、登录。</p>
+<p>注意：您也可以直接百度 CNZZ 搜索，然后注册、登录。如果您已经有该平台的账号，请直接登录。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419045114-0qr8yB" srcset="/img/loading.gif" lazyload alt="Image 71"></p>
+<p>3.登录 CNZZ 数据统计专家网站后，填写以下信息，完成后点击 <strong>确认添加站点</strong> 。</p>
+<p><strong>网站名称</strong>：自定义</p>
+<p><strong>网站域名</strong>：实验资源 提供的 弹性IP</p>
+<p><strong>网站首页</strong>：<strong><a target="_blank" rel="noopener" href="http://xxx.xxx.xx/wp-blog/wp-admin/">http://xxx.xxx.xx/wp-blog/wp-admin/</a> (xxx.xxx.xx</strong> 表示 <strong>实验资源</strong> 提供的 **弹性IP)**；</p>
+<p><strong>网站类型</strong> 和 <strong>网站地区</strong>：根据实际情况可自行选择</p>
+<p><strong>网站简介</strong>：自定义</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419087927-lGBzzd" srcset="/img/loading.gif" lazyload alt="Image 72"></p>
+<p>4.复制红框内任意一种形式的代码。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419103972-eqW8q2" srcset="/img/loading.gif" lazyload alt="Image 73"></p>
+<p>点击左侧导航栏处的 <strong>查看密码</strong> ，勾选 <strong>开启查看密码服务</strong> ，然后输入 <strong>查看密码</strong> 。完成后点击 <strong>确定</strong> 。</p>
+<p>注意：此处 <strong>查看密码</strong> 不是指 CNZZ 平台的 <strong>登录密码</strong> ，需要用户再次设置。您也可以勾选 <strong>无需密码</strong> ，不设置查看密码。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419144601-a1yTuQ" srcset="/img/loading.gif" lazyload alt="Image 74"></p>
+<p>5.切换回 WordPress 网站的主页面，点击 <strong>外观</strong> ，并选择子菜单下的 <strong>小工具</strong> 。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419159023-slIUeS" srcset="/img/loading.gif" lazyload alt="Image 75"></p>
+<p>在右侧展开的 <strong>小工具</strong> 选项中，点击 <strong>文本</strong> ，然后点击 <strong>页脚1</strong>（或 <strong>页脚2</strong>） ，完成后点击 <strong>添加小工具</strong> 。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419182808-hC4GOj" srcset="/img/loading.gif" lazyload alt="Image 76"></p>
+<p>6.弹框 <strong>标题</strong> 部分输入 <strong>站长统计</strong> ， <strong>内容</strong> 框中粘贴刚才在 CNZZ 平台复制的代码。完成后点击 <strong>保存</strong> 。 </p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419202335-H3wzyS" srcset="/img/loading.gif" lazyload alt="Image 77"></p>
+<p>点击如下图中的红框部分，可将弹框收拢或展开。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419213038-lbndNL" srcset="/img/loading.gif" lazyload alt="Image 78"></p>
+<p>7.点击左上角处的站点标题 <strong>HelloWorld</strong> ，页面下方看到我们添加的页脚标题，点击 <strong>站长统计</strong>。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419244072-9dXCrx" srcset="/img/loading.gif" lazyload alt="Image 79"></p>
+<p>8.输入 <strong>查看密码</strong> 后点击 <strong>查看数据</strong> 。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419255973-pQh3FR" srcset="/img/loading.gif" lazyload alt="Image 80"></p>
+<p>9.看到如下统计结果。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419269052-yvHvIs" srcset="/img/loading.gif" lazyload alt="Image 81"></p>
+<p>11.点击左侧的 <strong>访问明细</strong> ，查看当前两次访问的 IP 来源。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419280447-REnHTz" srcset="/img/loading.gif" lazyload alt="Image 82"></p>
+<p>点击 当前在线 ，查看访问流量分析。</p>
+<p> <img src="https://edu.aliyun.com/lab/files/courses/24d0e20f6d794183bce217ba72d34e9e/sections/43edc625b80a4264a598adda13948f4e/content/images/course-24d0e20f6d794183bce217ba72d34e9e-section-43edc625b80a4264a598adda13948f4e-content-image-1668419289401-YeXa3u" srcset="/img/loading.gif" lazyload alt="Image 83"></p>
+<p>12.执行以下步骤，取消通过 CNZZ 对 WordPress 网站的访问量等数据的统计操作。</p>
+<p>1）点击 <strong>站点设置</strong> ，下拉菜单中点击 <strong>统计设置</strong> ；</p>
+<p>2）左侧导航栏处选择 <strong>关闭统计</strong> ；</p>
+<p>3）点击 <strong>删除站点</strong> ，并在弹框中输入 <strong>登录密码</strong> 。</p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Clouder/">Clouder</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E4%BA%91%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E5%88%9D%E4%BD%93%E9%AA%8C/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Clouder-云数据管理初体验</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/01/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%A7%84%E5%88%92%E5%92%8C%E5%A4%9A%E7%9B%AE%E6%A0%87%E8%A7%84%E5%88%92%E6%A8%A1%E5%9E%8B/">
+                        <span class="hidden-mobile">数学建模-非线性规划和多目标规划模型</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

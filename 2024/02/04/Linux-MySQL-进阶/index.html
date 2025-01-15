@@ -1,0 +1,786 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 MySQL 架构和性能优化 MySQL是C&#x2F;S 架构的，connectors是连接器；可供Native C API、JDBC、ODBC、NET、PHP、Perl、Python、Ruby、Cobol等连接mysql。 https:&#x2F;&#x2F;docs.oracle.com&#x2F;cd&#x2F;E17952_01&#x2F;mysql-8.0-en&#x2F;storage-engines.html https:&#x2F;&#x2F;docs.oracle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-MySQL-进阶">
+<meta property="og:url" content="http://example.com/2024/02/04/Linux-MySQL-%E8%BF%9B%E9%98%B6/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 MySQL 架构和性能优化 MySQL是C&#x2F;S 架构的，connectors是连接器；可供Native C API、JDBC、ODBC、NET、PHP、Perl、Python、Ruby、Cobol等连接mysql。 https:&#x2F;&#x2F;docs.oracle.com&#x2F;cd&#x2F;E17952_01&#x2F;mysql-8.0-en&#x2F;storage-engines.html https:&#x2F;&#x2F;docs.oracle">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202402040936270.png">
+<meta property="article:published_time" content="2024-02-04T09:31:35.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.350Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202402040936270.png">
+  
+  
+  <title>Linux-MySQL-进阶 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-MySQL-进阶">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-02-04 09:31" pubdate>
+        February 4, 2024 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      10k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      88 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-MySQL-进阶</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-MySQL-架构和性能优化"><a href="#1-MySQL-架构和性能优化" class="headerlink" title="1 MySQL 架构和性能优化"></a>1 MySQL 架构和性能优化</h1><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202402040936270.png" srcset="/img/loading.gif" lazyload></p>
+<p>MySQL是C/S 架构的，connectors是连接器；可供Native C API、JDBC、ODBC、NET、PHP、Perl、Python、Ruby、Cobol等连接mysql。</p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/storage-engines.html">https://docs.oracle.com/cd/E17952_01/mysql-8.0-en/storage-engines.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/storage-engines.html">https://docs.oracle.com/cd/E17952_01/mysql-5.7-en/storage-engines.html</a></p>
+<h2 id="1-1-存储引擎"><a href="#1-1-存储引擎" class="headerlink" title="1.1 存储引擎"></a>1.1 存储引擎</h2><p><strong>InnoDB</strong>   <strong>MyISAM</strong>  Memorry  Archive  NDB ……</p>
+<h3 id="1-1-1-InnoDB与MyISAM的区别"><a href="#1-1-1-InnoDB与MyISAM的区别" class="headerlink" title="1.1.1 InnoDB与MyISAM的区别"></a>1.1.1 InnoDB<strong>与</strong>MyISAM的区别</h3><table>
+<thead>
+<tr>
+<th align="center"><strong>引擎</strong></th>
+<th align="center">MyISAM</th>
+<th align="center">InnoDB</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>特点</strong></td>
+<td align="center">不支持事务</td>
+<td align="center">支持事务，适合处理大量短期事务</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">表级锁定</td>
+<td align="center">行级锁</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">读写相互阻塞，写入不能读，读时不能写</td>
+<td align="center">读写阻塞与事务隔离级别相关</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">只缓存索引</td>
+<td align="center">可缓存数据和索引</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">不支持外键约束</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">不支持聚簇索引</td>
+<td align="center">支持聚簇索引</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">读取数据较快，占用资源较少</td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">不支持MVCC（多版本并发控制机制）高并发</td>
+<td align="center">支持MVCC高并发</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">崩溃恢复性较差</td>
+<td align="center">崩溃恢复性更好</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">MySQL5.5.5 前默认的数据库引擎</td>
+<td align="center">从MySQL5.5.5开始为默认的数据库引擎</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">从MySQL5.5后支持全文索引</td>
+</tr>
+</tbody></table>
+<p>MyISAM 存储引擎适合用于<strong>只读（或者写较少）、表较小（可以接受长时间进行修复操作）</strong>的场景。</p>
+<p>MyISAM引擎文件：tbl_name.frm 表格式定义、tbl_name.MYD 数据文件、tbl_name.MYI 索引文件。</p>
+<p><strong>InnoDB</strong>数据库文件：</p>
+<ul>
+<li>所有InnoDB表的数据和索引放置于同一个表空间中</li>
+<li>每个表单独使用一个表空间存储表的数据和索引</li>
+<li>启用：innodb_file_per_table=ON (MariaDB 5.5以后版是默认值)</li>
+</ul>
+<h2 id="1-1-2-基本管理"><a href="#1-1-2-基本管理" class="headerlink" title="1.1.2 基本管理"></a>1.1.2 基本管理</h2><figure class="highlight sql"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> engines;<br><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%storage_engine%&#x27;</span>;<br><span class="hljs-keyword">show</span> <span class="hljs-keyword">table</span> status <span class="hljs-keyword">from</span> db_name;<br><span class="hljs-keyword">show</span> <span class="hljs-keyword">table</span> status <span class="hljs-keyword">like</span>  <span class="hljs-string">&#x27;tb_name&#x27;</span>;<br><span class="hljs-keyword">show</span> <span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> tb_name;<br><br>#设置默认的存储引擎<br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# vim <span class="hljs-operator">/</span>etc<span class="hljs-operator">/</span>my.cnf<br>[mysql]<br>default_storage_engine<span class="hljs-operator">=</span>InnoDB<br><br><span class="hljs-keyword">create</span> <span class="hljs-keyword">table</span> tb_name engine<span class="hljs-operator">=</span>InnoDB;<br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> tb_name engine<span class="hljs-operator">=</span>InnoDB;<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-2-系统数据库"><a href="#1-2-系统数据库" class="headerlink" title="1.2 系统数据库"></a>1.2 系统数据库</h2><ul>
+<li><strong>mysql</strong></li>
+</ul>
+<p>存储数据库的用户、权限设置、关键字等mysql自己需要使用的控制和管理信息。</p>
+<ul>
+<li><strong>information_schema</strong> <strong>数据库</strong></li>
+</ul>
+<p>MySQL 5.0之后产生的，一个虚拟数据库。提供访问数据库元数据的方式，即数据的数据。比如数据库名或表名，列类型，访问权限（更加细化的访问方式）。</p>
+<ul>
+<li><strong>performance_schema</strong> <strong>数据库</strong></li>
+</ul>
+<p>MySQL 5.5开始新增的数据库，主要用于收集数据库服务器性能参数,库里表的存储引擎均为performance_schema，用户不能创建存储引擎为performance_schema的表</p>
+<ul>
+<li><strong>sys</strong> <strong>数据库</strong></li>
+</ul>
+<p>MySQL5.7之后新增加的数据库，performance_schema库的简化版。</p>
+<h2 id="1-3-服务器配置和状态"><a href="#1-3-服务器配置和状态" class="headerlink" title="1.3 服务器配置和状态"></a>1.3 服务器配置和状态</h2><p>可以通过mysqld选项，服务器系统变量和服务器状态变量进行MySQL的配置和查看状态。</p>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/server-option-variable-reference.html">https://dev.mysql.com/doc/refman/8.0/en/server-option-variable-reference.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html">https://dev.mysql.com/doc/refman/5.7/en/server-option-variable-reference.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://mariadb.com/kb/en/library/full-list-of-mariadb-options-system-and-status-variables/">https://mariadb.com/kb/en/library/full-list-of-mariadb-options-system-and-status-variables/</a></p>
+<h3 id="1-3-1-服务器选项"><a href="#1-3-1-服务器选项" class="headerlink" title="1.3.1 服务器选项"></a>1.3.1 服务器选项</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql">[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# ps aux<br>mysql   <span class="hljs-number">1089</span>  <span class="hljs-number">0.2</span> <span class="hljs-number">23.6</span> <span class="hljs-number">1788232</span> <span class="hljs-number">433280</span> ?  Ssl  <span class="hljs-number">14</span>:<span class="hljs-number">17</span>   <span class="hljs-number">0</span>:<span class="hljs-number">09</span> <span class="hljs-operator">/</span>usr<span class="hljs-operator">/</span>libexec<span class="hljs-operator">/</span>mysqld <span class="hljs-comment">--basedir=/usr</span><br><br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# <span class="hljs-operator">/</span>usr<span class="hljs-operator">/</span>libexec<span class="hljs-operator">/</span>mysqld <span class="hljs-operator">-</span>verbose <span class="hljs-comment">--help</span><br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# mysqld <span class="hljs-comment">--verbose --help</span><br><br>#获取mysqld当前启动选项<br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# mysqld <span class="hljs-comment">--print-defaults</span><br></code></pre></td></tr></table></figure>
+
+<p>设置服务器选项方法：</p>
+<ul>
+<li>在命令行中设置</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql">[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# <span class="hljs-operator">/</span>usr<span class="hljs-operator">/</span>libexec<span class="hljs-operator">/</span>mysqld <span class="hljs-comment">--basedir=/usr</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>在配置文件my.cnf中设置</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# vim <span class="hljs-operator">/</span>etc<span class="hljs-operator">/</span>my.cnf<br>[mysqld]<br>skip_name_resolve<span class="hljs-operator">=</span><span class="hljs-number">1</span><br><span class="hljs-keyword">skip</span><span class="hljs-operator">-</span><span class="hljs-keyword">grant</span><span class="hljs-operator">-</span>tables<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-3-2-服务器系统变量"><a href="#1-3-2-服务器系统变量" class="headerlink" title="1.3.2 服务器系统变量"></a>1.3.2 服务器系统变量</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;version_compile_machine&#x27;</span>;<br><span class="hljs-keyword">select</span> @<span class="hljs-variable">@version</span>_compile_machine;<br><br>#查看选项和部分变量<br>[root<span class="hljs-variable">@centos8</span> <span class="hljs-operator">~</span>]#mysqladmin variables<br><br>#修改全局变量<br><span class="hljs-keyword">set</span> <span class="hljs-keyword">global</span> system_var_name<span class="hljs-operator">=</span><span class="hljs-keyword">value</span>;<br>#修改会话变量<br><span class="hljs-keyword">set</span> system_var_name<span class="hljs-operator">=</span><span class="hljs-keyword">value</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-3-3-服务器状态变量"><a href="#1-3-3-服务器状态变量" class="headerlink" title="1.3.3 服务器状态变量"></a>1.3.3 服务器状态变量</h3><p>状态变量（只读）：用于保存mysqld运行中的统计数据的变量，不可更改</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> <span class="hljs-keyword">global</span> status;<br><span class="hljs-keyword">show</span> status;<br><br><span class="hljs-keyword">show</span> status <span class="hljs-keyword">like</span> &quot;innodb_page_size&quot;;<br><span class="hljs-keyword">select</span> @<span class="hljs-variable">@innodb</span>_page_size;<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-3-4-服务器变量SQL-MODE"><a href="#1-3-4-服务器变量SQL-MODE" class="headerlink" title="1.3.4 服务器变量SQL_MODE"></a>1.3.4 服务器变量SQL_MODE</h3><p><a target="_blank" rel="noopener" href="https://mariadb.com/kb/en/library/sql-mode/">https://mariadb.com/kb/en/library/sql-mode/</a></p>
+<p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_sql-mode">https://dev.mysql.com/doc/refman/5.7/en/server-options.html#option_mysqld_sql-mode</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> @<span class="hljs-variable">@sql</span>_mode;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>NO_AUTO_CREATE_USER： 禁止GRANT创建密码为空的用户</li>
+<li>NO_ZERO_DATE：在严格模式，不允许使用’0000-00-00’的时</li>
+<li>ONLY_FULL_GROUP_BY： 对于GROUP BY聚合操作，如果在SELECT中的列，没有在GROUP BY中出现，那么将认为这个SQL是不合法的</li>
+<li>NO_BACKSLASH_ESCAPES： 反斜杠”&quot;作为普通字符而非转义字符</li>
+<li>PIPES_AS_CONCAT： 将”||”视为连接操作符而非”或”运算符</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql"># CentOS8<br><span class="hljs-keyword">set</span> sql_mode<span class="hljs-operator">=</span>&quot;only_full_group_by&quot;;<br># CentOS7<br><span class="hljs-keyword">set</span> sql_mode<span class="hljs-operator">=</span>traditional<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-4-INDEX-索引"><a href="#1-4-INDEX-索引" class="headerlink" title="1.4 INDEX 索引"></a>1.4 INDEX 索引</h2><p><strong>优点：</strong></p>
+<ul>
+<li>索引可以降低服务需要扫描的数据量，减少了IO次数</li>
+<li>索引可以帮助服务器避免排序和使用临时表</li>
+<li>索引可以帮助将随机I/O转为顺序 I/O</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>占用额外空间，影响插入速度</li>
+</ul>
+<h3 id="1-4-1-索引结构"><a href="#1-4-1-索引结构" class="headerlink" title="1.4.1 索引结构"></a>1.4.1 索引结构</h3><p> <a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/Algorithms.html">https://www.cs.usfca.edu/~galles/visualization/Algorithms.html</a></p>
+<ul>
+<li><strong>二叉树</strong>   <a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/BST.html">https://www.cs.usfca.edu/~galles/visualization/BST.html</a></li>
+<li>**红黑树 **  <a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/RedBlack.html">https://www.cs.usfca.edu/~galles/visualization/RedBlack.html</a></li>
+<li><strong>B树</strong>        <a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/BTree.html">https://www.cs.usfca.edu/~galles/visualization/BTree.html</a></li>
+<li><strong>B+树</strong>      <a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html">https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html</a></li>
+</ul>
+<p><strong>面试题: InnoDB中一颗的B+树可以存放多少行数据？</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs http">假设定义一颗B+树高度为2，即一个根节点和若干叶子节点。<br>那么这棵B+树的存放总行记录数=根节点指针数*单个叶子记录的行数。<br>这里先计算叶子节点，B+树中的单个叶子节点的大小为16K，假设每一条目为1K，那么记录数即为16(16k/1K=16)。<br>然后计算非叶子节点能够存放多少个指针，假设主键ID为bigint类型，那么长度为8字节，而指针大小在InnoDB中是设置为6个字节，这样加起来一共是14个字节。<br>那么通过页大小/(主键ID大小+指针大小），即16384/14=1170个指针，所以一颗高度为2的B+树能存放16*1170=18720条这样的记录。<br>根据这个原理就可以算出一颗高度为3的B+树可以存放16*1170*1170=21902400条记录。<br>所以在InnoDB中B+树高度一般为2-3层，它就能满足千万级的数据存储<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Hash</strong>     </li>
+<li><strong>地理空间数据索引</strong>R-Tree（Geospatial indexing）</li>
+<li><strong>全文索引</strong>(FULLTEXT)</li>
+<li><strong>聚簇(innodb)和非聚簇(MyISAM)索引，主键和二级索引</strong></li>
+</ul>
+<h3 id="1-4-2-索引优化"><a href="#1-4-2-索引优化" class="headerlink" title="1.4.2 索引优化"></a>1.4.2 索引优化</h3><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/topic/java2020">https://developer.aliyun.com/topic/java2020</a></p>
+<h3 id="1-4-3-索引管理"><a href="#1-4-3-索引管理" class="headerlink" title="1.4.3 索引管理"></a>1.4.3 索引管理</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"># index 具有左前缀特性<br><span class="hljs-keyword">desc</span> students;<br><span class="hljs-keyword">show</span> index <span class="hljs-keyword">from</span> students\G<br><br><span class="hljs-keyword">create</span> index index_name <span class="hljs-keyword">on</span> students(name);<br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> students(name) <span class="hljs-keyword">add</span> index index_name;<br><br><span class="hljs-keyword">drop</span> index index_name <span class="hljs-keyword">on</span> students(name);<br><span class="hljs-keyword">alter</span> <span class="hljs-keyword">table</span> students(name) <span class="hljs-keyword">drop</span> index_name;<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-4-4-EXPLAIN-工具"><a href="#1-4-4-EXPLAIN-工具" class="headerlink" title="1.4.4  EXPLAIN 工具"></a>1.4.4  <strong>EXPLAIN</strong> <strong>工具</strong></h3><p><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/explain-output.html">https://dev.mysql.com/doc/refman/5.7/en/explain-output.html</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs sql">explain <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> students <span class="hljs-keyword">where</span> name<span class="hljs-operator">=</span><span class="hljs-string">&#x27;Jin&#x27;</span>;<br><br>type: 关联类型或访问类型，即MySQL决定的如何去查询表中的行的方式<br>possible_keys: 查询可能会用到的索引<br>key: 显示mysql决定采用哪个索引来优化查询<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-4-5-profile工具"><a href="#1-4-5-profile工具" class="headerlink" title="1.4.5 profile工具"></a>1.4.5 profile工具</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> @<span class="hljs-variable">@profiling</span>;<br><span class="hljs-keyword">set</span> profiling<span class="hljs-operator">=</span><span class="hljs-number">1</span>;<br><br><span class="hljs-keyword">show</span> profiles;<br>#显示语句的详细执行步骤和时长<br><span class="hljs-keyword">Show</span> profile <span class="hljs-keyword">for</span> query # <br>#显示cpu使用情况<br><span class="hljs-keyword">Show</span> profile cpu <span class="hljs-keyword">for</span> query #<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-5-并发控制"><a href="#1-5-并发控制" class="headerlink" title="1.5 并发控制"></a>1.5 并发控制</h2><h3 id="1-5-1-锁机制"><a href="#1-5-1-锁机制" class="headerlink" title="1.5.1 锁机制"></a>1.5.1 锁机制</h3><ul>
+<li><p>```http<br>  读锁：共享锁、S锁，多个读互不阻塞<br>  写锁：排它锁、X锁，会阻塞其它事</p>
+  <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><br>- ```http<br>	表级锁：MyISAM<br>	行级锁：InnoDB<br></code></pre></td></tr></table></figure></li>
+<li><p>```http<br>  存储引擎：自行实现其锁策略和锁粒度<br>  服务器级：实现了锁，表级锁，用户可显式请求</p>
+  <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey"><br>- ```http<br>	隐式锁：由存储引擎自动施加锁<br>	显式锁：用户手动请求<br></code></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="1-5-2-显示使用锁"><a href="#1-5-2-显示使用锁" class="headerlink" title="1.5.2 显示使用锁"></a>1.5.2 显示使用锁</h3><p><a target="_blank" rel="noopener" href="https://mariadb.com/kb/en/lock-tables/">https://mariadb.com/kb/en/lock-tables/</a></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql">lock tables students read;<br>lock tables teachers write;<br>#通常在备份前加全局读锁<br>flush <span class="hljs-keyword">table</span> <span class="hljs-keyword">with</span> read lock;<br><br>unlock tables;<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-5-3-事务"><a href="#1-5-3-事务" class="headerlink" title="1.5.3 事务"></a>1.5.3 事务</h3><p><strong>ACID特性：</strong></p>
+<ul>
+<li>A：atomicity 原子性：整个事务中的所有操作要么<strong>全部成功执行</strong>，要么<strong>全部失败后回滚</strong>。</li>
+<li>C：consistency一致性：数据库总是从一个一致性状态转换为另一个一致性状态,类似于能量守恒定律。</li>
+<li>I：Isolation隔离性：一个事务所做出的操作在提交之前，是不能为其它事务所见；隔离有多种隔离级别，实现并发。</li>
+<li>D：durability持久性：一旦事务提交，其所做的修改会永久保存于数据库中。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 显式启动事务<br><span class="hljs-keyword">begin</span>;<br><span class="hljs-keyword">begin</span> work;<br><span class="hljs-keyword">start</span> transaction;<br># 结束事务<br><span class="hljs-keyword">commit</span>;<br><span class="hljs-keyword">rollback</span>;     <span class="hljs-operator">/</span><span class="hljs-operator">/</span> 只有事务型存储引擎中的DML语句方能支持此类操作<br><br># 自动提交<br><span class="hljs-keyword">set</span> autocommit<span class="hljs-operator">=</span>&#123;<span class="hljs-number">1</span><span class="hljs-operator">|</span><span class="hljs-number">0</span>&#125;;<br><br># 支持保存点<br><span class="hljs-keyword">savepoint</span> A;<br><span class="hljs-keyword">rollback</span> <span class="hljs-keyword">to</span> A;<br><span class="hljs-keyword">release</span> <span class="hljs-keyword">savepoint</span> A;<br><br>#查看当前事务<br><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> information_schema.innodb_trx\G<br><span class="hljs-keyword">show</span> processlist;<br>kill 进程编号；<br></code></pre></td></tr></table></figure>
+
+<p><strong>死锁</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> information_schema.innodb_trx\G<br><span class="hljs-keyword">show</span> processlist;<br>kill 进程编号；<br><br>#查看事务锁的超时时长<br><span class="hljs-keyword">show</span> <span class="hljs-keyword">global</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;innodb_lock_wait_timeout&#x27;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><strong>事务的隔离级别</strong></p>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复度</th>
+<th>幻读</th>
+<th>加锁读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读未提交</td>
+<td>可以出现</td>
+<td>可以出现</td>
+<td>可以出现</td>
+<td>否</td>
+</tr>
+<tr>
+<td>读提交</td>
+<td>不允许出现</td>
+<td>可以出现</td>
+<td>可以出现</td>
+<td>否</td>
+</tr>
+<tr>
+<td>可重复读</td>
+<td>不允许出现</td>
+<td>不允许出现</td>
+<td>可以出现</td>
+<td>否</td>
+</tr>
+<tr>
+<td>串行化</td>
+<td>不允许出现</td>
+<td>不允许出现</td>
+<td>不允许出现</td>
+<td>是</td>
+</tr>
+</tbody></table>
+<p>MySQL默认使用“可重复读”的事务隔离级别。串行化的隔离级别<strong>并发性差</strong>。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs sql">#MySQL8<span class="hljs-number">.0</span>之前版本<br><span class="hljs-keyword">set</span> tx_isolation<span class="hljs-operator">=</span><span class="hljs-string">&#x27;read-uncommitted|read-committed|repeatable-read|serialzable&#x27;</span><br>#MySQL8<span class="hljs-number">.0</span><br><span class="hljs-keyword">set</span> transaction_isolation<span class="hljs-operator">=</span><span class="hljs-string">&#x27;read-uncommitted|read-committed|repeatable-read|serialzable&#x27;</span><br><br>vim <span class="hljs-operator">/</span>etc<span class="hljs-operator">/</span>my.cnf<br>[mysqld]<br>transaction<span class="hljs-operator">-</span>isolation<span class="hljs-operator">=</span>serialzable<br><br><span class="hljs-keyword">select</span> @<span class="hljs-variable">@transaction</span>_isolation<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-6-日志管理"><a href="#1-6-日志管理" class="headerlink" title="1.6 日志管理"></a>1.6 日志管理</h2><ul>
+<li>事务日志：transaction log</li>
+</ul>
+<p>​    事务日志的写入类型为”追加”，因此其操作为”顺序IO”；通常也被称为：预写式日志 write ahead logging</p>
+<p>​    事务日志文件： ib_logfile0， ib_logfile1</p>
+<ul>
+<li><p>错误日志error log</p>
+</li>
+<li><p>通用日志general log</p>
+</li>
+<li><p>慢查询日志 slow query log</p>
+</li>
+<li><p>二进制日志 binary log</p>
+</li>
+<li><p>中继日志reley log，在主从复制架构中，从服务器用于保存从主服务器的二进制日志中读取的事件</p>
+</li>
+</ul>
+<h3 id="1-6-1-事务日志"><a href="#1-6-1-事务日志" class="headerlink" title="1.6.1 事务日志"></a>1.6.1 事务日志</h3><ul>
+<li><p>redo log：记录某数据块被修改后的值，数据更新前先记录redo log( WALWrite Ahead Log ),可以</p>
+<p>  用来恢复未写入data file的已成功事务更新的数据</p>
+</li>
+<li><p>undo log：保存与执行的操作相反的操作,即记录某数据被修改前的值，可以用来在事务失败时进</p>
+<p>  行rollback</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;%innodb_log%&#x27;</span>;<br><br># 事务日志性能优化<br>innodb_flush_log_at_trx_commit<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-operator">|</span><span class="hljs-number">1</span><span class="hljs-operator">|</span><span class="hljs-number">2</span><br><span class="hljs-number">1</span> 此为默认值，日志缓冲区将写入日志文件，并在每次事务后执行刷新到磁盘。 这是完全遵守ACID特性<br><br><span class="hljs-number">0</span> 提交时没有写磁盘的操作; 而是每秒执行一次将日志缓冲区的提交的事务写入刷新到磁盘。 这样可提供更<br>好的性能，但服务器崩溃可能丢失最后一秒的事务<br><span class="hljs-number">2</span> 每次提交后都会写入OS的缓冲区，但每秒才会进行一次刷新到磁盘文件中。 性能比<span class="hljs-number">0</span>略差一些，但操作系<br>统或停电可能导致最后一秒的交易丢失<br><br># 高并发业务行业最佳实践，是使用第三种折衷配置（<span class="hljs-operator">=</span><span class="hljs-number">2</span>）：<br><span class="hljs-number">1.</span>配置为<span class="hljs-number">2</span>和配置为<span class="hljs-number">0</span>，性能差异并不大，因为将数据从Log Buffer拷贝到OS cache，虽然跨越用户态与内<br>核态，但毕竟只是内存的数据拷贝，速度很快<br><span class="hljs-number">2.</span>配置为<span class="hljs-number">2</span>和配置为<span class="hljs-number">0</span>，安全性差异巨大，操作系统崩溃的概率相比MySQL应用程序崩溃的概率，小很多，设置<br>为<span class="hljs-number">2</span>，只要操作系统不奔溃，也绝对不会丢数据<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-6-2-错误日志"><a href="#1-6-2-错误日志" class="headerlink" title="1.6.2 错误日志"></a>1.6.2 错误日志</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> @<span class="hljs-variable">@log</span>_error;<br><br># 记录哪些警告信息至错误日志文件<br>#CentOS7 mariadb <span class="hljs-number">5.5</span> 默认值为<span class="hljs-number">1</span><br>#CentOS8 mariadb <span class="hljs-number">10.3</span> 默认值为<span class="hljs-number">2</span><br>log_warnings<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-operator">|</span><span class="hljs-number">1</span><span class="hljs-operator">|</span><span class="hljs-number">2</span><span class="hljs-operator">|</span><span class="hljs-number">3.</span>..         #MySQL5<span class="hljs-number">.7</span>之前<br>log_error_verbosity<span class="hljs-operator">=</span><span class="hljs-number">0</span><span class="hljs-operator">|</span><span class="hljs-number">1</span><span class="hljs-operator">|</span><span class="hljs-number">2</span><span class="hljs-operator">|</span><span class="hljs-number">3.</span>..   #MySQL8<span class="hljs-number">.0</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="1-6-3-通用日志"><a href="#1-6-3-通用日志" class="headerlink" title="1.6.3 通用日志"></a>1.6.3 通用日志</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 通用日志服务<br>general_log<span class="hljs-operator">=</span><span class="hljs-keyword">ON</span><span class="hljs-operator">|</span>OFF<br># 通用日志存放的文件路径<br>general_log_file<span class="hljs-operator">=</span>HOSTNAME.log<br># 默认通用日志存放在哪里<br>log_output<span class="hljs-operator">=</span><span class="hljs-keyword">TABLE</span><span class="hljs-operator">|</span>FILE<span class="hljs-operator">|</span><span class="hljs-keyword">NONE</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">select</span> @<span class="hljs-variable">@general</span>_log;<br><span class="hljs-keyword">set</span> <span class="hljs-keyword">global</span> general_log<span class="hljs-operator">=</span><span class="hljs-number">1</span>;<br><br><span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">GLOBAL</span> VARIABLES <span class="hljs-keyword">LIKE</span> <span class="hljs-string">&#x27;log_output&#x27;</span>;<br><span class="hljs-keyword">select</span> @<span class="hljs-variable">@general</span>_log_file;<br><br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# ll <span class="hljs-operator">/</span>var<span class="hljs-operator">/</span>lib<span class="hljs-operator">/</span>mysql <span class="hljs-operator">-</span>t<br><br>[root<span class="hljs-variable">@Rocky8</span> <span class="hljs-operator">~</span>]# tail <span class="hljs-operator">-</span>f <span class="hljs-operator">/</span>var<span class="hljs-operator">/</span>lib<span class="hljs-operator">/</span>mysql<span class="hljs-operator">/</span>[].log<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-6-4-慢查询日志"><a href="#1-6-4-慢查询日志" class="headerlink" title="1.6.4 慢查询日志"></a>1.6.4 慢查询日志</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql">slow_query_log<span class="hljs-operator">=</span><span class="hljs-keyword">ON</span><span class="hljs-operator">|</span>OFF   	#开启或关闭慢查询，支持全局和会话，只有全局设置才会生成慢查询文件<br>long_query_time<span class="hljs-operator">=</span>N 		#慢查询的阀值，单位秒,默认为<span class="hljs-number">10</span>s<br>slow_query_log_file<span class="hljs-operator">=</span>HOSTNAME<span class="hljs-operator">-</span>slow.log  #慢查询日志文件<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">log_queries_not_using_indexes<span class="hljs-operator">=</span><span class="hljs-keyword">ON</span>  #不使用索引或使用全索引扫描，不论是否达到慢查询阀值的语句是否记录日志，默认OFF，即不记录<br>log_slow_rate_limit <span class="hljs-operator">=</span> <span class="hljs-number">1</span> #多少次查询才记录，mariadb特有<br>log_slow_verbosity<span class="hljs-operator">=</span> Query_plan,explain #记录内容<br>log_slow_queries <span class="hljs-operator">=</span> OFF    #同slow_query_log，MariaDB <span class="hljs-number">10.0</span><span class="hljs-operator">/</span>MySQL <span class="hljs-number">5.6</span><span class="hljs-number">.1</span> 版后已删除<br></code></pre></td></tr></table></figure>
+
+<p> 慢查询分析工具mysqldumpslow</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs sql">[root<span class="hljs-variable">@centos8</span> <span class="hljs-operator">~</span>]#mysqldumpslow <span class="hljs-operator">-</span>s c <span class="hljs-operator">-</span>t <span class="hljs-number">2</span> <span class="hljs-operator">/</span>var<span class="hljs-operator">/</span>lib<span class="hljs-operator">/</span>mysql<span class="hljs-operator">/</span>centos8<span class="hljs-operator">-</span>slow.log<br>Reading mysql slow query log <span class="hljs-keyword">from</span> <span class="hljs-operator">/</span>var<span class="hljs-operator">/</span>lib<span class="hljs-operator">/</span>mysql<span class="hljs-operator">/</span>centos8<span class="hljs-operator">-</span>slow.log<br>Count: <span class="hljs-number">1</span>  <span class="hljs-type">Time</span><span class="hljs-operator">=</span><span class="hljs-number">0.00</span>s (<span class="hljs-number">0</span>s)  Lock<span class="hljs-operator">=</span><span class="hljs-number">0.00</span>s (<span class="hljs-number">0</span>s)  Rows_sent<span class="hljs-operator">=</span><span class="hljs-number">2.0</span> (<span class="hljs-number">2</span>), <br>Rows_examined<span class="hljs-operator">=</span><span class="hljs-number">25.0</span> (<span class="hljs-number">25</span>), Rows_affected<span class="hljs-operator">=</span><span class="hljs-number">0.0</span> (<span class="hljs-number">0</span>), root[root]<span class="hljs-variable">@localhost</span><br> <span class="hljs-keyword">select</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">from</span> students <span class="hljs-keyword">where</span> age<span class="hljs-operator">=</span>N<br>Count: <span class="hljs-number">1</span>  <span class="hljs-type">Time</span><span class="hljs-operator">=</span><span class="hljs-number">4.00</span>s (<span class="hljs-number">4</span>s)  Lock<span class="hljs-operator">=</span><span class="hljs-number">0.00</span>s (<span class="hljs-number">0</span>s)  Rows_sent<span class="hljs-operator">=</span><span class="hljs-number">4.0</span> (<span class="hljs-number">4</span>), Rows_examined<span class="hljs-operator">=</span><span class="hljs-number">4.0</span> <br>(<span class="hljs-number">4</span>), Rows_affected<span class="hljs-operator">=</span><span class="hljs-number">0.0</span> (<span class="hljs-number">0</span>), root[root]<span class="hljs-variable">@localhost</span><br> <span class="hljs-keyword">select</span> sleep(N) <span class="hljs-keyword">from</span> teachers<br></code></pre></td></tr></table></figure>
+
+<h3 id="1-6-5-二进制日志（备份）"><a href="#1-6-5-二进制日志（备份）" class="headerlink" title="1.6.5 二进制日志（备份）"></a>1.6.5 二进制日志（备份）</h3><ul>
+<li>基于”语句”记录：statement，记录语句，默认模式（ MariaDB 10.2.3 版本以下 ），日志量较少</li>
+<li>基于”行”记录：row，记录数据，日志量较大，更加安全，建议使用的格式,MySQL8.0默认格式</li>
+<li>混合模式：mixed, 让系统自行判定该基于哪种方式进行，默认模式（ MariaDB 10.2.4及版本以上）</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">show</span> variables <span class="hljs-keyword">like</span> <span class="hljs-string">&#x27;binlog_format&#x27;</span>;<br><span class="hljs-keyword">show</span> master logs;<br><span class="hljs-keyword">show</span> master status;<br></code></pre></td></tr></table></figure>
+
+<p><strong>二进制日志文件构成</strong></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs http">1.日志文件：mysql|mariadb-bin.文件名后缀，二进制格式,如： on.000001,mariadb-bin.000002<br>2.索引文件：mysql|mariadb-bin.index，文本格式,记录当前已有的二进制日志文件列表<br></code></pre></td></tr></table></figure>
+
+<p><strong>服务器变量</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs sql"># 是否记录二进制日志，默认<span class="hljs-keyword">ON</span>，支持动态修改，系统变量，而非服务器选项<br>sql_log_bin<span class="hljs-operator">=</span><span class="hljs-keyword">on</span><span class="hljs-operator">|</span>off <br><br># 指定文件位置；默认OFF，表示不启用二进制日志功能，上述两项都开启才可以<br>log_bin<span class="hljs-operator">=</span><span class="hljs-operator">/</span>PATH<span class="hljs-operator">/</span>BIN_LOG_FILE<br><br>max_binlog_size<span class="hljs-operator">=</span><span class="hljs-number">1073741824</span>：# 单个二进制日志文件的最大体积，到达最大值会自动滚动，默认为<span class="hljs-number">1</span>G<br>#说明：文件达到上限时的大小未必为指定的精确值<br><br>binlog_format<span class="hljs-operator">=</span>statement<span class="hljs-operator">|</span><span class="hljs-type">row</span><span class="hljs-operator">|</span>mixed：# 二进制日志记录的格式，mariadb5<span class="hljs-number">.5</span>默认statement<br><br>binlog_cache_size<span class="hljs-operator">=</span><span class="hljs-number">4</span>m # 此变量确定在每次事务中保存二进制日志更改记录的缓存的大小（每次连接）<br><br>max_binlog_cache_size<span class="hljs-operator">=</span><span class="hljs-number">512</span>m # 限制用于缓存多事务查询的字节大小。<br><br>sync_binlog<span class="hljs-operator">=</span><span class="hljs-number">1</span><span class="hljs-operator">|</span><span class="hljs-number">0</span>：# 设定是否启动二进制日志即时同步磁盘功能，默认<span class="hljs-number">0</span>，由操作系统负责同步日志到磁盘<br><br>expire_logs_days<span class="hljs-operator">=</span>N：# 二进制日志可以自动删除的天数。 默认为<span class="hljs-number">0</span>，即不自动删除<br></code></pre></td></tr></table></figure>
+
+<p><strong>mysqlbinlog</strong>：二进制日志的客户端命令工具，支持离线查看二进制日志</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs sql">mysqlbinlog <span class="hljs-comment">--start-position=678 --stop-position=752 /var/lib/mysql/mariadb-bin.000003 -v</span><br>mysqlbinlog  <span class="hljs-comment">--start-datetime=&quot;2018-01-30 20:30:10&quot;   --stop-datetime=&quot;2018-01-30 20:35:22&quot; mariadb-bin.000003 -vvv</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>切换二进制日志文件</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">[root<span class="hljs-variable">@centos8</span> <span class="hljs-operator">~</span>]# mysqladmin   flush<span class="hljs-operator">-</span><span class="hljs-type">binary</span><span class="hljs-operator">-</span>log<br>[root<span class="hljs-variable">@centos8</span> <span class="hljs-operator">~</span>]# mysqladmin   flush<span class="hljs-operator">-</span>logs<br>[root<span class="hljs-variable">@centos8</span> <span class="hljs-operator">~</span>]# mysql<br>MariaDB [hellodb]<span class="hljs-operator">&gt;</span> flush logs;<br></code></pre></td></tr></table></figure>
+
+<p><strong>删除二进制</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs sql">purge <span class="hljs-type">binary</span> logs <span class="hljs-keyword">To</span> <span class="hljs-string">&#x27;mariadb-bin.000003&#x27;</span>;<br>purge <span class="hljs-type">binary</span> logs before <span class="hljs-string">&#x27;2017-03-22 [09:25:30]&#x27;</span>; <br># 重置<br>reset master [<span class="hljs-keyword">To</span> #]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">从10.0.0.8远程主机实时同步从指定的二进制日志binlog.000002开始向后进行同步到当前目录</span><br>create user test@&#x27;10.0.0.%&#x27; identified by &#x27;123456&#x27;;<br>grant replication slave on *.* to test@&#x27;10.0.0.%&#x27;;<br><br>[root@centos8 data]# yum -y install mysql;<br>[root@centos8 data]# mysqlbinlog -R --host=10.0.0.8 --user=test --password=123456 --raw --stop-never binlog.000002<br></code></pre></td></tr></table></figure>
+
+<p><strong>事务日志和二进制区别</strong></p>
+<ul>
+<li>事务日志在线,二进制离线</li>
+<li>事务日志记录事务执行的过程,包括提交和未提交,二进制日志记录只记提交的过程</li>
+<li>事务日志只支持innodb,二进制都支持MyiSAM和innoDB</li>
+</ul>
+<p>功能：通过”重放”日志文件中的事件来生成数据副本</p>
+<p>注意：建议二进制日志和数据文件分开存放</p>
+<h1 id="2-MySQL备份和恢复"><a href="#2-MySQL备份和恢复" class="headerlink" title="2 MySQL备份和恢复"></a>2 MySQL备份和恢复</h1><ul>
+<li><p>完全备份、部分备份</p>
+</li>
+<li><p>完全备份、增量备份（相对于前一次备份）、差异备份（相对于完全备份）</p>
+</li>
+<li><p>冷备份、温备份、热备份（MyISAM不支持）</p>
+</li>
+<li><p>物理备份、逻辑备份</p>
+</li>
+</ul>
+<p><strong>备份内容</strong></p>
+<ul>
+<li>数据</li>
+<li>二进制日志、InnoDB事务日志</li>
+<li>服务器配置文件</li>
+<li>用户账号，权限设置、程序代码</li>
+</ul>
+<h2 id="2-1-数据库冷备份和还原"><a href="#2-1-数据库冷备份和还原" class="headerlink" title="2.1 数据库冷备份和还原"></a>2.1 数据库冷备份和还原</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs shell">[root@Rocky8 ~]# systemctl stop mysqld<br><br>// 第一种<br>[root@Rocky8 ~]# cp -a /var/lib/mysql /data/<br>[root@Rocky8 ~]# ll /data/<br>total 4<br>drwxr-xr-x 8 mysql mysql 4096 Feb  7 16:10 mysql<br>[root@Rocky8 ~]# scp -r /data 10.1.16.129:/data/<br>root@10.1.16.129&#x27;s password: <br><br>[root@Rocky8 ~]# ls /data<br>mysql<br>[root@Rocky8 ~]# cp -a /data/mysql/* /var/lib/mysql/<br>[root@Rocky8 ~]# chown -R mysql.mysql /var/lib/mysql/<br><br>// 第二种<br>[root@centos8 ~]# rsync -a /var/lib/mysql 10.1.16.129:/data/<br>[root@Rocky8 ~]# cp -a /data/mysql/* /var/lib/mysql/<br><br>[root@Rocky8 ~]# systemctl enable --now  mysqld<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-mysqldump-备份工具"><a href="#2-2-mysqldump-备份工具" class="headerlink" title="2.2 mysqldump 备份工具"></a>2.2 mysqldump 备份工具</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">-<span class="hljs-selector-tag">A</span> -D<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/02/08/Linux-MySQL-%E9%9B%86%E7%BE%A4%E4%B8%8E%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux-MySQL-集群与压力测试</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/01/26/Linux-MySQL-%E5%9F%BA%E7%A1%80/">
+                        <span class="hidden-mobile">Linux-MySQL-基础</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

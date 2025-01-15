@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="华三AC+AP部署无线基本配置任务描述完成网络的规划和配置，PC和无线终端设备能ping通，各交换机和路由能ping通。 任务要求 掌握交换机VLAN配置 掌握AC配置 掌握AP配置 掌握路由配置 掌握链路聚合 掌握LoopBack配置  实训拓扑本任务的实训拓扑图如图1所示。 本任务具体要求如下： 1、按图示连接好网络设备，AP可以只用一个 2、IP网段地址用自己的学号后两位以及后面的网段（本人">
+<meta property="og:type" content="article">
+<meta property="og:title" content="华三AC+AP部署无线基本配置">
+<meta property="og:url" content="http://example.com/2024/12/31/%E5%8D%8E%E4%B8%89AC-AP%E9%83%A8%E7%BD%B2%E6%97%A0%E7%BA%BF%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="华三AC+AP部署无线基本配置任务描述完成网络的规划和配置，PC和无线终端设备能ping通，各交换机和路由能ping通。 任务要求 掌握交换机VLAN配置 掌握AC配置 掌握AP配置 掌握路由配置 掌握链路聚合 掌握LoopBack配置  实训拓扑本任务的实训拓扑图如图1所示。 本任务具体要求如下： 1、按图示连接好网络设备，AP可以只用一个 2、IP网段地址用自己的学号后两位以及后面的网段（本人">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857733.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857205.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857105.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857844.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857106.png">
+<meta property="article:published_time" content="2024-12-31T08:20:45.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.351Z">
+<meta property="article:author" content="Jin Runda">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857733.png">
+  
+  
+  <title>华三AC+AP部署无线基本配置 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="华三AC+AP部署无线基本配置">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-12-31 08:20" pubdate>
+        December 31, 2024 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      6.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      51 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">华三AC+AP部署无线基本配置</h1>
+            
+            <div class="markdown-body">
+              <h1 id="华三AC-AP部署无线基本配置"><a href="#华三AC-AP部署无线基本配置" class="headerlink" title="华三AC+AP部署无线基本配置"></a>华三AC+AP部署无线基本配置</h1><h2 id="任务描述"><a href="#任务描述" class="headerlink" title="任务描述"></a>任务描述</h2><p>完成网络的规划和配置，PC和无线终端设备能ping通，各交换机和路由能ping通。</p>
+<h2 id="任务要求"><a href="#任务要求" class="headerlink" title="任务要求"></a>任务要求</h2><ol>
+<li>掌握交换机VLAN配置</li>
+<li>掌握AC配置</li>
+<li>掌握AP配置</li>
+<li>掌握路由配置</li>
+<li>掌握链路聚合</li>
+<li>掌握LoopBack配置</li>
+</ol>
+<h2 id="实训拓扑"><a href="#实训拓扑" class="headerlink" title="实训拓扑"></a>实训拓扑</h2><p>本任务的实训拓扑图如图1所示。</p>
+<p>本任务具体要求如下：</p>
+<p>1、按图示连接好网络设备，AP可以只用一个</p>
+<p>2、IP网段地址用自己的学号后两位以及后面的网段（本人学号后两位为47）</p>
+<p>3、管理IP都用loopback地址</p>
+<p>4、完成网络的规划和配置，PC和无线终端设备能ping通</p>
+<h2 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h2><h3 id="1．按图连接设备"><a href="#1．按图连接设备" class="headerlink" title="1．按图连接设备"></a><strong>1．按图连接设备</strong></h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857733.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="2．规划交换机、路由器、PC、AC的IP地址，见表如下。"><a href="#2．规划交换机、路由器、PC、AC的IP地址，见表如下。" class="headerlink" title="2．规划交换机、路由器、PC、AC的IP地址，见表如下。"></a>2．规划交换机、路由器、PC、AC的IP地址，见表如下。</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857205.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="3-配置AC机"><a href="#3-配置AC机" class="headerlink" title="3.  配置AC机"></a>3.  配置AC机</h3><figure class="highlight shell"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></div></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">设备管理VLAN 9、AP管理VLAN 8、终端接入VLAN 7，并添加描述</span><br>[AC]vlan 7<br>[AC-vlan7]description ap-yonghu<br>[AC-vlan7]vlan 8<br>[AC-vlan8]description ac-ap<br>[AC-vlan8]vlan 9<br>[AC-vlan9]description ac-sw-ap<br>[AC-vlan9]qu<br>[AC]interface vlan 9<br>[AC-Vlan-interface9]ip address 192.168.9.1 24<br>[AC-Vlan-interface9]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置交换机的接口为trunk口允许VLAN通行</span><br>[AC]interface g1/0/0<br>[AC-GigabitEthernet1/0/0]port link-type trunk<br>[AC-GigabitEthernet1/0/0]port trunk permit vlan all<br>[AC-GigabitEthernet1/0/0]quit<br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置AP管理同网段IP地址</span><br>[AC]interface vlan 8<br>[AC-Vlan-interface8]ip address 192.168.8.253 24<br>[AC-Vlan-interface8]qu<br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置路由 将路由指向核心交换机</span><br>[AC]ip route-static 0.0.0.0 0.0.0.0 192.168.9.2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">开启自动AP功能</span><br>[AC]wlan auto-ap enable<br><span class="hljs-meta prompt_">#</span><span class="language-bash">开启自动AP自动固化功能</span><br>[AC]wlan auto-persistent enable<br>[AC]display wlan ap all<br><span class="hljs-meta prompt_"># </span><span class="language-bash">自动AP固化,不固化无法修改ap名称。</span><br>[AC]wlan auto-ap persistent all<br><span class="hljs-meta prompt_">#</span><span class="language-bash">对AP进行重命名</span><br>[AC]wlan rename-ap accf-653e-0700 ap1<br>[AC]display wlan ap all<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_"># </span><span class="language-bash">创建无线服务模板</span><br>[AC]wlan service-template wuxian<br><span class="hljs-meta prompt_"># </span><span class="language-bash">在无线服务模板视图下配置SSID,即无线网络名称（WiFi名称）</span><br>[AC-wlan-st-wuxian]ssid 业务<br><span class="hljs-meta prompt_"># </span><span class="language-bash">开启无线服务模板</span><br>[AC-wlan-st-wuxian]service-template enable<br>[AC-wlan-st-wuxian]quit<br><span class="hljs-meta prompt_">#</span><span class="language-bash">创建Wlan组</span><br>[AC]wlan ap-group group1<br>[AC-wlan-ap-group-group1]ap ap1<br><span class="hljs-meta prompt_"># </span><span class="language-bash">创建并进入AP组下的AP型号视图</span><br>[AC-wlan-ap-group-group1]ap-model WA6320-HCL<br><span class="hljs-meta prompt_"># </span><span class="language-bash">进入Radio视图</span><br>[AC-wlan-ap-group-group1-ap-model-WA6320-HCL]radio 1<br><span class="hljs-meta prompt_"># </span><span class="language-bash">无线服务模板绑定Radio时绑定的VLAN ID，此处VLAN就是用户dhcp获取的网关vlan <span class="hljs-built_in">id</span></span><br>[AC-wlan-ap-group-group1-ap-model-WA6320-HCL-radio-1]service-template wuxian vlan 7<br><span class="hljs-meta prompt_"># </span><span class="language-bash">开启射频功能,即WiFi可被搜索</span><br>[AC-wlan-ap-group-group1-ap-model-WA6320-HCL-radio-1]radio enable<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置LoopBack地址</span><br>[AC]int LoopBack 1<br>[AC-LoopBack1]ip address 192.168.56.14 24<br>[AC-LoopBack1]qu<br></code></pre></td></tr></table></figure>
+
+<h4 id="4-配置汇聚交换机"><a href="#4-配置汇聚交换机" class="headerlink" title="4.  配置汇聚交换机"></a>4.  配置汇聚交换机</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">设备管理VLAN 9、AP管理VLAN 8、终端接入VLAN 7</span><br>[huiju]vlan 7<br>[huiju-vlan7]vlan 8<br>[huiju-vlan8]vlan 9<br>[huiju-vlan9]qu<br>[huiju]interface vlan 9<br>[huiju-Vlan-interface9]ip address 192.168.9.2 24<br>[huiju-Vlan-interface9]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置AC和接入的对接端口</span><br>[huiju]interface g1/0/2<br>[huiju-GigabitEthernet1/0/2]port link-type trunk<br>[huiju-GigabitEthernet1/0/2]port trunk permit vlan all<br>[huiju-GigabitEthernet1/0/2]qu<br>[huiju]interface g1/0/1<br>[huiju-GigabitEthernet1/0/1]port link-type trunk<br>[huiju-GigabitEthernet1/0/1]port trunk permit vlan all<br>[huiju-GigabitEthernet1/0/1]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">汇聚交换机上配置终端接入VLAN网关和AP管理VLAN网关</span><br>[huiju]interface vlan 7<br>[huiju-Vlan-interface7]ip address 192.168.7.254 24<br>[huiju-Vlan-interface7]qu<br>[huiju]interface vlan 8<br>[huiju-Vlan-interface8]ip address 192.168.8.254 24<br>[huiju-Vlan-interface8]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置dhcp，终端接入获取的上网IP</span><br>[huiju]dhcp enable<br>[huiju]dhcp server forbidden-ip 192.168.7.254<br>[huiju]dhcp server ip-pool ap-yonghu<br>[huiju-dhcp-pool-ap-yonghu]network 192.168.7.0 24<br>[huiju-dhcp-pool-ap-yonghu]gateway-list 192.168.7.254<br>[huiju-dhcp-pool-ap-yonghu]dns-list 202.102.224.68<br>[huiju-dhcp-pool-ap-yonghu]qu<br>[huiju]dhcp server forbidden-ip  192.168.8.254<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">AP获取的管理IP</span><br>[huiju]dhcp server ip-pool ac-ap<br>[huiju-dhcp-pool-ac-ap]network 192.168.8.0 24<br>[huiju-dhcp-pool-ac-ap]gateway-list 192.168.8.254<br>[huiju-dhcp-pool-ac-ap]dns-list 202.102.224.68<br>[huiju-dhcp-pool-ac-ap]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置交换机链路聚合</span><br>[huiju]interface Bridge-Aggregation 1<br>[huiju-Bridge-Aggregation1]qu<br>[huiju]interface g1/0/9<br>[huiju-GigabitEthernet1/0/9]port link-aggregation group 1<br>[huiju-GigabitEthernet1/0/9]interface g1/0/10<br>[huiju-GigabitEthernet1/0/10]port link-aggregation group 1<br>[huiju-GigabitEthernet1/0/10]qu<br>[huiju]interface vlan 1<br>[huiju-Vlan-interface1]ip address 192.168.1.2 24<br>[huiju-Vlan-interface1]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置下一跳地址</span><br>[huiju]ip route-static 192.168.48.0 24 192.168.1.1<br>[huiju]ip route-static 192.168.47.0 24 192.168.1.1<br>[huiju]ip route-static 192.168.7.0 24 192.168.9.3<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置LoopBack地址</span><br>[huiju]int LoopBack 1<br>[huiju-LoopBack1]ip address 192.168.56.13 24<br>[huiju-LoopBack1]qu<br></code></pre></td></tr></table></figure>
+
+<h3 id="5-配置接入交换机"><a href="#5-配置接入交换机" class="headerlink" title="5.  配置接入交换机"></a>5.  配置接入交换机</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">设备管理VLAN 9、AP管理VLAN 8、终端接入VLAN 7</span><br>[jieru]vlan 7<br>[jieru-vlan7]vlan 8<br>[jieru-vlan8]vlan 9<br>[jieru-vlan9]qu<br>[jieru]interface vlan 9<br>[jieru-Vlan-interface9]ip address 192.168.9.1 24<br>[jieru-Vlan-interface9]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置上联端口、将AP加入到AP管理VLAN</span><br>[jieru]interface g1/0/1<br>[jieru-GigabitEthernet1/0/1]port link-type trunk<br>[jieru-GigabitEthernet1/0/1]port trunk permit vlan all<br>[jieru-GigabitEthernet1/0/1]<br>[jieru-GigabitEthernet1/0/1]qu	<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">接入台式机测试用</span><br>[jieru]interface g1/0/3<br>[jieru-GigabitEthernet1/0/3]port access vlan 8<br>[jieru-GigabitEthernet1/0/3]qu<br>[jieru]interface g1/0/4<br>[jieru-GigabitEthernet1/0/4]port access vlan 8<br>[jieru-GigabitEthernet1/0/4]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置路由 将路由指向核心交换机</span><br>[jieru]ip route-static 0.0.0.0 0.0.0.0 192.168.9.2<br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置下一跳地址</span><br>[jieru]ip route-static 192.168.1.0 24 192.168.9.2<br>[jieru]ip route-static 192.168.48.0 24 192.168.9.2<br>[jieru]ip route-static 192.168.47.0 24 192.168.9.2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置LoopBack地址</span><br>[jieru]int LoopBack 1<br>[jieru-LoopBack1]ip address 192.168.56.15 24<br>[jieru-LoopBack1]qu<br></code></pre></td></tr></table></figure>
+
+<h3 id="6-配置SXX汇聚交换机"><a href="#6-配置SXX汇聚交换机" class="headerlink" title="6.  配置SXX汇聚交换机"></a>6.  配置SXX汇聚交换机</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">配置VLAN3</span><br>[sxx]vlan 3<br>[sxx-vlan3]port g1/0/2<br>[sxx-vlan3]qu<br>[sxx]interface vlan 3<br>[sxx-Vlan-interface3]ip address 192.168.28.1 24<br>[sxx]vlan 4<br>[sxx-vlan4]port g1/0/1<br>[sxx-vlan4]qu<br>[sxx]interface vlan 4<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置下一跳地址</span><br>[sxx-Vlan-interface4]ip address 192.168.29.2 24<br>[sxx]ip route-static 192.168.1.0 24 192.168.48.1<br>[sxx]ip route-static 192.168.9.0 24 192.168.48.1<br>[sxx]ip route-static 192.168.7.0 24 192.168.48.1<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置LoopBack地址</span><br>[sxx]int LoopBack 1<br>[sxx-LoopBack1]ip address 192.168.56.11 24<br>[sxx-LoopBack1]qu<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-配置核心路由器"><a href="#7-配置核心路由器" class="headerlink" title="7.  配置核心路由器"></a>7.  配置核心路由器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs shell">[hexin]interface g0/0/0<br>[hexin-GigabitEthernet0/0/0]ip address 192.168.29.1 24<br>[hexin-GigabitEthernet0/0/0]qu<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置路由器链路聚合</span><br>[hexin]interface Route-Aggregation 1<br>[hexin-Route-Aggregation1]qu<br>[hexin]interface g0/0/9<br>[hexin-GigabitEthernet0/0/9]port link-aggregation group 1<br>[hexin-GigabitEthernet0/0/9]interface g0/0/10<br>[hexin-GigabitEthernet0/0/10]port link-aggregation group 1<br>[hexin-GigabitEthernet0/0/10]qu<br>[hexin]interface Route-Aggregation 1<br>[hexin-Route-Aggregation1]ip address 192.168.1.1 24<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置下一跳地址</span><br>[hexin]ip route-static 192.168.47.0 24 192.168.48.2<br>[hexin]ip route-static 192.168.9.0 24 192.168.1.2<br>[hexin]ip route-static 192.168.7.0 24 192.168.1.2<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">配置LoopBack地址</span><br>[hexin]int LoopBack 1<br>[hexin-LoopBack1]ip address 192.168.56.12 24<br>[hexin-LoopBack1]qu<br></code></pre></td></tr></table></figure>
+
+<h3 id="8-配置PC"><a href="#8-配置PC" class="headerlink" title="8. 配置PC"></a>8. 配置PC</h3><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857105.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="9-实验结果"><a href="#9-实验结果" class="headerlink" title="9.  实验结果"></a>9.  实验结果</h3><p>各交换机和路由器之间可以相互ping通，不一一展示，以下只展示PC3和Phone_6之间的相互ping命令结果。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857844.png" srcset="/img/loading.gif" lazyload> </p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202412310857106.png" srcset="/img/loading.gif" lazyload></p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/24/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA/">
+                        <span class="hidden-mobile">软件工程概论</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="进程和内存管理进程相关概念内核功用进程管理、内存管理、文件系统、网络功能、驱动程序、安全功能等 什么是进程Process：运行中的程序的一个副本，是被载入内存的一个指令集合，是资源分配的单位  进程ID（PID）：号码被用来标记各个进程 UID、GID 和 SELinux 语境决定对文件系统的存取和访问权限 通常从执行进程的用户来继承 存在生命周期  进程创建：  init：第一进程，从Cento">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-进程管理和计划任务">
+<meta property="og:url" content="http://example.com/2023/07/30/Linux-%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%92%8C%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="进程和内存管理进程相关概念内核功用进程管理、内存管理、文件系统、网络功能、驱动程序、安全功能等 什么是进程Process：运行中的程序的一个副本，是被载入内存的一个指令集合，是资源分配的单位  进程ID（PID）：号码被用来标记各个进程 UID、GID 和 SELinux 语境决定对文件系统的存取和访问权限 通常从执行进程的用户来继承 存在生命周期  进程创建：  init：第一进程，从Cento">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301554388.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301553332.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301632829.png">
+<meta property="og:image" content="https://www.brendangregg.com/Perf/linux_observability_tools.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308121611193.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308121802175.png">
+<meta property="article:published_time" content="2023-07-30T09:36:50.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.351Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301554388.png">
+  
+  
+  <title>Linux-进程管理和计划任务 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-进程管理和计划任务">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-07-30 09:36" pubdate>
+        July 30, 2023 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      8.8k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      74 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-进程管理和计划任务</h1>
+            
+            <div class="markdown-body">
+              <h1 id="进程和内存管理"><a href="#进程和内存管理" class="headerlink" title="进程和内存管理"></a>进程和内存管理</h1><h2 id="进程相关概念"><a href="#进程相关概念" class="headerlink" title="进程相关概念"></a>进程相关概念</h2><h3 id="内核功用"><a href="#内核功用" class="headerlink" title="内核功用"></a>内核功用</h3><p>进程管理、内存管理、文件系统、网络功能、驱动程序、安全功能等</p>
+<h3 id="什么是进程"><a href="#什么是进程" class="headerlink" title="什么是进程"></a>什么是进程</h3><p>Process：运行中的程序的一个副本，是被载入内存的一个指令集合，是资源分配的单位</p>
+<ul>
+<li>进程ID（PID）：号码被用来标记各个进程</li>
+<li>UID、GID 和 SELinux 语境决定对文件系统的存取和访问权限</li>
+<li>通常从执行进程的用户来继承</li>
+<li>存在生命周期</li>
+</ul>
+<p>进程创建：</p>
+<ul>
+<li>init：第一进程，从Centos7以后为systemd</li>
+<li>进程：都由其父进程创建，fork()/<em>C语言</em>/，父子关系，Cow(机制)：Copy On Write</li>
+</ul>
+<h3 id="进程的组成"><a href="#进程的组成" class="headerlink" title="进程的组成"></a>进程的组成</h3><p>进程一般由程序、数据集合和进程控制块三部分组成。</p>
+<ul>
+<li>程序用于描述进程要完成的功能，是控制进程执行的指令集</li>
+<li>数据集合是程序在执行时所需要的数据和工作区</li>
+<li>程序控制块（Program Control Block，简称PCB），包含进程的描述信息和控制信息，是进程存在的唯一标识</li>
+</ul>
+<h3 id="进程具有的特点"><a href="#进程具有的特点" class="headerlink" title="进程具有的特点"></a>进程具有的特点</h3><p>动态性    并发(时间片)性    独立性    结构性</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301554388.png" srcset="/img/loading.gif" lazyload></p>
+<p>注意：</p>
+<ol>
+<li>多个进程可以同时进行，而多个线程（“{}”）存在竞争，可能发生冲突；” 加锁 “ 在进程和线程中很重要</li>
+<li>进程是任务调度（操作系统分配资源）的最小单位，线程是程序执行的最小单位</li>
+<li>多线程的运行顺序由操作系统决定，并非由程序员设置</li>
+<li>进程控制块PCB(了解)，ucore(清华大学课程)  ………………………………………………………………..有时间再说</li>
+<li>调度和切换：线程上下文切换比进程上下文切换要快得多。</li>
+</ol>
+<h3 id="进程使用内存问题"><a href="#进程使用内存问题" class="headerlink" title="进程使用内存问题"></a>进程使用内存问题</h3><p>1.内存泄漏 Memory Leak：申请的空间未释放    2.内存溢出 Memory Overflow：数据量超过申请的空间    </p>
+<p>3.内存不足 OOM：vm.overcommit.memory 接受三种取值（0、1、2）</p>
+<h2 id="进程状态"><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301553332.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="进程的基本状态"><a href="#进程的基本状态" class="headerlink" title="进程的基本状态"></a>进程的基本状态</h3><ul>
+<li>创建状态</li>
+<li>就绪状态</li>
+<li>执行状态</li>
+<li>阻塞状态</li>
+<li>终止状态</li>
+</ul>
+<h3 id="进程的更多状态"><a href="#进程的更多状态" class="headerlink" title="进程的更多状态"></a>进程的更多状态</h3><ul>
+<li>运行态：running</li>
+<li>就绪态：ready</li>
+<li>睡眠态：分为两种，可中断 ( interruptable )  and  不可中断 ( uninterruptable )</li>
+<li>停止态：stopped，暂停于内存，但不会被调度，除非手动启动</li>
+<li>僵死态：zombie，结束进程，父进程结束前，子进程不关闭，杀死父进程可以关闭僵死态的子程序</li>
+<li>孤儿进程</li>
+</ul>
+<h2 id="LRU算法"><a href="#LRU算法" class="headerlink" title="LRU算法"></a>LRU算法</h2><p>Least Recently Used 近期最少使用算法（喜新厌旧），释放内存   —-   缓存的核心算法</p>
+<h2 id="IPC进程间通信"><a href="#IPC进程间通信" class="headerlink" title="IPC进程间通信"></a>IPC进程间通信</h2><ul>
+<li>同一主机</li>
+</ul>
+<figure class="highlight stata"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></div></td><td class="code"><pre><code class="hljs stata">pipe				管道，单向传输<br>socket				套接字文件，双工通信<br><span class="hljs-keyword">Memory</span>-maped <span class="hljs-keyword">file</span>	文件映射，将文件中的一段数据映射到物理内存，多个进程共享这片内存<br>shm shared <span class="hljs-keyword">memory</span>	共享文件<br>signal				信号<br>Lock				上锁<br>semaphore			信号量，一种计数器<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>不同主机：socket = IP和端口号</li>
+</ul>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs delphi">RPC remote <span class="hljs-function"><span class="hljs-keyword">procedure</span> <span class="hljs-title">call</span></span><br><span class="hljs-function"><span class="hljs-title">MQ</span>	消息队列，生产者和消费者<span class="hljs-params">(缓冲区)</span>            -----<span class="hljs-title">ELK</span>大量的系统生成日志用到此技术</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="进程优先级"><a href="#进程优先级" class="headerlink" title="进程优先级"></a>进程优先级</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202307301632829.png" srcset="/img/loading.gif" lazyload></p>
+<p><strong>进程优先级：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">系统优先级：0 - 139，数字越小，优先级越高，各有140个运行队列和过期队列<br>实时优先级：99 - 0 值越大，优先级越高<br><span class="hljs-built_in">nice</span>值：-20 至 19，对应系统优先级100 - 139<br></code></pre></td></tr></table></figure>
+
+<p><strong>时间（空间）复杂度</strong></p>
+<h2 id="进程分类"><a href="#进程分类" class="headerlink" title="进程分类"></a>进程分类</h2><h3 id="操作系统分类"><a href="#操作系统分类" class="headerlink" title="操作系统分类"></a>操作系统分类</h3><ul>
+<li>协作多任务：早期Windows系统使用，即一个任务得到了CPU时间，除非他自己放弃使用CPU，否则将完全霸占CPU，所以任务之间需要协作一一使用一段时间的CPU，主动放弃使用</li>
+<li>抢占式多任务：Linux内核，CPU的总控制权在操作系统手中，操作系统会轮流询问每一个任务 是否需要CPU，需要使用的话就让它用，不过在一定时间后，操作系统会剥夺当前任务的CPU使用权，把它排在询问队列的最后，再去询问下一个任务</li>
+</ul>
+<h3 id="进程类型"><a href="#进程类型" class="headerlink" title="进程类型"></a>进程类型</h3><ul>
+<li>守护进程：daemon,在系统引导过程中启动的进程，和终端无关进程</li>
+<li>前台进程：跟终端相关，通过终端启动的进程</li>
+</ul>
+<p>注意：两者可以相互转换</p>
+<h3 id="按进程资源使用的分类"><a href="#按进程资源使用的分类" class="headerlink" title="按进程资源使用的分类"></a>按进程资源使用的分类</h3><p>CPU-Bound：CPU密集型，非交互</p>
+<p>IO-Bound：IO密集型，交互</p>
+<h1 id="进程管理和性能相关工具"><a href="#进程管理和性能相关工具" class="headerlink" title="进程管理和性能相关工具"></a>进程管理和性能相关工具</h1><p>参考链接：<a target="_blank" rel="noopener" href="https://www.brendangregg.com/linuxperf.html">https://www.brendangregg.com/linuxperf.html</a></p>
+<p><img src="https://www.brendangregg.com/Perf/linux_observability_tools.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>Linux系统状态的查看及管理工具：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">pstree	ps		pidof	pgrep	top		htop	glance	pmap	<br>vmstat	dstat	<span class="hljs-built_in">kill</span>	pkill	job		<span class="hljs-built_in">bg</span>		<span class="hljs-built_in">fg</span>		<span class="hljs-built_in">nohup</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="进程树-pstree"><a href="#进程树-pstree" class="headerlink" title="进程树 pstree"></a>进程树 pstree</h2><p>pstree 可以用来显示进程的父子关系，以树形结构显示</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs diff">pstree [OPTION] [ PID | USER ]<br><br><span class="hljs-deletion">-p		显示PID</span><br><span class="hljs-deletion">-T		不显示线程thread,默认显示线程</span><br><span class="hljs-deletion">-u 		显示用户切换</span><br><span class="hljs-deletion">-H pid	高亮显示指定进程及其前辈进程</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="进程信息-ps"><a href="#进程信息-ps" class="headerlink" title="进程信息 ps"></a>进程信息 ps</h2><p>ps即Process state，可以进程当前状态的快照，默认显示当前终端中的进程，Linux系统各进程的相关信息均保存在 <strong>/proc/PID</strong> 目录下的各文件中</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs diff">ps [OPTION]...<br><br>a				选项包括所有终端中的进程<br>x				选项包括不链接终端的进程<br>u				选项显示进程所有者信戏<br>k|--sort 属性 	对属性排序，属性前加 - 表示倒序<br><span class="hljs-deletion">-e				显示所有进程,相当于-A</span><br><span class="hljs-deletion">-f				显示完整格式程序信息</span><br><span class="hljs-deletion">-F				显示更完整格式的进程信息</span><br><span class="hljs-deletion">-o 属性 			选项显示定制的信息</span><br><span class="hljs-deletion">-H				以进程层级格式显示进程相关信息</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>常用组合</strong></p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@centos7</span><span class="hljs-number">-22</span> ~][<span class="hljs-meta"># ps aux</span><br>[root<span class="hljs-symbol">@centos7</span><span class="hljs-number">-22</span> ~][<span class="hljs-meta"># ps auxf</span><br>[root<span class="hljs-symbol">@centos7</span><span class="hljs-number">-22</span> ~][<span class="hljs-meta"># ps axo ...</span><br>[root<span class="hljs-symbol">@centos7</span><span class="hljs-number">-22</span> ~][<span class="hljs-meta"># ps -ef</span><br>[root<span class="hljs-symbol">@centos7</span><span class="hljs-number">-22</span> ~][<span class="hljs-meta"># ps -eFH</span><br>[root<span class="hljs-symbol">@centos7</span><span class="hljs-number">-22</span> ~][<span class="hljs-meta"># ps -eo ...</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="查看进程信息-prtstat"><a href="#查看进程信息-prtstat" class="headerlink" title="查看进程信息 prtstat"></a>查看进程信息 prtstat</h2><p>可以显示进程信息，来自于psmisc包。</p>
+<figure class="highlight prolog"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs prolog">prtstat [options] <span class="hljs-symbol">PID</span> ...<br></code></pre></td></tr></table></figure>
+
+<p>常用命令:</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autoit">[root<span class="hljs-symbol">@centos7</span><span class="hljs-number">-22</span> ~][<span class="hljs-meta"># prtstat -r PID</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="设置和调整进程优先级"><a href="#设置和调整进程优先级" class="headerlink" title="设置和调整进程优先级"></a>设置和调整进程优先级</h2><h3 id="进程优先级调整"><a href="#进程优先级调整" class="headerlink" title="进程优先级调整"></a>进程优先级调整</h3><ul>
+<li>静态优先级：100-139</li>
+<li>进程默认启动时的nice值为0，优先提为120</li>
+<li>只有跟用户才能降低nice值（提高优先性）</li>
+</ul>
+<h3 id="nice命令"><a href="#nice命令" class="headerlink" title="nice命令"></a>nice命令</h3><p>以指定的优先级来启动进程。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">nice -<span class="hljs-built_in">n</span> <span class="hljs-built_in">N</span>（adjustment=<span class="hljs-built_in">N</span>） COMMAND<br></code></pre></td></tr></table></figure>
+
+<h3 id="renice命令"><a href="#renice命令" class="headerlink" title="renice命令"></a>renice命令</h3><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs excel">renice -<span class="hljs-built_in">n</span> <span class="hljs-built_in">N</span> PID<br></code></pre></td></tr></table></figure>
+
+<h2 id="搜索进程"><a href="#搜索进程" class="headerlink" title="搜索进程"></a>搜索进程</h2><p><strong>按条件搜索进程</strong></p>
+<ul>
+<li>ps 选项 | grep ‘pattern’     灵活</li>
+<li>pgrep   按预定义的模式</li>
+<li>/sbin/pidof    按确切的程序名称查看pid</li>
+</ul>
+<h3 id="pgrep"><a href="#pgrep" class="headerlink" title="pgrep"></a>pgrep</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs diff">pgrep [option]  pattern<br><br><span class="hljs-deletion">-u uid			生效者</span><br><span class="hljs-deletion">-U uid			真正发起运行命令者</span><br><span class="hljs-deletion">-t terminal		与指定终端相关的进程</span><br><span class="hljs-deletion">-l 				显示进程名</span><br><span class="hljs-deletion">-a				显示完整格式的进程名</span><br><span class="hljs-deletion">-P pid			是指定进程的子进程</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="pidof"><a href="#pidof" class="headerlink" title="pidof"></a>pidof</h3><p>获取进程编号</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css">pidof <span class="hljs-selector-attr">[option]</span> <span class="hljs-selector-attr">[Program]</span><br><br>-x 脚本名称		按脚本名称查找pid<br></code></pre></td></tr></table></figure>
+
+<h2 id="负载查询-uptime"><a href="#负载查询-uptime" class="headerlink" title="负载查询 uptime"></a>负载查询 uptime</h2><p>/proc/uptime 包括两个值,单位为s</p>
+<ul>
+<li>系统启动时长</li>
+<li>空闲进程的总时长</li>
+</ul>
+<p>uptime和w显示以下内容</p>
+<ul>
+<li>当前时间</li>
+<li>系统已启动时间</li>
+<li>当前上线人数</li>
+<li>系统平均负载（1,5,15分钟的平均负载，一般不会超过1，超过5时建议警报）</li>
+</ul>
+<p>系统平均负载：只在特定时间间隔内运行队列中的平均进程数，通常每个CPU内核的当前活动进程书不大于3，那么系统性能良好，如果每个CPU内核的任务数大于5，那么主机的性能有严重问题。</p>
+<h2 id="显示CPU相关统计-mpstat"><a href="#显示CPU相关统计-mpstat" class="headerlink" title="显示CPU相关统计 mpstat"></a>显示CPU相关统计 mpstat</h2><p>来自sysstat包</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs haml">#各部分所占CPU百分比<br><span class="hljs-tag">%<span class="hljs-selector-tag">usr</span></span>	用户空间<br><span class="hljs-tag">%<span class="hljs-selector-tag">sys</span></span>	内核空间<br><span class="hljs-tag">%<span class="hljs-selector-tag">nice</span></span>	优先级调整<br><span class="hljs-tag">%<span class="hljs-selector-tag">iowait</span></span>	等待IO时间<br><span class="hljs-tag">%<span class="hljs-selector-tag">irq</span></span>	硬中断<br><span class="hljs-tag">%<span class="hljs-selector-tag">soft</span></span>	软中断（模式切换）<br><span class="hljs-tag">%<span class="hljs-selector-tag">steal</span></span>	虚拟机偷走的时间<br><span class="hljs-tag">%<span class="hljs-selector-tag">idle</span></span>  	空闲<br><br><br>mpstat 1   #表示每一秒显示一次CPU相关统计<br></code></pre></td></tr></table></figure>
+
+<h2 id="查看进程实时状态-top-和-htop"><a href="#查看进程实时状态-top-和-htop" class="headerlink" title="查看进程实时状态 top 和 htop"></a>查看进程实时状态 top 和 htop</h2><h3 id="top"><a href="#top" class="headerlink" title="top"></a>top</h3><p>top提供动态的实时进程状态。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308121611193.png" srcset="/img/loading.gif" lazyload alt="image-20230812161145879"></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs css">帮助：h 或 ？ ，按<span class="hljs-selector-tag">q</span> 或 Esc退出帮助<br><br>排序：<br><span class="hljs-selector-tag">P</span> 		以占据的CPU百分比，%CPU<br>M		占据内存百分比，%MEM<br>T		累计占据CPU时长，<span class="hljs-selector-tag">TIME</span>+<br><br>首部信息显示：<br>uptime信息： l命令<br>tasks及CPU信息： t命令<br>cpu分别显示： <span class="hljs-number">1</span>（数字）<br>memory信息：m命令<br><br><span class="hljs-selector-tag">q</span>	退出命令<br>s	修改刷新时间间隔<br>k	终止指定进程<br>w	保存文件<br></code></pre></td></tr></table></figure>
+
+<p><strong>top命令栏位信息简介</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs vim">us	用户空间<br><span class="hljs-keyword">sy</span>	内核空间<br>ni	调整nice时间。<br>id	空闲<br><span class="hljs-keyword">wa</span>	等待IO时间<br><span class="hljs-keyword">hi</span>	硬中断<br>si	软中断（模式切换）<br><span class="hljs-keyword">st</span>	虚拟机偷走的时间 	<br></code></pre></td></tr></table></figure>
+
+<p><strong>top选项</strong></p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs ldif"><span class="hljs-literal">-</span>d <span class="hljs-comment">#		指定刷新时间，默认为三秒。</span><br><span class="hljs-literal">-</span>b			全部显示所有进程<br><span class="hljs-literal">-</span>n <span class="hljs-comment">#		刷新多少次后退出</span><br><span class="hljs-literal">-</span>H			县城模式<br><span class="hljs-literal">-</span>p <span class="hljs-comment">#		指定进程</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="htop"><a href="#htop" class="headerlink" title="htop"></a>htop</h3><p>htop 命令是增强版的top命令，来自于EPEL源，比top功能更强。</p>
+<p><strong>选项</strong></p>
+<figure class="highlight ldif"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ldif"><span class="hljs-literal">-</span>d <span class="hljs-comment">#		指定延迟时间</span><br><span class="hljs-literal">-</span>u username	仅显示指定用户的进程<br><span class="hljs-literal">-</span>s COLUME	以指定字段进行排序<br></code></pre></td></tr></table></figure>
+
+<p><strong>子命令</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css">s	跟踪选定进程的系统调用<br>l	显示选定进程打开的文件列表<br><span class="hljs-selector-tag">a</span>	将选定的进程绑定至某指定CPU核心<br>t	显示进程数<br></code></pre></td></tr></table></figure>
+
+<h2 id="内存空间-free"><a href="#内存空间-free" class="headerlink" title="内存空间    free"></a>内存空间    free</h2><p><strong>格式</strong></p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gams"><span class="hljs-keyword">free</span> [<span class="hljs-keyword">OPTION</span>]<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-h		易读格式</span><br><span class="hljs-deletion">-b		以字节为单位</span><br><span class="hljs-deletion">-m		以mb为单位</span><br><span class="hljs-deletion">-o		不显示-/+buffers/cache行</span><br><span class="hljs-deletion">-s n	刷新间隔为n秒</span><br><span class="hljs-deletion">-c n	刷新n次后退出。</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="进程对应的内存映射-pmap"><a href="#进程对应的内存映射-pmap" class="headerlink" title="进程对应的内存映射 pmap"></a>进程对应的内存映射 pmap</h2><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs css">pmap <span class="hljs-selector-attr">[option]</span> pid <span class="hljs-selector-attr">[...]</span><br><br>-x	显示详细格式的信息<br></code></pre></td></tr></table></figure>
+
+<h2 id="虚拟内存信息-vmstat"><a href="#虚拟内存信息-vmstat" class="headerlink" title="虚拟内存信息 vmstat"></a>虚拟内存信息 vmstat</h2><p><strong>格式</strong></p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs inform7">vmstat <span class="hljs-comment">[option]</span> <span class="hljs-comment">[delay <span class="hljs-comment">[count]</span>]</span><br><br>-s	显示内存统计数据<br></code></pre></td></tr></table></figure>
+
+<p><strong>显示项说明</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs vim">procs:<br>	r	可运行(运行或等待运行)进程的过程,和核心数有关。<br>	<span class="hljs-keyword">b</span>	处于不可中断睡眠状态的进程个数(被阻塞的队列的长度)<br>memory：<br>	awpd	交换内存的使用总量<br>	free	空闲物理内存总量<br>	<span class="hljs-keyword">buffer</span>	缓冲区，用于缓冲区的内存总量<br>	cache	缓存，用于缓存的内存总量<br>swap：<br>	si	从磁盘交换进内存的数据速率。（kb/s）<br>	<span class="hljs-keyword">so</span>	从内存交换进磁盘的数据速率。（kb/s）<br>io：<br>	bi	从块设备读入数据到系统的速率。（kb/s）<br>	<span class="hljs-keyword">bo</span>	保存数据这块设备的速率。<br><span class="hljs-built_in">system</span>：<br>	in	interrups		中断速率，包括时钟<br>	<span class="hljs-keyword">cs</span>	contex switch	进程切换速率<br>cpu：<br>	us	用户空间<br>	<span class="hljs-keyword">sy</span>	内核空间<br>	id	空闲<br>	<span class="hljs-keyword">wa</span>	等待IO时间<br>	<span class="hljs-keyword">st</span>	虚拟机偷走的时间 	两个	<br></code></pre></td></tr></table></figure>
+
+<h2 id="统计CPU和设备io信息-iostat"><a href="#统计CPU和设备io信息-iostat" class="headerlink" title="统计CPU和设备io信息 iostat"></a>统计CPU和设备io信息 iostat</h2><p>iostat 可以提供更丰富的io性能状态数据。此工具由sysstat包提供。</p>
+<p><strong>常用选项</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-c	只显示CPU行</span><br><span class="hljs-deletion">-d	显示设备磁盘使用状态</span><br><span class="hljs-deletion">-k	以千字节为单位显示输出</span><br><span class="hljs-deletion">-t	在输出中包括时间戳</span><br><span class="hljs-deletion">-x	在输出中包括扩展的磁盘指标</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>显示项说明</strong></p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">tps</span>			该设备每秒的传输次数。“一次传输”意思是“一次<span class="hljs-built_in">I</span><span class="hljs-operator">/</span><span class="hljs-built_in">O</span>请求”。多个逻辑请求可能会被合并为“一次<span class="hljs-built_in">I</span><span class="hljs-operator">/</span><span class="hljs-built_in">O</span>请求”。“一次传输”请求大小是未知的。<br><span class="hljs-type">kB_read</span><span class="hljs-operator">/</span><span class="hljs-variable">s</span>	每秒从设备读取的数据量<br><span class="hljs-type">kB_wrtn</span><span class="hljs-operator">/</span><span class="hljs-variable">s</span>	每秒向设备写入的数据量<br><span class="hljs-type">kB_read</span>		读取的总数据量<br><span class="hljs-type">kB_wrtn</span>		写入的总数据量<br></code></pre></td></tr></table></figure>
+
+<h2 id="监视磁盘I-O-iotop"><a href="#监视磁盘I-O-iotop" class="headerlink" title="监视磁盘I/O iotop"></a>监视磁盘I/O iotop</h2><p>iotop命令是一个用来监视磁盘I/O使用状况的top类工具。iotop具有与top相似的UI，其中包括PID，用户，I/O、进程等相关信息，可查看每个进程是如何使用IO。</p>
+<p><strong>iotop输出</strong></p>
+<ul>
+<li>第一行    读和写速率总计</li>
+<li>第二行    实际的读和写速率</li>
+<li>第三行     线程ID（按p切换为进程ID）、优先级、用户、磁盘读写速率、swap交换百分比、IO等待所占的百分比。</li>
+</ul>
+<h2 id="显示网络带宽使用情况-iftop"><a href="#显示网络带宽使用情况-iftop" class="headerlink" title="显示网络带宽使用情况 iftop"></a>显示网络带宽使用情况 iftop</h2><p>通过EPEL源的iftop包。</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">iftop -n</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看网络实时吞吐量-nload"><a href="#查看网络实时吞吐量-nload" class="headerlink" title="查看网络实时吞吐量 nload"></a>查看网络实时吞吐量 nload</h2><p>nload 是一个实时监控网络流量和带宽使用情况，以数值和动态图展示。进出的流浪情况，通过EPEL源安装</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-t 	设置刷新时间，默认刷新时间为100毫秒。</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看进程网络带宽的使用情况-nethogs"><a href="#查看进程网络带宽的使用情况-nethogs" class="headerlink" title="查看进程网络带宽的使用情况 nethogs"></a>查看进程网络带宽的使用情况 nethogs</h2><p>Nethogs 是一个开源的命令行工具，用来按进程或程序实施统计网络带宽使用率。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/raboof/nethogs">https://github.com/raboof/nethogs</a></p>
+<h2 id="网络监视工具-iptraf-ng"><a href="#网络监视工具-iptraf-ng" class="headerlink" title="网络监视工具 iptraf-ng"></a>网络监视工具 iptraf-ng</h2><p>来自于iptraf-ng包，可以进网络进行监控，对终端窗口大小有要求。</p>
+<h2 id="系统资源统计-dstat"><a href="#系统资源统计-dstat" class="headerlink" title="系统资源统计 dstat"></a>系统资源统计 dstat</h2><p>dstat 由 pcp-system-tools包提供，但安装dstat包即可，可用于代替vmstat，iostat功能。</p>
+<h2 id="综合监控工具-glances"><a href="#综合监控工具-glances" class="headerlink" title="综合监控工具 glances"></a>综合监控工具 glances</h2><p>基于Python写的程序。</p>
+<p>可以远程监控。</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-s					服务器端</span><br><span class="hljs-deletion">-c 服务器端口号		客户端</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看进程打开文件-lsof"><a href="#查看进程打开文件-lsof" class="headerlink" title="查看进程打开文件 lsof"></a>查看进程打开文件 lsof</h2><p>查看当前系统文件工具。在Linux环境下，一切接文件。用户通过文件不仅可以访问常规数据，还可以访问网络连接和硬件，如：传输控制协议（TCP）和用户数据报协议（UDP）套接字等，系统在后台都为该应用程序分配了一个文件描述符。</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">-i<span class="hljs-variable">&lt;条件&gt;</span>	列出符合条件的进程（4、6、协议、:端口、<span class="hljs-meta">@ip）</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="系统图形化管理-cockpit"><a href="#系统图形化管理-cockpit" class="headerlink" title="系统图形化管理 cockpit"></a>系统图形化管理 cockpit</h2><p>cockpit是一个基于Web界面的应用，它提供了对系统的图形化管理。</p>
+<ul>
+<li>监控系统活动（CPU、内存、磁盘IO和网络流量）</li>
+<li>查看系统日志条目</li>
+<li>查看磁盘分区的容量</li>
+<li>查看网络活动（发送和接收）</li>
+<li>查看用户账户</li>
+<li>检查系统服务的状态</li>
+<li>提取已安装应用信息</li>
+<li>查看和安装可更新（如果以root身份登录）并在需要时重新启动系统</li>
+<li>打开并使用终端窗口</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs csharp">[<span class="hljs-meta">root@centos8 ~</span>][<span class="hljs-meta"># yum -y install cockpit</span><br>[<span class="hljs-meta">root@centos8 ~</span>][<span class="hljs-meta"># systemctl enable --now cockpit.socket</span><br>[<span class="hljs-meta">root@centos8 ~</span>][<span class="hljs-meta"># ss -ntl</span><br><br>打开浏览器，访问以下地址:<br>https:<span class="hljs-comment">//&lt;cockpit主机&gt;:9090</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="信号发送-kill"><a href="#信号发送-kill" class="headerlink" title="信号发送 kill"></a>信号发送 kill</h2><p>内部命令，可用来向进程发送控制信号，以实现对进程管理，每个信号对应一个数字，信号名称以SIG开头（可忽略）不区分大小写。</p>
+<p><strong>显示当前系统可用信号：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">kill</span> -l<br><span class="hljs-built_in">trap</span> -l<br></code></pre></td></tr></table></figure>
+
+<p><strong>查看帮助</strong></p>
+<figure class="highlight qml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs qml">man <span class="hljs-number">7</span> <span class="hljs-keyword">signal</span><span class="hljs-string"></span><br></code></pre></td></tr></table></figure>
+
+<p><strong>常用信号</strong></p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs livescript"><span class="hljs-number">1</span>) SIGHUP 	无须关闭进程而让其重读配置文件<br><span class="hljs-number">2</span>) SIGINT 	中止正在运行的进程；相当于 Ctrl + c <br><span class="hljs-number">3</span>) SIGQUIT 	相当于ctr1+<span class="hljs-string">\</span><br><span class="hljs-number">9</span>) SIGKILL 	强制杀死正在运行的进程，可能会导致数据丢失，慎用！<br><span class="hljs-number">15</span>) SIGTERM 终止正在运行的进程，默认信号<br><span class="hljs-number">18</span>) SIGCONT 继续运行<br><span class="hljs-number">19</span>) SIGSTOP 后台休眠<br></code></pre></td></tr></table></figure>
+
+<p><strong>指定信号的方法</strong></p>
+<ul>
+<li>信号的数字标识：1,2,9</li>
+<li>信号完整名称： SIGHUP , sighup </li>
+<li>信号的简写名称： HUP , hup</li>
+</ul>
+<h2 id="作业管理"><a href="#作业管理" class="headerlink" title="作业管理"></a>作业管理</h2><p><strong>Linux的作业控制</strong></p>
+<ul>
+<li>前端作业：通过终端启动，且启动后一直占据终端。</li>
+<li>后台作业：可通过终端启动，但启动后即转入后台运行（释放终端）。</li>
+</ul>
+<img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308121802175.png" srcset="/img/loading.gif" lazyload alt="image-20230812180255121" style="zoom:200%;" />
+
+<p><strong>让作业运行于后台</strong></p>
+<ul>
+<li>运行中的作业：Ctrl+z</li>
+<li>尚未启动的作业：COMMAND &amp;</li>
+</ul>
+<p>帮我拍作业，虽然被送往后台运行，但其依然与终端相关；退出终端，将关闭后台作业。如果希望送往后台后，剥离与终端的关系。</p>
+<ul>
+<li>nohub COMMAND &amp;&gt;/dev/null &amp;</li>
+<li>screen; COMMAND</li>
+<li>tmux; COMMAND</li>
+</ul>
+<p><strong>查看当前终端所有作业</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">jobs</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>作业控制</strong></p>
+<figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs inform7">fg <span class="hljs-comment">[<span class="hljs-comment">[%]</span> JOB _ NUM ]</span>：	把指定的后台作业调回前台<br>bg <span class="hljs-comment">[<span class="hljs-comment">[%]</span> JOB _ NUM ]</span>：	让送往后台的作业在后台继续运行<br>ki11 <span class="hljs-comment">[% JOB _ NUM ]</span>：	终止指定的作业<br></code></pre></td></tr></table></figure>
+
+<h2 id="并行运行"><a href="#并行运行" class="headerlink" title="并行运行"></a>并行运行</h2><p>利用后台执行，实现并行功能，即同时运行多个进程，提高效率。</p>
+<p><strong>方法一</strong></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">cat</span> <span class="hljs-keyword">all</span>.<span class="hljs-keyword">sh</span><br>f1.<span class="hljs-keyword">sh</span>&amp;<br>f2.<span class="hljs-keyword">sh</span>&amp;<br>f3.<span class="hljs-keyword">sh</span>&amp;<br></code></pre></td></tr></table></figure>
+
+<p><strong>方法二</strong></p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode"><span class="hljs-comment">(f1.sh&amp;)</span>;<span class="hljs-comment">(f2.sh&amp;)</span>;<span class="hljs-comment">(f3.sh嗯走不走乱转啥呀？这种要存在。好了对&amp;)</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>方法三</strong></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stata">f1.<span class="hljs-keyword">sh</span>&amp;f2.<span class="hljs-keyword">sh</span>&amp;f3.<span class="hljs-keyword">sh</span>我&amp;<br></code></pre></td></tr></table></figure>
+
+<h1 id="任务计划"><a href="#任务计划" class="headerlink" title="任务计划"></a>任务计划</h1><p>通过任务计划可以让系统自动的按时间或周期性任务执行任务。</p>
+<p><strong>环境准备</strong></p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs maxima">yum -y install <span class="hljs-built_in">postfix</span><br>systemctl enable --now <span class="hljs-built_in">postfix</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>未来的某时间点执行一次任务</strong></p>
+<ul>
+<li>at            指定时间点，执行一次任务。</li>
+<li>batch      系统自行选择空闲时间去执行此处指定任务。</li>
+</ul>
+<p><strong>周期性运行某任务</strong></p>
+<ul>
+<li>cron</li>
+</ul>
+<h2 id="一次性任务-at"><a href="#一次性任务-at" class="headerlink" title="一次性任务 at"></a>一次性任务 at</h2><p><strong>at工具</strong></p>
+<ul>
+<li>有包at提供。</li>
+<li>依赖于atd需要启动才能实现at任务。</li>
+<li>at队列存放在 <strong>/var/spool/at</strong> 目录下，Ubuntu存放在 <strong>/var/spool/cron/atjobs</strong> 目录下。</li>
+<li>执行任务时PATH变量的值和当前定义任务的用户身份一致。</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">at <span class="hljs-selector-attr">[option]</span> <span class="hljs-selector-tag">TIME</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-v			显示版本信息</span><br><span class="hljs-deletion">-t time		时间格式[[CC]YY]MMDDhhmm[.ss]</span><br><span class="hljs-deletion">-l			列出指定队列中等待运行的作业；相当于atq命令</span><br><span class="hljs-deletion">-d N		删除指定的N号作业；相当于atrm</span><br><span class="hljs-deletion">-c N		查看具体作业N号任务</span><br><span class="hljs-deletion">-f file		指定的文件中读取任务</span><br><span class="hljs-deletion">-m			当任务被完成之后，将给用户发送邮件，即使没有标准输出</span><br></code></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<ul>
+<li>作业执行命令的结果中的标准输出和错误以执行任务的用户身份发邮件给root</li>
+<li>默认 CentOs8 最小化安装没有安装邮件服务，需要自行安装</li>
+</ul>
+<p>TIME定义出什么时候进行at这项任务的时间</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss">HH：MM <span class="hljs-selector-attr">[YYYY-mm-dd]</span><br>noon,midnight,<span class="hljs-built_in">teatime</span>(<span class="hljs-number">4</span>pm),tomorrow<br>now+#&#123;minutes,hours,days,OR weeks&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>常用at时间格式示例</strong></p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">HH</span>:MM	在今日的 HH:MM 进行，若该时刻已过，则明天此时执行任务<br><span class="hljs-attribute">02</span>:<span class="hljs-number">00</span><br><br><span class="hljs-attribute">HH</span>:MM YYYY-MM-DD	规定在某年某月的某一天的特殊时刻进行该项任务<br><span class="hljs-attribute">02</span>:<span class="hljs-number">00</span> <span class="hljs-number">2016</span>-<span class="hljs-number">09</span>-<span class="hljs-number">20</span><br><br><span class="hljs-attribute">HH</span>:MM[am|pm]<span class="hljs-meta"> [Month] [Date]</span><br><span class="hljs-attribute">06pm</span> March <span class="hljs-number">17</span><br><span class="hljs-attribute">17</span>:<span class="hljs-number">20</span> tomorrow<br><br><span class="hljs-attribute">HH</span>:MM[am|pm] + number<span class="hljs-meta"> [minutes|hours|days|weeks]   在某个时间点再加几个时间后才进行该项任务</span><br><span class="hljs-meta">now + 5 min</span><br><span class="hljs-meta">02pm + 3 days</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>at 任务执行方式</strong></p>
+<ul>
+<li>交互式 </li>
+<li>输入重定向</li>
+<li>at -f file </li>
+</ul>
+<p>/etc/at.{allow,deny} 控制用户是否执行at任务</p>
+<ul>
+<li>白名单：/etc/at.allow 默认不存在，只有该文件中的用户才能执行at命令</li>
+<li>黑名单：/etc/at.deny 默认存在，拒绝该文件中用户执行at命令，而没在at.deny文件中的使用者可以执行</li>
+<li>如果两个文件都不存在，只有root可以执行at命令 </li>
+</ul>
+<h2 id="周期性任务计划-cron"><a href="#周期性任务计划-cron" class="headerlink" title="周期性任务计划 cron"></a>周期性任务计划 cron</h2><p><strong>周期性任务计划 cron 相关的程序包：</strong></p>
+<ul>
+<li>cronie ：主程序包，提供 crond 守护进程及相关辅助工具</li>
+<li>crontabs ：包含 CentOS 提供系统维护任务</li>
+<li>cronie - anacron : cronie 的补充程序，用于监控 cronie 任务执行状况，如： cronie 中的任务在过去该运行的时间点未能正常运行，则 anacron 会随后启动一次此任务</li>
+</ul>
+<p>cron 依赖于 crond 服务，<strong>确保 crond 守护处于运行状态</strong>：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Centos</span> <span class="hljs-number">7</span>以后版本：<br><span class="hljs-attribute">systemctl</span> status crond <br><br><span class="hljs-attribute">CentOs</span> <span class="hljs-number">6</span>:<br><span class="hljs-attribute">service</span> crond status <br></code></pre></td></tr></table></figure>
+
+<p> <strong>cron 任务分为</strong></p>
+<ul>
+<li><p>系统 cron 任务：系统维护作业◇/ etc / crontab 主配置文件，/ etc / cron . d ／子配 文件</p>
+</li>
+<li><p>用户 cron 任务：红帽系统保存在／ var / spool / cron / USERNAME , Ubuntu 系统存放，在／ var / spoolcron / crontabs / USERNAME ，利用 crontab 命令管理</p>
+</li>
+</ul>
+<p><strong>计划任务日志</strong>：/ var / log / cron </p>
+<h3 id="系统-cron-计划任务"><a href="#系统-cron-计划任务" class="headerlink" title="系统 cron 计划任务"></a>系统 cron 计划任务</h3><p>/ etc / crontab 格式说明，详情参见 man 5 crontab</p>
+<p><strong>计划任务时间表示法</strong></p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs autoit">(<span class="hljs-number">1</span>）特定值<br>	给定时间点有效取值范围内的值<br>(<span class="hljs-number">2</span>)	*<br>	给定时间点上有效取值范围内的所有值，表示<span class="hljs-string">&quot;每．..&quot;</span>，放在星期的位置表示不确<br>(<span class="hljs-number">3</span>）离散取值<br>	<span class="hljs-meta">#,#,#</span><br>(<span class="hljs-number">4</span>）连续取值<br>	<span class="hljs-meta">#-#</span><br>(<span class="hljs-number">5</span>）在指定时间范围上，定义步长<br>	/<span class="hljs-meta">#: ＃即为步长</span><br><br>(<span class="hljs-number">6</span>）特定关健字<br><span class="hljs-symbol">@yearly</span> 	<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> *<br><span class="hljs-symbol">@annually</span> 	<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> <span class="hljs-number">1</span> *<br><span class="hljs-symbol">@monthly</span> 	<span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1</span> * *<br><span class="hljs-symbol">@weekly</span> 	<span class="hljs-number">0</span> <span class="hljs-number">0</span> * * <span class="hljs-number">0</span><br><span class="hljs-symbol">@daily</span> 		<span class="hljs-number">0</span> <span class="hljs-number">0</span> * * *<br><span class="hljs-symbol">@hourly</span> 	<span class="hljs-number">0</span> * * * *<br><span class="hljs-symbol">@reboot</span>		<span class="hljs-built_in">Run</span> once after reboot<br></code></pre></td></tr></table></figure>
+
+<p><strong>crond任务相关文件</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>crontab		配置文件<br><span class="hljs-regexp">/etc/</span>con.d/			配置文件<br><span class="hljs-regexp">/etc/</span>cron.hourly/	脚本<br><span class="hljs-regexp">/etc/</span>cron.daily/	脚本<br><span class="hljs-regexp">/etc/</span>cron.weekly/	脚本<br><span class="hljs-regexp">/etc/</span>cron.monthly/	脚本<br></code></pre></td></tr></table></figure>
+
+<h3 id="用户计划任务"><a href="#用户计划任务" class="headerlink" title="用户计划任务"></a>用户计划任务</h3><p><strong>crontab 命令：</strong></p>
+<ul>
+<li>每个用户都有专用的 cron 任务文件◇/ var / spool / cron / USERNAME </li>
+<li>默认标准输出和错误会被发邮件给对应的用户◇如◇ wang 创建的任务就发送.</li>
+<li> root 能够修改其它用户的作业</li>
+<li>用户的 cron 中默认 PATH =/ usr / bin :/ bin ，如果使用其它路径，在任务文件的第者加入到计划任务执行的脚本中</li>
+<li>第六个字段指定要运行的命令。该行的整个命令部分◇直至换行符或”%”字除非使用反斜杠（\）进行转义，否则该命令中的”%”字符将变为换行符，并数据将作为标准输入发送到该命令。</li>
+</ul>
+<p> <strong>crontab 命令格式</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">crontab <span class="hljs-selector-attr">[-u user]</span> <span class="hljs-selector-attr">[-l | -r | -e]</span> <span class="hljs-selector-attr">[-i]</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>常用选项</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-l 			列出所有任务</span><br><span class="hljs-deletion">-e	 		编辑任务</span><br><span class="hljs-deletion">-r 			移除所有任务</span><br><span class="hljs-deletion">-i  		同﹣r 一同使用，以交互模式移除指定任务</span><br><span class="hljs-deletion">- U user 	指定用户管理 cron 任务，仅 root 可运行</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>控制用户执行计划任务：</strong>/ etc / cron .( allow , deny )</p>
+<p>注意：运行结果的标准输出和错误以邮件通知给相关用户</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arcade">（<span class="hljs-number">1</span>） COMMAND &gt; <span class="hljs-regexp">/dev/</span><span class="hljs-literal">null</span><br>（<span class="hljs-number">2</span>） COMMAND &amp;&gt; <span class="hljs-regexp">/dev/</span><span class="hljs-literal">null</span><br></code></pre></td></tr></table></figure>
+
+<p>cron任务中不建议使用%，它有特殊用途，它表示换行的特殊意义，且第一个%后的所有字符串会被当作命令的标准输入，如果在命令中要使用%，则需要用 \ 转义</p>
+<p>注意：将%放置于单引号中是不支持的</p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/07/30/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-%E6%95%B0%E5%AD%A6%E8%A7%84%E5%88%92%E6%A8%A1%E5%9E%8B/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数学建模-数学规划类基本问题</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/29/%E5%85%8D%E8%B4%B9%E5%8D%9A%E5%AE%A2/">
+                        <span class="hidden-mobile">免费博客</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 名字解析介绍和DNS12345678Linux：&#x2F;etc&#x2F;hostsWindows：%WINDI%&#x2F;system32&#x2F;drivers&#x2F;etc&#x2F;hosts#格式122.10.117.2	www.magedu.org	www93.46.8.89		www.goole.com	goole主机名www + 域名magedu.org  1.1 DNS 服务工作原理123Client- -&gt; hos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-DNS服务原理和互联网域名注册">
+<meta property="og:url" content="http://example.com/2023/09/12/Linux-DNS%E6%9C%8D%E5%8A%A1%E5%8E%9F%E7%90%86%E5%92%8C%E4%BA%92%E8%81%94%E7%BD%91%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 名字解析介绍和DNS12345678Linux：&#x2F;etc&#x2F;hostsWindows：%WINDI%&#x2F;system32&#x2F;drivers&#x2F;etc&#x2F;hosts#格式122.10.117.2	www.magedu.org	www93.46.8.89		www.goole.com	goole主机名www + 域名magedu.org  1.1 DNS 服务工作原理123Client- -&gt; hos">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-09-12T18:49:05.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.349Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="-云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  <title>Linux-DNS服务原理和互联网域名注册 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-DNS服务原理和互联网域名注册">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-09-12 18:49" pubdate>
+        September 12, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      5.5k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      46 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-DNS服务原理和互联网域名注册</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-名字解析介绍和DNS"><a href="#1-名字解析介绍和DNS" class="headerlink" title="1 名字解析介绍和DNS"></a>1 名字解析介绍和DNS</h1><figure class="highlight accesslog"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></div></td><td class="code"><pre><code class="hljs accesslog">Linux：/etc/hosts<br>Windows：%WINDI%/system32/drivers/etc/hosts<br><br>#格式<br><span class="hljs-number">122.10.117.2</span>	www.magedu.org	www<br><span class="hljs-number">93.46.8.89</span>		www.goole.com	goole<br><br>主机名www + 域名magedu.org<br></code></pre></td></tr></table></figure>
+
+<h2 id="1-1-DNS-服务工作原理"><a href="#1-1-DNS-服务工作原理" class="headerlink" title="1.1 DNS 服务工作原理"></a>1.1 DNS 服务工作原理</h2><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xl">C<span class="hljs-function"><span class="hljs-title">lient</span>- -&gt;</span> <span class="hljs-function"><span class="hljs-title">hosts</span> files- - -&gt;</span> C<span class="hljs-function"><span class="hljs-title">lient</span> DNS Service Local Cache- -&gt;</span> DNS S<span class="hljs-function"><span class="hljs-title">erver</span> (recursion recursion) - -&gt;</span> DNS S<span class="hljs-function"><span class="hljs-title">erver</span> Cache- - -&gt;</span> DNS <span class="hljs-function"><span class="hljs-title">iteration</span> (iterations) - -&gt;</span> <span class="hljs-function"><span class="hljs-title">root</span>- - - -&gt;</span> <span class="hljs-function"><span class="hljs-title">top</span>-level domain DNS- -&gt;</span> secondary domain DNS...<br><br>客户端——&gt;hosts文件——&gt;客户端DNS服务本地缓存——&gt;DNS服务器（递归查询）——&gt;DNS服务器缓存——&gt;DNS迭代（迭代查询）【——&gt;根——&gt;顶级域名DNS——&gt;二级域名DNS..。】<br></code></pre></td></tr></table></figure>
+
+<p><strong>DNS查询类型</strong></p>
+<p><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/102237.html">https://help.aliyun.com/document_detail/102237.html</a></p>
+<h2 id="1-2-DNS服务器类型"><a href="#1-2-DNS服务器类型" class="headerlink" title="1.2 DNS服务器类型"></a>1.2 DNS服务器类型</h2><ul>
+<li>主DNS服务器</li>
+<li>从DNS服务器</li>
+<li>缓存DNS服务器（转发器）</li>
+</ul>
+<h1 id="2-DNS软件-bind"><a href="#2-DNS软件-bind" class="headerlink" title="2 DNS软件 bind"></a>2 DNS软件 bind</h1><p>DNS服务器软件：bind、powerdns、dnsmasq、unbound、coredns</p>
+<h2 id="2-1-BIND相关程序包"><a href="#2-1-BIND相关程序包" class="headerlink" title="2.1 BIND相关程序包"></a>2.1 BIND相关程序包</h2><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">dnf -y <span class="hljs-keyword">install </span><span class="hljs-keyword">bind </span><span class="hljs-keyword">bind-utils</span><br><span class="hljs-keyword"></span>apt -y <span class="hljs-keyword">install </span><span class="hljs-keyword">bind9 </span><span class="hljs-keyword">bind9-u</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-BIND包相关文件"><a href="#2-2-BIND包相关文件" class="headerlink" title="2.2 BIND包相关文件"></a>2.2 BIND包相关文件</h2><ul>
+<li>BIND主程序：/usr/sbin/named</li>
+<li>服务脚本和Unit名称：/etc/rc.d/init.d/named、/usr/lib/systemd/system/named.service</li>
+<li>主配置文件：/etc/named.conf、/etc/named.rfc1912.zones、/etc/rndc.key</li>
+<li>管理工具：/usr/sbin/rndc：remote name domain controller    默认与bind安装在同一主机,且 只能通过127.0.0.1连接named进程,提供辅助性的管理功能；953/tcp</li>
+<li>解析库文件：/var/named/ZONE_NAME.ZONE</li>
+</ul>
+<h2 id="2-3-主配置文件"><a href="#2-3-主配置文件" class="headerlink" title="2.3 主配置文件"></a>2.3 主配置文件</h2><ul>
+<li>全局配置：options{}；</li>
+<li>日志子系统配置：logging{}；</li>
+<li>区域定义：本机能够为哪些zone进行解析，就要定义哪些zone</li>
+</ul>
+<p>​    zone“ZONE_NAME” IN {}；</p>
+<p>dnssec：建议关闭dnssec，设为no</p>
+<h1 id="3-实现主DNS服务器"><a href="#3-实现主DNS服务器" class="headerlink" title="3 实现主DNS服务器"></a>3 实现主DNS服务器</h1><h2 id="3-1-主DNS服务器配置"><a href="#3-1-主DNS服务器配置" class="headerlink" title="3.1 主DNS服务器配置"></a>3.1 主DNS服务器配置</h2><p>1.在主配置文件中定义区域</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs awk">vim <span class="hljs-regexp">/ etc/</span>named.conf <br><br><span class="hljs-comment"># 注释掉下面两行</span><br><span class="hljs-regexp">//</span> listen-on port <span class="hljs-number">53</span> &#123;<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>;&#125;; <br><span class="hljs-regexp">//</span> allow-query &#123;localhost;&#125;; <br><br>zone <span class="hljs-string">&quot;ZONE _ NAME&quot;</span> IN &#123;<br>	type &#123;master | split | hint | forward&#125;; <br>	file <span class="hljs-string">&quot;ZONE_NAME.zone&quot;</span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>2.定义区域解析库</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-meta">$TTL</span> <span class="hljs-number">86400</span> <br><span class="hljs-meta">$ORIGIN</span> magedu.org. <br>@ 		<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">SOA</span> 	ns1.magedu.org. admin.magedu.org (  <br>				<span class="hljs-number">2015042201</span>  <br>				<span class="hljs-number">1</span>H  <br>				<span class="hljs-number">5</span>M  <br>				<span class="hljs-number">7</span>D  <br>				<span class="hljs-number">1</span>D )  <br>		<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">NS</span> 		ns1  <br>		<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">NS</span> 		ns2  <br>		<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">MX</span> 	<span class="hljs-number">10</span> 	mx1  <br>		<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">MX</span> 	<span class="hljs-number">20</span> 	mx2 <br>ns1 	<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">A</span> 	<span class="hljs-number">172.16.100.11</span> <br>ns2 	<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">A</span> 	<span class="hljs-number">172.16.100.12</span> <br>mx1 	<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">A</span> 	<span class="hljs-number">172.16.100.13</span> <br>mx2 	<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">A</span> 	<span class="hljs-number">172.16.100.14</span> <br>websrv 	<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">A</span> 	<span class="hljs-number">172.16.100.11</span> <br>websrv 	<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">A</span> 	<span class="hljs-number">172.16.100.12</span> <br>www 	<span class="hljs-keyword">IN</span> 		<span class="hljs-keyword">CNAME</span>	websrv<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-2-主配置文件语法检查"><a href="#3-2-主配置文件语法检查" class="headerlink" title="3.2 主配置文件语法检查"></a>3.2 主配置文件语法检查</h2><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">named-checkconf</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-3-解析库文件语法检查"><a href="#3-3-解析库文件语法检查" class="headerlink" title="3.3 解析库文件语法检查"></a>3.3 解析库文件语法检查</h2><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">named-checkzone <span class="hljs-string">&quot;magedu.org&quot;</span> <span class="hljs-regexp">/var/</span>named/magedu.org.zone<br></code></pre></td></tr></table></figure>
+
+<h2 id="3-4-配置生效"><a href="#3-4-配置生效" class="headerlink" title="3.4 配置生效"></a>3.4 配置生效</h2><figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-comment">#三种方式</span><br>rndc <span class="hljs-keyword">reload</span><br>systemctl <span class="hljs-keyword">reload</span> named<br>service named <span class="hljs-keyword">reload</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="3-5-DNS-测试和管理工具"><a href="#3-5-DNS-测试和管理工具" class="headerlink" title="3.5 DNS 测试和管理工具"></a>3.5 DNS 测试和管理工具</h2><h3 id="3-5-1-dig"><a href="#3-5-1-dig" class="headerlink" title="3.5.1 dig"></a>3.5.1 dig</h3><p>dig只用于测试dns系统,不会查询hosts文件进行解析</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-comment">#测试反向解析</span><br><span class="hljs-keyword">dig </span>-x IP = <span class="hljs-keyword">dig </span>–t ptr reverseip.in-<span class="hljs-keyword">addr.arpa</span><br><span class="hljs-keyword"></span><span class="hljs-comment">#模拟区域传送</span><br><span class="hljs-keyword">dig </span>-t axfr ZONE_NAME @SERVER <br><span class="hljs-keyword">dig </span>-t axfr magedu.<span class="hljs-keyword">org </span>@<span class="hljs-number">10</span>.<span class="hljs-number">10</span>.<span class="hljs-number">10</span>.<span class="hljs-number">11</span> <br><span class="hljs-keyword">dig </span>–t axfr <span class="hljs-number">100</span>.<span class="hljs-number">1</span>.<span class="hljs-number">10</span>.in-<span class="hljs-keyword">addr.arpa </span>@<span class="hljs-number">172</span>.<span class="hljs-number">16</span>.<span class="hljs-number">1</span>.<span class="hljs-number">1</span> <br><span class="hljs-keyword">dig </span>-t NS . @<span class="hljs-number">114</span>.<span class="hljs-number">114</span>.<span class="hljs-number">114</span>.<span class="hljs-number">114</span> <br><span class="hljs-keyword">dig </span>-t NS . @a.root-servers.net<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-2-host"><a href="#3-5-2-host" class="headerlink" title="3.5.2 host"></a>3.5.2 host</h3><p>格式</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">host [-t <span class="hljs-keyword">type</span>] <span class="hljs-type">name</span> [<span class="hljs-keyword">SERVER</span>]<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs avrasm">host -t NS magedu<span class="hljs-meta">.org</span> <span class="hljs-number">172.16</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> <br>host -t soa magedu<span class="hljs-meta">.org</span> <br>host -t mx magedu<span class="hljs-meta">.org</span> <br>host -t axfr magedu<span class="hljs-meta">.org</span> <br>host <span class="hljs-number">1.2</span><span class="hljs-number">.3</span><span class="hljs-number">.4</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-3-nslookup"><a href="#3-5-3-nslookup" class="headerlink" title="3.5.3 nslookup"></a>3.5.3 nslookup</h3><p>nslookup 可以支持交互和非交互式两种方式执行</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css">nslookup <span class="hljs-selector-attr">[-option]</span> <span class="hljs-selector-attr">[name | -]</span> <span class="hljs-selector-attr">[server]</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs routeros">nslookup&gt;<span class="hljs-built_in"></span><br><span class="hljs-built_in">server </span>IP:指明使用哪个DNS server进行查询<br><span class="hljs-built_in">set</span> <span class="hljs-attribute">q</span>=RR_TYPE:指明查询的资源记录类型<br>NAME:要查询的名称<br></code></pre></td></tr></table></figure>
+
+<h3 id="3-5-4-rndc"><a href="#3-5-4-rndc" class="headerlink" title="3.5.4 rndc"></a>3.5.4 rndc</h3><p>利用rndc工具可以实现管理DNS功能 rndc </p>
+<p>监听端口: 953/tcp</p>
+<figure class="highlight nestedtext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs nestedtext"><span class="hljs-attribute">rndc COMMAND </span><br><span class="hljs-attribute"></span><br><span class="hljs-attribute">COMMAND</span><span class="hljs-punctuation">:    </span><br>	<span class="hljs-attribute">status</span><span class="hljs-punctuation">:</span> <span class="hljs-string">查看状态  </span><br>	<span class="hljs-attribute">reload</span><span class="hljs-punctuation">:</span> <span class="hljs-string">重载主配置文件和区域解析库文件  </span><br>	<span class="hljs-attribute">reload zonename</span><span class="hljs-punctuation">:</span> <span class="hljs-string">重载区域解析库文件  </span><br>	<span class="hljs-attribute">retransfer zonename</span><span class="hljs-punctuation">:</span> <span class="hljs-string">手动启动区域传送,而不管序列号是否增加  </span><br>	<span class="hljs-attribute">notify zonename</span><span class="hljs-punctuation">:</span> <span class="hljs-string">重新对区域传送发通知  </span><br>	<span class="hljs-attribute">reconfig</span><span class="hljs-punctuation">:</span> <span class="hljs-string">重载主配置文件  </span><br>	<span class="hljs-attribute">querylog</span><span class="hljs-punctuation">:</span> <span class="hljs-string">开启或关闭查询日志文件/var/log/message  </span><br>	<span class="hljs-attribute">trace</span><span class="hljs-punctuation">:</span> <span class="hljs-string">递增debug一个级别  </span><br>	<span class="hljs-attribute">trace LEVEL</span><span class="hljs-punctuation">:</span> <span class="hljs-string">指定使用的级别  </span><br>	notrace：将调试级别设置为 0  <br>	flush：清空DNS服务器的所有缓存记录<br></code></pre></td></tr></table></figure>
+
+<h1 id="4-实现反向解析配置"><a href="#4-实现反向解析配置" class="headerlink" title="4 实现反向解析配置"></a>4 实现反向解析配置</h1><p>反向区域：即将IP反向解析为FQDN </p>
+<p>区域名称：网络地址反写.in-addr.arpa.</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">172</span>.<span class="hljs-number">16</span>.<span class="hljs-number">100</span>.--&gt; <span class="hljs-number">100</span>.<span class="hljs-number">16</span>.<span class="hljs-number">172</span>.in-addr.arpa .<br></code></pre></td></tr></table></figure>
+
+<p>1.定义区域</p>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs crmsh">Zone <span class="hljs-string">&quot;ZONE _ NAME&quot;</span> <span class="hljs-keyword">IN</span> &#123;<br>	<span class="hljs-keyword">type</span> &#123;<span class="hljs-keyword">master</span> <span class="hljs-title">| slave</span> | forward&#125;; <br>	file <span class="hljs-string">&quot; network address. zone&quot;</span><br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>2.定义区域解析库文件</p>
+<p>不需要A记录,以PTR记录为主</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-variable">$TTL</span> <span class="hljs-number">86400</span> <br><span class="hljs-variable">$ORIGIN</span> <span class="hljs-number">16.172</span><span class="hljs-selector-class">.in-addr</span><span class="hljs-selector-class">.arpa</span>. <br>@ 	IN 	SOA ns1<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. admin<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. (  <br>			<span class="hljs-number">2015042201</span>  <br>			<span class="hljs-number">1</span>H  <br>			<span class="hljs-number">5</span>M  <br>			<span class="hljs-number">7</span>D  <br>			<span class="hljs-number">1</span>D )  <br>	IN NS ns1<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. <br><span class="hljs-number">1.2</span> IN PTR www<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. <br><span class="hljs-number">3.4</span> IN PTR mx1<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>.<br>#实现以下解析<br><span class="hljs-number">172.16</span>.<span class="hljs-number">2.1</span> www<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span><br><span class="hljs-number">172.16</span>.<span class="hljs-number">4.3</span> mx1<span class="hljs-selector-class">.magedu</span>.org<br></code></pre></td></tr></table></figure>
+
+<h1 id="5-实现从服务器"><a href="#5-实现从服务器" class="headerlink" title="5 实现从服务器"></a>5 实现从服务器</h1><p>只有一台主DNS服务器,存在单点失败的问题,可以建立主DNS服务器的备份服务器,即从服务器来实 现DNS服务的容错机制.从服务器可以自动和主服务器进行单向的数据同步,从而和主DNS服务器一 样,也可以对外提供查询服务,但从服务器不提供数据更新服务.</p>
+<h2 id="5-1-DNS从服务器"><a href="#5-1-DNS从服务器" class="headerlink" title="5.1 DNS从服务器"></a>5.1 DNS从服务器</h2><ol>
+<li>应该为一台独立的名称服务器 </li>
+<li>主服务器的区域解析库文件中必须有一条NS记录指向从服务器 </li>
+<li>从服务器只需要定义区域,而无须提供解析库文件；解析库文件应该放置于/var/named/slaves/目 录中 </li>
+<li>主服务器得允许从服务器作区域传送 </li>
+<li>主从服务器时间应该同步,可通过ntp进行 </li>
+<li>bind程序的版本应该保持一致；否则,应该从高,主低</li>
+</ol>
+<h2 id="5-2-定义从区域"><a href="#5-2-定义从区域" class="headerlink" title="5.2 定义从区域"></a>5.2 定义从区域</h2><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs abnf">zone <span class="hljs-string">&quot;ZONE_NAME&quot;</span> IN &#123;  <br>	type slave<span class="hljs-comment">;  </span><br>	masters &#123; MASTER_IP<span class="hljs-comment">; &#125;;  </span><br>	file <span class="hljs-string">&quot;slaves/ZONE_NAME.zone&quot;</span><span class="hljs-comment">; </span><br>&#125;<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="6-实现子域"><a href="#6-实现子域" class="headerlink" title="6 实现子域"></a>6 实现子域</h1><h2 id="6-1-子域委派授权"><a href="#6-1-子域委派授权" class="headerlink" title="6.1 子域委派授权"></a>6.1 子域委派授权</h2><p>将子域委派给其它主机管理,实现分布式DNS数据库</p>
+<p>正向解析区域子域方法</p>
+<p>e.g.定义两个子域区域</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stylus">shanghai<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 		IN NS ns1<span class="hljs-selector-class">.ops</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. <br>shanghai<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 		IN NS ns2<span class="hljs-selector-class">.ops</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. <br>shenzhen<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 		IN NS ns1<span class="hljs-selector-class">.shenzhen</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. <br>shenzhen<span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 	   	IN NS ns2<span class="hljs-selector-class">.shenzhen</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. <br>ns1<span class="hljs-selector-class">.shanghai</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 	IN A <span class="hljs-number">1.1</span>.<span class="hljs-number">1.1</span> <br>ns2<span class="hljs-selector-class">.shanghai</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 	IN A <span class="hljs-number">1.1</span>.<span class="hljs-number">1.2</span> <br>ns1<span class="hljs-selector-class">.shenzhen</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 	IN A <span class="hljs-number">1.1</span>.<span class="hljs-number">1.3</span> <br>ns2<span class="hljs-selector-class">.shenzhen</span><span class="hljs-selector-class">.magedu</span><span class="hljs-selector-class">.org</span>. 	IN A <span class="hljs-number">1.1</span>.<span class="hljs-number">1.4</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="7-实现DNS转发（缓存）服务器"><a href="#7-实现DNS转发（缓存）服务器" class="headerlink" title="7 实现DNS转发（缓存）服务器"></a>7 实现DNS转发（缓存）服务器</h1><h2 id="7-1-DNS转发"><a href="#7-1-DNS转发" class="headerlink" title="7.1 DNS转发"></a>7.1 DNS转发</h2><p>利用DNS转发，可以将用户的DNS请求，转发至指定的DNS服务，而非默认的根DNS服务器，并将指定的服务器查询的返回结果进行缓存，提高效率。</p>
+<p>注意：</p>
+<p>1.被转发的服务器需要能够未请求者做递归，否则转发请求不予进行</p>
+<p>2.在/etc/named.conf的全局配置快中，关闭dnssec功能</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">dnssec-<span class="hljs-built_in">enable</span> <span class="hljs-literal">no</span>;<br>dnssec-validation <span class="hljs-literal">no</span>;<br></code></pre></td></tr></table></figure>
+
+<h2 id="7-2-转发方式"><a href="#7-2-转发方式" class="headerlink" title="7.2 转发方式"></a>7.2 转发方式</h2><h3 id="7-2-1全局转发"><a href="#7-2-1全局转发" class="headerlink" title="7.2.1全局转发"></a>7.2.1全局转发</h3><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs coq"><span class="hljs-keyword">Options</span> &#123;    <br>	forward <span class="hljs-built_in">first</span>|<span class="hljs-type">only</span>;    <br>	forwarders &#123; ip;&#125;; <br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<h3 id="7-2-2-特定区域转发"><a href="#7-2-2-特定区域转发" class="headerlink" title="7.2.2 特定区域转发"></a>7.2.2 特定区域转发</h3><figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-type">zone</span> &quot;ZONE_NAME&quot; <span class="hljs-keyword">IN</span> &#123;  <br>	<span class="hljs-keyword">type</span> forward;  <br>	forward first|<span class="hljs-keyword">only</span>;  <br>	forwarders &#123; ip;&#125;; <br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>first：先转发至指定DNS服务器,如果无法解析查询请求,则本服务器再去根服务器查询 </p>
+<p>only: 先转发至指定DNS服务器,如果无法解析查询请求,则本服务器将不再去根服务器查询</p>
+<h1 id="8-实现智能-DNS"><a href="#8-实现智能-DNS" class="headerlink" title="8 实现智能 DNS"></a>8 实现智能 DNS</h1><h2 id="8-1-GSLB"><a href="#8-1-GSLB" class="headerlink" title="8.1 GSLB"></a>8.1 GSLB</h2><p>全局负载均衡</p>
+<h2 id="8-2-CDN"><a href="#8-2-CDN" class="headerlink" title="8.2 CDN"></a>8.2 CDN</h2><p>内容分发网络</p>
+<h2 id="8-3-智能DNS相关技术"><a href="#8-3-智能DNS相关技术" class="headerlink" title="8.3 智能DNS相关技术"></a>8.3 智能DNS相关技术</h2><h3 id="8-3-1-bind中ACL"><a href="#8-3-1-bind中ACL" class="headerlink" title="8.3.1 bind中ACL"></a>8.3.1 bind中ACL</h3><p>ACL：把一个或多个地址归并为一个集合,并通过一个统一的名称调用</p>
+<h3 id="8-3-2-bind有四个内置的acl"><a href="#8-3-2-bind有四个内置的acl" class="headerlink" title="8.3.2 bind有四个内置的acl"></a>8.3.2 bind有四个内置的acl</h3><ul>
+<li>none         没有一个主机</li>
+<li>any            任意主机</li>
+<li>localhost  本机</li>
+<li>localnet    本机的IP同掩码运算后得到的网络地址</li>
+</ul>
+<h3 id="8-3-3-访问控制的指令"><a href="#8-3-3-访问控制的指令" class="headerlink" title="8.3.3 访问控制的指令"></a>8.3.3 访问控制的指令</h3><ul>
+<li>allow-query {}： 允许查询的主机；白名单 </li>
+<li>allow-transfer {}：允许区域传送的主机；白名单 </li>
+<li>allow-recursion {}: 允许递归的主机,建议全局使用 </li>
+<li>allow-update {}: 允许更新区域数据库中的内容</li>
+</ul>
+<h3 id="8-3-4-View视图"><a href="#8-3-4-View视图" class="headerlink" title="8.3.4 View视图"></a>8.3.4 View视图</h3><p>将ACL和区域数据库实现对应关系,以实现智能DNS。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs abnf">view VIEW_NAME &#123;<br>	match-clients &#123; beijingnet<span class="hljs-comment">; &#125;;  </span><br>	zone <span class="hljs-string">&quot;magedu.org&quot;</span> &#123;  <br>		type master<span class="hljs-comment">;  </span><br>		file <span class="hljs-string">&quot;magedu.org.zone.bj&quot;</span><span class="hljs-comment">;   </span><br>	&#125;<span class="hljs-comment">;  </span><br>	include <span class="hljs-string">&quot;/etc/named.rfc1912.zones&quot;</span><span class="hljs-comment">; </span><br>&#125;<span class="hljs-comment">; </span><br><br>view VIEW_NAME &#123;  <br>	match-clients &#123; shanghainet<span class="hljs-comment">; &#125;;  </span><br>	zone <span class="hljs-string">&quot;magedu.org&quot;</span> &#123;  <br>		type master<span class="hljs-comment">;  </span><br>		file <span class="hljs-string">&quot;magedu.org.zone.sh&quot;</span><span class="hljs-comment">;   </span><br>    &#125;<span class="hljs-comment">;  </span><br>    include <span class="hljs-string">&quot;/etc/named.rfc1912.zones&quot;</span><span class="hljs-comment">; </span><br>&#125;<span class="hljs-comment">;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="9-DNS排错"><a href="#9-DNS排错" class="headerlink" title="9 DNS排错"></a>9 DNS排错</h1><ul>
+<li>SERVFAIL：The nameserver encountered a problem while processing the query.<ul>
+<li>可使用dig +trace排错,可能是网络和防火墙导致</li>
+</ul>
+</li>
+<li>nxdemion：The queried name does not exist in the zone.<ul>
+<li>可能是CNAME对应的A记录不存在导致</li>
+</ul>
+</li>
+<li>REFUSED: The nameserver refused the client’s DNS request due to policy restrictions. <ul>
+<li>可能是DNS策略导致</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">-云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/21/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E9%93%BE%E8%A1%A8/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数据结构-链表</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/05/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-%E8%AE%BA%E6%96%87%E5%86%99%E4%BD%9C/">
+                        <span class="hidden-mobile">数学建模-论文写作</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 安全机制1.1 信息安全防护的目标 保密性 完整性 可用性 可控制性 不可否认性  1.2 安全防护环节 物理安全：各种设备&#x2F;主机、机房环境 系统安全：主机或设备的操作系统 应用安全：各种网络服务、应用程序 网络安全：对网络访问的控制、防火墙规则 数据安全：信息的备份与恢复、加密解密 管理安全：各种保障性的规范、流程、方法  1.3 常见的安全攻击 ATRIDE 假冒            S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux-安全技术">
+<meta property="og:url" content="http://example.com/2023/08/28/Linux-%E5%AE%89%E5%85%A8%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 安全机制1.1 信息安全防护的目标 保密性 完整性 可用性 可控制性 不可否认性  1.2 安全防护环节 物理安全：各种设备&#x2F;主机、机房环境 系统安全：主机或设备的操作系统 应用安全：各种网络服务、应用程序 网络安全：对网络访问的控制、防火墙规则 数据安全：信息的备份与恢复、加密解密 管理安全：各种保障性的规范、流程、方法  1.3 常见的安全攻击 ATRIDE 假冒            S">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291644468.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291654864.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291655958.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291655883.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308301057910.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308301103429.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308301442337.png">
+<meta property="article:published_time" content="2023-08-28T16:52:04.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.350Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="云计算SRE工程师">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291644468.png">
+  
+  
+  <title>Linux-安全技术 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Linux-安全技术">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-28 16:52" pubdate>
+        August 28, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.1k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      35 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux-安全技术</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-安全机制"><a href="#1-安全机制" class="headerlink" title="1 安全机制"></a>1 安全机制</h1><h2 id="1-1-信息安全防护的目标"><a href="#1-1-信息安全防护的目标" class="headerlink" title="1.1 信息安全防护的目标"></a>1.1 信息安全防护的目标</h2><ul>
+<li>保密性</li>
+<li>完整性</li>
+<li>可用性</li>
+<li>可控制性</li>
+<li>不可否认性</li>
+</ul>
+<h2 id="1-2-安全防护环节"><a href="#1-2-安全防护环节" class="headerlink" title="1.2 安全防护环节"></a>1.2 安全防护环节</h2><ul>
+<li>物理安全：各种设备/主机、机房环境</li>
+<li>系统安全：主机或设备的操作系统</li>
+<li>应用安全：各种网络服务、应用程序</li>
+<li>网络安全：对网络访问的控制、防火墙规则</li>
+<li>数据安全：信息的备份与恢复、加密解密</li>
+<li>管理安全：各种保障性的规范、流程、方法</li>
+</ul>
+<h2 id="1-3-常见的安全攻击-ATRIDE"><a href="#1-3-常见的安全攻击-ATRIDE" class="headerlink" title="1.3 常见的安全攻击 ATRIDE"></a>1.3 常见的安全攻击 ATRIDE</h2><ul>
+<li>假冒            Spoofing</li>
+<li>篡改           Tampering</li>
+<li>否认            Repudiation</li>
+<li>信息泄露    Information Disclosure</li>
+<li>拒绝服务    Denial of Service</li>
+<li>提升权限    Elevation of Privilege             </li>
+</ul>
+<h2 id="1-4-安全设计基本原则"><a href="#1-4-安全设计基本原则" class="headerlink" title="1.4 安全设计基本原则"></a>1.4 安全设计基本原则</h2><ul>
+<li>使用成熟的安全系统</li>
+<li>以小人之心度输入数据</li>
+<li>外部系统是不安全的</li>
+<li>最小授权</li>
+<li>减少外部接口</li>
+<li>缺省使用安全模式</li>
+<li>安全不是似是而非</li>
+<li>从STRIDE思考</li>
+<li>在入口处检查</li>
+<li>从管理上保护好你的系统</li>
+</ul>
+<h2 id="1-5-常用安全技术"><a href="#1-5-常用安全技术" class="headerlink" title="1.5 常用安全技术"></a>1.5 常用安全技术</h2><ul>
+<li>认证</li>
+<li>授权</li>
+<li>审计</li>
+<li>安全通信</li>
+</ul>
+<p><strong>3A：认证，授权，审计</strong></p>
+<h2 id="1-6-加密算法和协议"><a href="#1-6-加密算法和协议" class="headerlink" title="1.6 加密算法和协议"></a>1.6 加密算法和协议</h2><ul>
+<li>对称加密</li>
+<li>非对称（秘钥）加密</li>
+<li>单项加密</li>
+<li>认证协议</li>
+</ul>
+<h3 id="1-6-1-对称加密算法"><a href="#1-6-1-对称加密算法" class="headerlink" title="1.6.1 对称加密算法"></a>1.6.1 对称加密算法</h3><p>对称加密：加密和解密使用同一个秘钥</p>
+<p>特性：</p>
+<ul>
+<li>加密、解密使用同一个秘钥，效率高</li>
+<li>将原始数据分割成固定大小的块，逐个进行加密</li>
+</ul>
+<p>缺陷：</p>
+<ul>
+<li>秘钥过多</li>
+<li>秘钥分发</li>
+<li>数据来源无法确认</li>
+</ul>
+<p>常见对称加密算法：</p>
+<ul>
+<li>DES</li>
+<li>3DES</li>
+<li>AES</li>
+<li>Blowfish，Twofish</li>
+<li>IDEA，RC6，CAST5</li>
+</ul>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br></pre></div></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">data</span> <span class="hljs-literal">--</span> <span class="hljs-comment">加密(key1)</span> <span class="hljs-literal">--</span> <span class="hljs-comment">data&#x27;</span> <span class="hljs-literal">--</span> <span class="hljs-comment">解密(key1)</span> <span class="hljs-literal">--</span> <span class="hljs-comment">data</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="1-6-2-非对称加密算法"><a href="#1-6-2-非对称加密算法" class="headerlink" title="1.6.2 非对称加密算法"></a>1.6.2 非对称加密算法</h3><p>非对称加密：密钥是成对出现</p>
+<ul>
+<li>公钥：public key，公开给所有人，主要给别人加密使用</li>
+<li>私钥：secret key，private key 自己存留</li>
+</ul>
+<p>特点：</p>
+<p>用公钥加密数据，只能使用与之匹配的私钥解密；反之亦然。</p>
+<p>功能：</p>
+<ul>
+<li>数据加密</li>
+<li>数字签名</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>秘钥长，算法复杂</li>
+<li>加密解密效率低</li>
+</ul>
+<p>常见算法：</p>
+<ul>
+<li>RSA</li>
+<li>DSA</li>
+<li>ECC</li>
+</ul>
+<figure class="highlight brainfuck"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs brainfuck"><span class="hljs-comment">data</span> <span class="hljs-literal">--</span> <span class="hljs-comment">加密(key1)</span> <span class="hljs-literal">--</span> <span class="hljs-comment">data&#x27;</span> <span class="hljs-literal">--</span> <span class="hljs-comment">解密(key2)</span> <span class="hljs-literal">--</span> <span class="hljs-comment">data</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="1-6-3-单向哈希算法"><a href="#1-6-3-单向哈希算法" class="headerlink" title="1.6.3 单向哈希算法"></a>1.6.3 单向哈希算法</h3><p>哈希算法：也称散列算法，将任意数据缩小成固定大小的“指纹”，称为“digest”，即摘要</p>
+<p>特性：</p>
+<ul>
+<li><strong>任意长度输入，固定长度输出</strong></li>
+<li>若修改数据，指纹也会发生改变，且有雪崩效应，<strong>数据</strong>的一点<strong>微小改变</strong>，生成的<strong>指纹值变化非常大</strong>。</li>
+<li>无法从指纹中重新生成数据，即<strong>不可逆</strong>，具有单向性</li>
+<li><strong>data相同，digest必相同；data不同，digest必不同</strong></li>
+</ul>
+<p>功能：数据完整性</p>
+<p>常见算法：</p>
+<ul>
+<li>md5：128bits</li>
+<li>sha1：160bits</li>
+<li>sha224</li>
+<li>sha384</li>
+<li><strong>sha512</strong></li>
+</ul>
+<p>常用工具：</p>
+<ul>
+<li>md5sum / sha1sum [ –check ] file</li>
+<li>openssl 、gpg</li>
+<li>rpm -V</li>
+</ul>
+<h3 id="1-6-4-综合应用多种加密算法"><a href="#1-6-4-综合应用多种加密算法" class="headerlink" title="1.6.4 综合应用多种加密算法"></a>1.6.4 综合应用多种加密算法</h3><h4 id="1-6-4-1-实现数据加密"><a href="#1-6-4-1-实现数据加密" class="headerlink" title="1.6.4.1 实现数据加密"></a>1.6.4.1 实现数据加密</h4><p>实现数据加密，无法实现验证数据完整性和来源</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gauss"><span class="hljs-built_in">key</span>（data）+ Pb（<span class="hljs-built_in">key</span>）<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291644468.png" srcset="/img/loading.gif" lazyload alt="image-20230829164406016"></p>
+<h4 id="1-6-4-2-实现数据签名"><a href="#1-6-4-2-实现数据签名" class="headerlink" title="1.6.4.2 实现数据签名"></a>1.6.4.2 实现数据签名</h4><p>不加密数据，可以保证数据来源的可靠性、数据的完整性和一致性</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs haskell"><span class="hljs-class"><span class="hljs-keyword">data</span> + <span class="hljs-type">Sa</span>（hash（<span class="hljs-keyword">data</span>））</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291654864.png" srcset="/img/loading.gif" lazyload alt="image-20230829165431789"></p>
+<h4 id="1-6-4-3-综合加密和签名"><a href="#1-6-4-3-综合加密和签名" class="headerlink" title="1.6.4.3 综合加密和签名"></a>1.6.4.3 综合加密和签名</h4><p>即实现加密数据，又可以保证数据来源的可靠性、数据的完整性和一致性</p>
+<p><strong>方法一：Pb{ Sa[hash(data)] + data }</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291655958.png" srcset="/img/loading.gif" lazyload alt="image-20230829165500890"></p>
+<p><strong>方法二：对称key{ Sa[ hash(data) ] +data } + Pb(对称key)</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308291655883.png" srcset="/img/loading.gif" lazyload alt="image-20230829165527810"></p>
+<h3 id="1-6-5-密码交换-IKE"><a href="#1-6-5-密码交换-IKE" class="headerlink" title="1.6.5 密码交换 IKE"></a>1.6.5 密码交换 IKE</h3><p>密钥交换：IKE （ Internet Key Exchange ）</p>
+<ul>
+<li><p>公钥加密：用目标的公钥加密对称密钥</p>
+</li>
+<li><p>DH（Deffie-Hellman）：生成对称（会话）秘钥</p>
+<p>  参考：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange">https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange</a></p>
+</li>
+</ul>
+<h2 id="1-7-CA和证书"><a href="#1-7-CA和证书" class="headerlink" title="1.7 CA和证书"></a>1.7 CA和证书</h2><p>PKI ：Public Key Infrastructure公共密钥加密体系</p>
+<p>签证机构：CA</p>
+<p>注册机构：RA</p>
+<p>证书吊销列表：CRL</p>
+<p>X.509：定义了证书的结构以及认证协议标准</p>
+<p>证书类型：证书授权机构的证书、服务器证书、用户证书</p>
+<p>获取证书：自签名证书、使用证书授权机构（生成证书请求csr | 将证书请求csr发送给CA | CA签名颁发证书）</p>
+<h3 id="1-7-1-安全协议-SSL-TLS"><a href="#1-7-1-安全协议-SSL-TLS" class="headerlink" title="1.7.1 安全协议 SSL/TLS"></a>1.7.1 安全协议 SSL/TLS</h3><p>功能：机密性、认证、完整性、重放保护</p>
+<p>SSL/TLS位于 <strong>应用层</strong> 与 <strong>传输层</strong> 之间</p>
+<p>组成：Handshake协议、ChangeCipherSpec协议、Alert协议、Record协议</p>
+<h3 id="1-7-2-HTTPS"><a href="#1-7-2-HTTPS" class="headerlink" title="1.7.2 HTTPS"></a>1.7.2 HTTPS</h3><p>HTTPS = HTTP +SSL/TLS</p>
+<p><strong>工作的简化过程</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308301057910.png" srcset="/img/loading.gif" lazyload alt="image-20230830105701834"></p>
+<h1 id="2-OpenSSL"><a href="#2-OpenSSL" class="headerlink" title="2 OpenSSL"></a>2 OpenSSL</h1><p>官网：<a target="_blank" rel="noopener" href="https://www.openssl.org/">https://www.openssl.org/</a></p>
+<p>三个组件：</p>
+<ul>
+<li>libcrypto：用于实现加密和解密的库</li>
+<li>libssl：用于实现ssl通信协议的安全库</li>
+<li>openssl：多用途命令行工具</li>
+</ul>
+<h2 id="2-1-Base64-编码"><a href="#2-1-Base64-编码" class="headerlink" title="2.1 Base64 编码"></a>2.1 Base64 编码</h2><p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308301103429.png" srcset="/img/loading.gif" lazyload alt="image-20230830110318294"></p>
+<p><strong>base64的编码过程如下</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202308301442337.png" srcset="/img/loading.gif" lazyload alt="image-20230830144254249"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment">#将 文本 转化为 Base64编码</span><br><span class="hljs-built_in">base64</span><br><span class="hljs-comment">#将 Base64编码 转化为 文本</span><br><span class="hljs-built_in">base64</span> -d<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-2-openssl-命令"><a href="#2-2-openssl-命令" class="headerlink" title="2.2 openssl 命令"></a>2.2 openssl 命令</h2><p><strong>查看 openssl 版本</strong></p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">openssl <span class="hljs-built_in">version</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>查看 openssl 帮助</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">openssl <span class="hljs-built_in">help</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-1-openssl-命令单项哈希加密"><a href="#2-2-1-openssl-命令单项哈希加密" class="headerlink" title="2.2.1 openssl 命令单项哈希加密"></a>2.2.1 openssl 命令单项哈希加密</h3><p>工具：openssl dgst</p>
+<p>算法：md5sum，sha1sum，sha224sum，sha256sum</p>
+<p>帮助：man dgst</p>
+<h3 id="2-2-2-openssl-命令生成用户密码"><a href="#2-2-2-openssl-命令生成用户密码" class="headerlink" title="2.2.2 openssl 命令生成用户密码"></a>2.2.2 openssl 命令生成用户密码</h3><p>帮助：man sslpasswd</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">openssl passwd <span class="hljs-comment">--help</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-3-openssl-命令生成随机数"><a href="#2-2-3-openssl-命令生成随机数" class="headerlink" title="2.2.3 openssl 命令生成随机数"></a>2.2.3 openssl 命令生成随机数</h3><p>随机数生成器：伪随机数字，利用键盘和鼠标，块设备中断生成随机数</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/dev/</span>random		<span class="hljs-comment">#仅从熵池返回随机数：随机数用尽，阻塞</span><br><span class="hljs-regexp">/dev/u</span>random	<span class="hljs-comment">#从熵池返回随机数：随机数用尽，会利用软件生成随机数，非阻塞</span><br></code></pre></td></tr></table></figure>
+
+<p>帮助：man sslrand</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs perl">openssl <span class="hljs-keyword">rand</span> -base64/-<span class="hljs-keyword">hex</span> NUM<br>NUM：表示字节数，使用-<span class="hljs-keyword">hex</span>，每个字符为十六进制，相当于<span class="hljs-number">4</span>为二进制，出现的字符数为<span class="hljs-number">2</span>*NUM<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-2-4-openssl-命令实现PKL"><a href="#2-2-4-openssl-命令实现PKL" class="headerlink" title="2.2.4 openssl 命令实现PKL"></a>2.2.4 openssl 命令实现PKL</h3><p><strong>公钥加密</strong></p>
+<p>​    算法：RSA，ELGamal</p>
+<p>​    工具：gpg，openssl rsautl（man rsautl）</p>
+<p><strong>数字签名</strong></p>
+<p>​    算法：RSA，DSA，ELGamal</p>
+<p><strong>密钥交换</strong></p>
+<p>​    算法：dh</p>
+<p>openssl命令生成密钥对：man  genrsa</p>
+<p><strong>生成私钥</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css">OpenSSL genrsa -out /PATH/<span class="hljs-selector-tag">TO</span>/PRIVATEKEY<span class="hljs-selector-class">.FILE</span> <span class="hljs-selector-attr">[-aes128]</span> <span class="hljs-selector-attr">[-aes192]</span> <span class="hljs-selector-attr">[-aes256]</span> <span class="hljs-selector-attr">[-des3]</span> <span class="hljs-selector-attr">[NUM_BITS，2048]</span><br><br>#对称加密算法:man genrsa<br>-aes128，-aes192，-aes256，-aria128，-aria192，-aria256，-camellia128，-camellia192，-des，-des3，-idea<br></code></pre></td></tr></table></figure>
+
+<p><strong>解密加密的私钥</strong></p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">openssl rsa -in <span class="hljs-regexp">/PATH/</span>TO<span class="hljs-regexp">/PRIVATEKEY.FILE -out /</span>PATH<span class="hljs-regexp">/TO/</span>PRIVATEKEY2.<span class="hljs-keyword">FILE</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>从私钥中提取公钥</strong></p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">openssl rsa -<span class="hljs-keyword">in</span> PRIVATEKEYFILE -pubout -<span class="hljs-keyword">out</span> PUBLICKEYFILE<br></code></pre></td></tr></table></figure>
+
+<h2 id="2-3-建立私有CA实现证书申请颁发"><a href="#2-3-建立私有CA实现证书申请颁发" class="headerlink" title="2.3 建立私有CA实现证书申请颁发"></a>2.3 建立私有CA实现证书申请颁发</h2><p>建立私有CA： </p>
+<ul>
+<li>OpenCA：OpenCA开源组织使用Perl对OpenSSL进行二次开发而成的一套完善的PKI免费软件 </li>
+<li>openssl：相关包 openssl和openssl-libs </li>
+</ul>
+<p>证书申请及签署步骤：</p>
+<ol>
+<li>生成证书申请请求</li>
+<li> RA核验 </li>
+<li>CA签署 </li>
+<li>获取证书 </li>
+</ol>
+<p><strong>openssl的配置文件</strong></p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/tls/</span>openssl.cnf<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-1-创建私有CA"><a href="#2-3-1-创建私有CA" class="headerlink" title="2.3.1 创建私有CA"></a>2.3.1 创建私有CA</h3><h4 id="2-3-1-1-创建CA所需文件"><a href="#2-3-1-1-创建CA所需文件" class="headerlink" title="2.3.1.1 创建CA所需文件"></a>2.3.1.1 创建CA所需文件</h4><figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-comment">#生成证书索引数据库文件 </span><br>touch <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/i</span>ndex.txt <br><span class="hljs-comment">#指定第一个颁发证书的序列号 </span><br>echo <span class="hljs-number">01</span> &gt; <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/</span>serial<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-1-2-生成CA私钥"><a href="#2-3-1-2-生成CA私钥" class="headerlink" title="2.3.1.2 生成CA私钥"></a>2.3.1.2 生成CA私钥</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> /etc/pki/CA<br>(<span class="hljs-built_in">umask</span> 066; openssl genrsa -out private/cakey.pem 2048)<br></code></pre></td></tr></table></figure>
+
+<h4 id="2-3-1-3-生成CA自签名证书"><a href="#2-3-1-3-生成CA自签名证书" class="headerlink" title="2.3.1.3 生成CA自签名证书"></a>2.3.1.3 生成CA自签名证书</h4><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">openssl req -<span class="hljs-keyword">new</span> -x509 -key <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/</span><span class="hljs-keyword">private</span><span class="hljs-regexp">/cakey.pem -days 3650 -out  /</span>etc<span class="hljs-regexp">/pki/</span>CA/cacert.pem <br></code></pre></td></tr></table></figure>
+
+<p>选项说明：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs diff"><span class="hljs-deletion">-new：生成新证书签署请求 </span><br><span class="hljs-deletion">-x509：专用于CA生成自签证书 </span><br><span class="hljs-deletion">-key：生成请求时用到的私钥文件 </span><br><span class="hljs-deletion">-days n：证书的有效期限 </span><br><span class="hljs-deletion">-out /PATH/TO/SOMECERTFILE: 证书的保存路径 </span><br></code></pre></td></tr></table></figure>
+
+<p>国家代码：<a target="_blank" rel="noopener" href="https://country-code.cl/">https://country-code.cl/</a></p>
+<h3 id="2-3-2-申请证书并颁发证书"><a href="#2-3-2-申请证书并颁发证书" class="headerlink" title="2.3.2 申请证书并颁发证书"></a>2.3.2 申请证书并颁发证书</h3><p>1、为需要使用证书的主机生成生成私钥</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">(umask <span class="hljs-number">066</span>; openssl genrsa -out <span class="hljs-regexp">/data/</span>test.key )<br></code></pre></td></tr></table></figure>
+
+<p>2、为需要使用证书的主机生成秘钥</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">openssl req -<span class="hljs-keyword">new</span> -key <span class="hljs-regexp">/data/</span>test.key -out <span class="hljs-regexp">/data/</span>test.csr<br></code></pre></td></tr></table></figure>
+
+<p>3、在CA签署证书并将证书颁发给请求者</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">openssl ca -<span class="hljs-keyword">in</span> <span class="hljs-regexp">/data/</span>test.csr -out <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/</span>certs/test.crt -days <span class="hljs-number">100</span><br></code></pre></td></tr></table></figure>
+
+<p>注意：默认要求国家，省，公司名称三项必须和CA一致</p>
+<p>4、查看证书中的信息</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">openssl x509 -in /PATH/FROM/CERT_FILE -noout -text|<span class="hljs-string">issuer</span>|<span class="hljs-string">subject</span>|<span class="hljs-string">serial</span>|datas<br><br><span class="hljs-comment">#查看指定编号的证书状态</span><br>openssl ca -status SERIAL<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-3-3-吊销证书"><a href="#2-3-3-吊销证书" class="headerlink" title="2.3.3 吊销证书"></a>2.3.3 吊销证书</h3><p>在客户端获取要吊销的证书的serial</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">openssl x509 in <span class="hljs-regexp">/PATH/</span><span class="hljs-keyword">FROM</span>/CERT_FILE -noout -serial -subhect<br></code></pre></td></tr></table></figure>
+
+<p>在CA上，根据客户提交的serial与subject信息，对比检验是否与index.txt文件中的信息一致，吊销证 书：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">openssl ca -revoke <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/</span>newcerts/SERIAL.pem<br></code></pre></td></tr></table></figure>
+
+<p>指定第一个吊销证书的编号,注意：第一次更新证书吊销列表前，才需要执行</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">echo <span class="hljs-number">01</span> &gt; <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/</span>crlnumber<br></code></pre></td></tr></table></figure>
+
+<p>更新证书吊销列表</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">openssl ca -gencrl -out <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/</span>crl.pem<br></code></pre></td></tr></table></figure>
+
+<p>查看crl文件：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">openssl crl -<span class="hljs-keyword">in</span> <span class="hljs-regexp">/etc/</span>pki<span class="hljs-regexp">/CA/</span>crl.pem -noout -text<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Linux%E8%BF%90%E7%BB%B4/">Linux运维</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97SRE%E5%B7%A5%E7%A8%8B%E5%B8%88/">云计算SRE工程师</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/31/%E6%95%B0%E5%AD%A6%E5%BB%BA%E6%A8%A1-%E6%8F%92%E5%80%BC%E4%B8%8E%E6%8B%9F%E5%90%88/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">数学建模-插值和=与拟合</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/28/Linux-shell%E8%84%9A%E6%9C%AC/">
+                        <span class="hidden-mobile">Linux-shell脚本</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

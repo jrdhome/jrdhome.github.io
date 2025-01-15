@@ -1,0 +1,574 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1 软件工程概述软件 &#x3D; 程序 + 数据 + 文档 软件工程三要素：方法、工具、过程 软件生命周期一般分为：问题定义、可行性研究、需求分析、设计(总体&#x2F;详细)、编码、测试、运行与维护阶段。   瀑布模型  瀑布模型将软件生命周期的各项活动自上而下如瀑布流水依次连接，逐层反馈，不能跨级反馈。  优点：  有良好的需求确认入口，为后续的开发奠定良好的基础。 强调设计过程。软件是“创造”出来的，不是“制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="软件工程概论">
+<meta property="og:url" content="http://example.com/2024/03/24/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E6%A6%82%E8%AE%BA/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="1 软件工程概述软件 &#x3D; 程序 + 数据 + 文档 软件工程三要素：方法、工具、过程 软件生命周期一般分为：问题定义、可行性研究、需求分析、设计(总体&#x2F;详细)、编码、测试、运行与维护阶段。   瀑布模型  瀑布模型将软件生命周期的各项活动自上而下如瀑布流水依次连接，逐层反馈，不能跨级反馈。  优点：  有良好的需求确认入口，为后续的开发奠定良好的基础。 强调设计过程。软件是“创造”出来的，不是“制">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403241940550.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403241950758.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403241952665.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242001991.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242003485.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242007638.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242007659.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242011494.png">
+<meta property="article:published_time" content="2024-03-24T00:05:34.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.352Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="软件工程">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403241940550.png">
+  
+  
+  <title>软件工程概论 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="软件工程概论">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2024-03-24 00:05" pubdate>
+        March 24, 2024 am
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      1.3k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      11 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">软件工程概论</h1>
+            
+            <div class="markdown-body">
+              <h1 id="1-软件工程概述"><a href="#1-软件工程概述" class="headerlink" title="1 软件工程概述"></a>1 软件工程概述</h1><p>软件 = 程序 + 数据 + 文档</p>
+<p>软件工程三要素：方法、工具、过程</p>
+<p>软件生命周期一般分为：问题定义、可行性研究、需求分析、设计(总体/详细)、编码、测试、运行与维护阶段。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403241940550.png" srcset="/img/loading.gif" lazyload></p>
+<ol>
+<li><strong>瀑布模型</strong></li>
+</ol>
+<p>瀑布模型将软件生命周期的各项活动自上而下如瀑布流水依次连接，<strong>逐层反馈</strong>，<strong>不能跨级反馈</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403241950758.png" srcset="/img/loading.gif" lazyload></p>
+<p>优点：</p>
+<ul>
+<li>有良好的需求确认入口，为后续的开发奠定良好的基础。</li>
+<li>强调设计过程。软件是“创造”出来的，不是“制造”出来的，所以设计显得格外重要。</li>
+<li>每一阶段结束后要进行复审，允许获取方/用户的参与，有效的控制了系统的质量问题。</li>
+<li>当前一阶段完成时，只需要关注后续阶段即可。（已经确保了前一阶段的有效性）</li>
+</ul>
+<p>缺点：</p>
+<p>在瀑布模型结束之前都不能演示系统的功能，增加了项目的风险。</p>
+<ol start="2">
+<li><strong>增量模型</strong></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403241952665.png" srcset="/img/loading.gif" lazyload></p>
+<p>优点：</p>
+<ul>
+<li><p>增量模型作为瀑布模型的变体，<strong>具有瀑布模型的所有优点</strong></p>
+</li>
+<li><p>第一个可交付版本所需成本和时间相比于瀑布模型来说是很少的，比如说第一个增量只有软件的核心功能。<br>  能很快的看到一些成果，增加开发人员的信心。</p>
+</li>
+<li><p><strong>开发风险相对较小</strong>。（大事化小，小事化了，分而治之）</p>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>对初始增量的需求进行修改，可能会影响后续的增量。</li>
+<li>增量模型要求必须有<strong>一部分的需求</strong>是可以<strong>确定</strong>的</li>
+<li>增量过多会造成管理成本超支，影响进度。</li>
+</ul>
+<ol start="3">
+<li><strong>演化模型</strong></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242001991.png" srcset="/img/loading.gif" lazyload></p>
+<p>注：不能弱化需求分析阶段的工作！</p>
+<p>优点：</p>
+<ul>
+<li><p>在<strong>需求不明确</strong>的情况下，可以使用该模型。</p>
+</li>
+<li><p>用户可以通过运行系统来对需求进行改进。</p>
+</li>
+<li><p>需要更多用户/获取方的参与，增加了对软件质量的控制。</p>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>较多的迭代使得管理成本较大</p>
+</li>
+<li><p>容易让开发团队有不进行需求分析的借口。</p>
+</li>
+<li><p>用户不易理解该模型不断迭代演化的特点，因此当某次迭代后的反馈不理想时，用户容易产生抱怨情绪。（实际上，这一缺点也是帮助了开发团队能从用户那儿获取到更明确的需求，因为用户抱怨，不满意，所以会提出改进意见，使得需求更加明确，促进了下一次的迭代）</p>
+</li>
+</ul>
+<ol start="4">
+<li><strong>喷泉模型</strong></li>
+</ol>
+<p>喷泉模型主要用于描述<strong>面向对象</strong>的软件的开发过程，该模型自下而上，各阶段<strong>无缝连接</strong>，可<strong>多次迭代</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242003485.png" srcset="/img/loading.gif" lazyload></p>
+<p>优点：</p>
+<ul>
+<li>各阶段无缝连接，可以同步开发，提高开发效率。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>由于多次迭代，会产生大量的文档，会导致文档管理困难。</li>
+</ul>
+<ol start="5">
+<li><strong>螺旋模型</strong></li>
+</ol>
+<p>瀑布模型 + 演化模型 + <strong>风险分析</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242007638.png" srcset="/img/loading.gif" lazyload></p>
+<p>优点：</p>
+<ul>
+<li>对大型的项目有较好的风险控制能力。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>需要分析人员有风险分析的经验，分析失误会造成很大的损失。</p>
+</li>
+<li><p>螺旋模型周期相对较长，不适用于大部分软件开发项目。</p>
+</li>
+</ul>
+<ol start="6">
+<li><strong>快速原型模型</strong></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242007659.png" srcset="/img/loading.gif" lazyload></p>
+<p>优点：</p>
+<ul>
+<li><p>主要针对于小型的、快捷的，并且需求不明确的项目.</p>
+</li>
+<li><p>有的软件原型可以作为最终产品的一部分。</p>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>快速建立的系统结构加上连续修改可能导致产品质量低下，原型系统的内部结构可能不好。</li>
+</ul>
+<ol start="7">
+<li><strong>统一过程模型</strong></li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/jrdhome/images@main/images/202403242011494.png" srcset="/img/loading.gif" lazyload></p>
+<ol start="8">
+<li><strong>敏捷开发模型</strong></li>
+</ol>
+<p>开发流程中三大角色：产品负责人、流程管理员、开发团队</p>
+<p>开发原则：快速迭代、充分讨论、编写可测试的需求文档、多交流减少文档、做好产品原型、尽早测试</p>
+<p>以人为本、自主管理、自我组织、多功能型</p>
+<h1 id="2-结构化分析"><a href="#2-结构化分析" class="headerlink" title="2 结构化分析"></a>2 结构化分析</h1><h2 id="2-1-问题定义"><a href="#2-1-问题定义" class="headerlink" title="2.1 问题定义"></a>2.1 问题定义</h2><p>项目名称、问题、项目目标、项目规模、初步设想、可行性研究、项目背景、安全可靠性 ……</p>
+<h2 id="2-2-可靠性分析"><a href="#2-2-可靠性分析" class="headerlink" title="2.2 可靠性分析"></a>2.2 可靠性分析</h2><p>技术可行性、经济可行性、（操作可行性）、社会(法律)可行性</p>
+<h2 id="2-3-需求分析"><a href="#2-3-需求分析" class="headerlink" title="2.3 需求分析"></a>2.3 需求分析</h2><p>获取需求 —— 分析需求 —— 定义需求 —— 验证需求</p>
+<p>结构化需求分析是一种面向<strong>数据流</strong>进行的需求分析方法。四个核心功能如下：</p>
+<h3 id="2-3-1-功能建模-数据流图）"><a href="#2-3-1-功能建模-数据流图）" class="headerlink" title="2.3.1 功能建模(数据流图）"></a>2.3.1 功能建模(数据流图）</h3><span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/">软件工程</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/31/%E5%8D%8E%E4%B8%89AC-AP%E9%83%A8%E7%BD%B2%E6%97%A0%E7%BA%BF%E5%9F%BA%E6%9C%AC%E9%85%8D%E7%BD%AE/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">华三AC+AP部署无线基本配置</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/02/16/Linux-PostgreSQL1/">
+                        <span class="hidden-mobile">Linux-PostgreSQL1</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>

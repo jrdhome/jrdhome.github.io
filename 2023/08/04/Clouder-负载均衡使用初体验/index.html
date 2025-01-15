@@ -1,0 +1,664 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.png">
+  <link rel="icon" href="/img/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jin Runda">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="实验概述   拥有大量用户的企业，经常会面临如下的难题：在高并发的情况下，经常会导致服务器响应速度慢，严重的情况会直接导致服务器停止服务。此时，会导致企业的业务中断，影响客户的正常访问。   本实验通过使用阿里云负载均衡SLB以及对负载均衡SLB后端服务器ECS的权重进行修改，可以快速解决上述的问题。  实验目标   完成此实验后，可以掌握的能力有： \1. 配置负载均衡SLB的监听规则，并将EC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Clouder-负载均衡使用初体验">
+<meta property="og:url" content="http://example.com/2023/08/04/Clouder-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%BD%BF%E7%94%A8%E5%88%9D%E4%BD%93%E9%AA%8C/index.html">
+<meta property="og:site_name" content="jrd&#39;s blog">
+<meta property="og:description" content="实验概述   拥有大量用户的企业，经常会面临如下的难题：在高并发的情况下，经常会导致服务器响应速度慢，严重的情况会直接导致服务器停止服务。此时，会导致企业的业务中断，影响客户的正常访问。   本实验通过使用阿里云负载均衡SLB以及对负载均衡SLB后端服务器ECS的权重进行修改，可以快速解决上述的问题。  实验目标   完成此实验后，可以掌握的能力有： \1. 配置负载均衡SLB的监听规则，并将EC">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/intro/11bc5c2e31a3429082a2b012fe08034d/images/course-11bc5c2e31a3429082a2b012fe08034d-intro-image-1501646995770-ezxsMY">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/8c47d7f310214b3184714b66c75b88d2/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-8c47d7f310214b3184714b66c75b88d2-content-image-1482739463577-BaRBx3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/8c47d7f310214b3184714b66c75b88d2/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-8c47d7f310214b3184714b66c75b88d2-content-image-1541389955758-2RtYaM">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/8c47d7f310214b3184714b66c75b88d2/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-8c47d7f310214b3184714b66c75b88d2-content-image-1541390115823-zXMyaq">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/54600e490f024713839e840b24c924bf/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-54600e490f024713839e840b24c924bf-content-image-1500426591685-DZCCY3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/54600e490f024713839e840b24c924bf/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-54600e490f024713839e840b24c924bf-content-image-1500426614050-m62y6Y">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/ccb6dfd9d7c14bd4b79a171f43a6e3b8/sections/9b8eaed5a8d54016a9da3a33b8d5296e/content/images/course-ccb6dfd9d7c14bd4b79a171f43a6e3b8-section-9b8eaed5a8d54016a9da3a33b8d5296e-content-image-1619081320524-klPTpf">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/ccb6dfd9d7c14bd4b79a171f43a6e3b8/sections/9b8eaed5a8d54016a9da3a33b8d5296e/content/images/course-ccb6dfd9d7c14bd4b79a171f43a6e3b8-section-9b8eaed5a8d54016a9da3a33b8d5296e-content-image-1619081328949-xVdxgo">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/c33d6096c65b45d6a0ebe4f950fc769c/sections/6a0176bef3cb4387b44eabc702ff6ee8/content/images/course-c33d6096c65b45d6a0ebe4f950fc769c-section-6a0176bef3cb4387b44eabc702ff6ee8-content-image-1589425130205-1r0AQS">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683138387-vBl6ys">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683183591-6N9lGJ">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683224137-1jr4Xw">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683245756-UeojUO">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034113289-nKBF4q">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034179806-kxeSd9">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034229137-XGOhp5">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034414783-3vO2Bi">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034615059-z1nEGH">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034693365-w0VUeR">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034901580-L1thla">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683367512-2FNP18">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1482732071055-IvPgyY">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1482732154630-aO6jWM">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035180709-zMp3BG">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035231762-pfqoQE">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035294839-fLcHIP">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035607477-PB8TUL">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683506946-T0hr13">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683511274-ucpIdD">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585038298518-2Xhp7l">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683599751-tKqn3v">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683626826-xsZwM3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1500433126572-hpcZTN">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1585040072971-0CM0aO">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1541419158135-fPaTXP">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1541419192407-ZZGXKR">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1585040124356-V5ryXE">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1590395979581-Y24rnF">
+<meta property="og:image" content="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3">
+<meta property="og:image" content="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1500433222221-qIUiLe">
+<meta property="article:published_time" content="2023-08-04T16:52:38.000Z">
+<meta property="article:modified_time" content="2025-01-15T13:58:48.349Z">
+<meta property="article:author" content="Jin Runda">
+<meta property="article:tag" content="Clouder">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://edu.aliyun.com/lab/files/courses/intro/11bc5c2e31a3429082a2b012fe08034d/images/course-11bc5c2e31a3429082a2b012fe08034d-intro-image-1501646995770-ezxsMY">
+  
+  
+  <title>Clouder-负载均衡使用初体验 - jrd&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.css" />
+  
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_ba1fz6golrf.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+<!-- 自定义样式保持在最底部 -->
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+  <header style="height: 70vh;">
+    <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>jrd</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div class="banner" id="banner" parallax=true
+         style="background: url('/img/default.png') no-repeat center center;
+           background-size: cover;">
+      <div class="full-bg-img">
+        <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+          <div class="page-header text-center fade-in-up">
+            <span class="h2" id="subtitle" title="Clouder-负载均衡使用初体验">
+              
+            </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2023-08-04 16:52" pubdate>
+        August 4, 2023 pm
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      4.9k 字
+    </span>
+  
+
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      42 分钟
+    </span>
+  
+
+  
+  
+</div>
+
+            
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Clouder-负载均衡使用初体验</h1>
+            
+            <div class="markdown-body">
+              <p><strong>实验概述</strong></p>
+<p>  拥有大量用户的企业，经常会面临如下的难题：在高并发的情况下，经常会导致服务器响应速度慢，严重的情况会直接导致服务器停止服务。此时，会导致企业的业务中断，影响客户的正常访问。</p>
+<p>  本实验通过使用阿里云负载均衡SLB以及对负载均衡SLB后端服务器ECS的权重进行修改，可以快速解决上述的问题。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/intro/11bc5c2e31a3429082a2b012fe08034d/images/course-11bc5c2e31a3429082a2b012fe08034d-intro-image-1501646995770-ezxsMY" srcset="/img/loading.gif" lazyload alt="屏幕快照 2017-08-02 下午12.09.18.png"></p>
+<p><strong>实验目标</strong></p>
+<p>  完成此实验后，可以掌握的能力有：</p>
+<p>\1. 配置负载均衡SLB的监听规则，并将ECS实例部署到SLB后端；</p>
+<p>\2. 通过设置负载均衡SLB后端服务器ECS的权重值，分配用户访问后端ECS实例的比例。</p>
+<p><strong>学前建议</strong></p>
+<p>\1. 熟悉阿里云管理控制台的使用方式。</p>
+<h1 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h1><p>负载均衡采用集群部署，可实现会话同步，以消除服务器单点故障，提升冗余，保证服务的稳定性。</p>
+<p>阿里云当前提供四层（TCP协议和UDP协议）和七层（HTTP和HTTPS协议）的负载均衡服务。</p>
+<ul>
+<li>四层采用开源软件LVS（Linux Virtual Server）+ keepalived的方式实现负载均衡，并根据云计算需求对其进行了个性化定制。</li>
+<li>七层采用Tengine实现负载均衡。Tengine是由淘宝网发起的Web服务器项目，它在Nginx的基础上，针对有大访问量的网站需求，添加了很多高级功能和特性。</li>
+</ul>
+<h2 id="阿里云负载均衡"><a href="#阿里云负载均衡" class="headerlink" title="阿里云负载均衡"></a>阿里云负载均衡</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><strong>负载均衡（Server Load Balancer）</strong>是将访问流量根据转发策略分发到后端多台云服务器（ECS实例）的流量分发控制服务。负载均衡扩展了应用的服务能力，增强了应用的可用性。</p>
+<p>负载均衡通过设置<strong>虚拟服务地址</strong>，将添加的ECS实例虚拟成一个高性能、高可用的应用服务池，并根据转发规则，将来自客户端的请求分发给云服务器池中的ECS实例。</p>
+<p>负载均衡默认检查云服务器池中ECS实例的健康状态，自动隔离异常状态的ECS实例，消除了单台ECS实例的单点故障，提高了应用的整体服务能力。此外，负载均衡还具备抗DDoS攻击的能力，增强了应用服务的防护能力。</p>
+<h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>负载均衡服务主要有三个核心概念：</p>
+<p>负载均衡实例 （Server Load Balancer instances）</p>
+<p>一个负载均衡实例是一个运行的负载均衡服务，用来接收流量并将其分配给后端服务器。要使用负载均衡服务，您必须创建一个负载均衡实例，并至少添加一个监听和两台ECS实例。</p>
+<p>监听 （Listeners）</p>
+<p>监听用来检查客户端请求并将请求转发给后端服务器。监听也会对后端服务器进行健康检查。</p>
+<p>后端服务器（Backend Servers）</p>
+<p>一组接收前端请求的ECS实例。您可以单独添加ECS实例到服务器池，也可以通过虚拟服务器组或主备服务器组来批量添加和管理。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/8c47d7f310214b3184714b66c75b88d2/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-8c47d7f310214b3184714b66c75b88d2-content-image-1482739463577-BaRBx3" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>1）负载均衡服务通过设置虚拟服务地址（IP），将位于同一地域（Region）的多台云服务器（Elastic Compute Service，简称ECS）资源虚拟成一个高性能、高可用的应用服务池；根据应用指定的方式，将来自客户端的网络请求分发到云服务器池中。</p>
+<p>2）负载均衡服务会检查云服务器池中ECS的健康状态，自动隔离异常状态的ECS，从而解决了单台ECS的单点问题，同时提高了应用的整体服务能力。在标准的负载均衡功能之外，负载均衡服务还具备TCP与HTTP抗DDoS攻击的特性，增强了应用服务器的防护能力。</p>
+<p>3）负载均衡服务是ECS面向多机方案的一个配套服务，需要同ECS结合使用。</p>
+<h3 id="产品优势"><a href="#产品优势" class="headerlink" title="产品优势"></a>产品优势</h3><ul>
+<li><p>高可用</p>
+<p>  采用全冗余设计，无单点，支持同城容灾。搭配DNS可实现跨地域容灾，可用性高达99.95%。</p>
+<p>  根据应用负载进行弹性扩容，在流量波动情况下不中断对外服务。</p>
+</li>
+<li><p>可扩展</p>
+<p>  您可以根据业务的需要，随时增加或减少后端服务器的数量，扩展应用的服务能力。</p>
+</li>
+<li><p>低成本</p>
+<p>  与传统硬件负载均衡系统高投入相比，成本可下降60%。</p>
+</li>
+<li><p>安全</p>
+<p>  结合云盾，可提供5Gbps的防DDOS攻击能力。</p>
+</li>
+</ul>
+<h2 id="阿里云负载均衡基础架构"><a href="#阿里云负载均衡基础架构" class="headerlink" title="阿里云负载均衡基础架构"></a>阿里云负载均衡基础架构</h2><p>负载均衡采用集群部署，可实现会话同步，以消除服务器单点故障，提升冗余，保证服务的稳定性。</p>
+<p>阿里云当前提供四层（TCP协议和UDP协议）和七层（HTTP和HTTPS协议）的负载均衡服务。</p>
+<ul>
+<li>四层采用开源软件LVS（Linux Virtual Server）+ keepalived的方式实现负载均衡，并根据云计算需求对其进行了个性化定制。</li>
+<li>七层采用Tengine实现负载均衡。Tengine是由淘宝网发起的Web服务器项目，它在Nginx的基础上，针对有大访问量的网站需求，添加了很多高级功能和特性。</li>
+</ul>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/8c47d7f310214b3184714b66c75b88d2/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-8c47d7f310214b3184714b66c75b88d2-content-image-1541389955758-2RtYaM" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>如下图所示，各个地域的四层负载均衡实际上是由多台LVS机器部署成一个LVS集群来运行的。采用集群部署模式极大地保证了异常情况下负载均衡服务的可用性、稳定性与可扩展性。</p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/8c47d7f310214b3184714b66c75b88d2/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-8c47d7f310214b3184714b66c75b88d2-content-image-1541390115823-zXMyaq" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>LVS集群内的每台LVS都会进行会话，通过组播报文同步到该集群内的其它LVS机器上，从而实现LVS集群内各台机器间的会话同步。如下图所示，当客户端向服务端传输三个数据包后，在LVS1上建立的会话A开始同步到其它LVS机器上。图中实线表示现有的连接，图中虚线表示当LVS1出现故障或进行维护时，这部分流量会走到一台可以正常运行的机器LVS2上。因而负载均衡集群支持热升级，并且在机器故障和集群维护时最大程度对用户透明，不影响用户业务。</p>
+<h1 id="分别访问两台云服务器"><a href="#分别访问两台云服务器" class="headerlink" title="分别访问两台云服务器"></a>分别访问两台云服务器</h1><p>本小节主要介绍：<strong>分别访问实验提供的两台云服务器ECS，观察有什么异同点</strong>。</p>
+<p>1.点击左侧导航栏处的 <strong>实验资源</strong> ，弹框中能看到 <strong>云服务器ECS-1</strong> 和 <strong>云服务器ECS-2</strong> 的相关信息。</p>
+<p>2.打开浏览器，在输入框中输入 <strong>实验资源</strong> 提供的 <strong>云服务器ECS-1 的 弹性IP</strong> ，页面如下图：</p>
+<p>说明：正常情况下不会显示 <strong>后端服务器IP</strong>，此处是为了观察比较的便利性而设计的。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/54600e490f024713839e840b24c924bf/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-54600e490f024713839e840b24c924bf-content-image-1500426591685-DZCCY3" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3.打开新的窗口，输入 <strong>云服务器ECS-2</strong> 的 <strong>弹性IP</strong> ，访问页面如下：</p>
+<p><strong>说明</strong>：正常情况下不会显示 <strong>后端服务器IP</strong>，此处是为了观察比较的便利性而设计的。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/54600e490f024713839e840b24c924bf/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-54600e490f024713839e840b24c924bf-content-image-1500426614050-m62y6Y" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4.比较两台ECS的访问结果，发现部署的网站内容相同，只是显示的后端服务器IP不同。</p>
+<p><strong>说明</strong>：在真实场景下，负载均衡后端的服务器中部署的应用都是一致的。</p>
+<h1 id="部署负载均衡后端服务器"><a href="#部署负载均衡后端服务器" class="headerlink" title="部署负载均衡后端服务器"></a>部署负载均衡后端服务器</h1><h3 id="在实验室页面，单击创建资源。"><a href="#在实验室页面，单击创建资源。" class="headerlink" title="在实验室页面，单击创建资源。"></a>在实验室页面，单击<strong>创建资源</strong>。</h3><ol>
+<li>（可选）在实验室页面左侧导航栏中，单击<strong>云产品资源</strong>列表，可查看本次实验资源相关信息（例如IP地址、用户信息等）。</li>
+</ol>
+<p><strong>说明：</strong> 资源创建过程需要1~3分钟。</p>
+<p>选择界面中的【<strong>Chromium网页浏览器</strong>】，进入登录页面。</p>
+<p>输入资源提供的“子用户名称”和“子用户密码”登录。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/ccb6dfd9d7c14bd4b79a171f43a6e3b8/sections/9b8eaed5a8d54016a9da3a33b8d5296e/content/images/course-ccb6dfd9d7c14bd4b79a171f43a6e3b8-section-9b8eaed5a8d54016a9da3a33b8d5296e-content-image-1619081320524-klPTpf" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/ccb6dfd9d7c14bd4b79a171f43a6e3b8/sections/9b8eaed5a8d54016a9da3a33b8d5296e/content/images/course-ccb6dfd9d7c14bd4b79a171f43a6e3b8-section-9b8eaed5a8d54016a9da3a33b8d5296e-content-image-1619081328949-xVdxgo" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>登录到界面：</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/c33d6096c65b45d6a0ebe4f950fc769c/sections/6a0176bef3cb4387b44eabc702ff6ee8/content/images/course-c33d6096c65b45d6a0ebe4f950fc769c-section-6a0176bef3cb4387b44eabc702ff6ee8-content-image-1589425130205-1r0AQS" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3）在阿里云管理控制台中，点击左侧导航栏的 <strong>产品与服务</strong> ，在弹出的页面中点击 <strong>负载均衡</strong> ，进入负载均衡控制台。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683138387-vBl6ys" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\2. 通过如下步骤，进入本次实验提供的负载均衡实例的管理页面：</p>
+<p>1）点击左侧栏的<strong>实例管理</strong>。</p>
+<p>2）在地域信息栏中，选择本实验的 <strong>实验资源</strong> 提供的 <strong>地域</strong> 。</p>
+<p>3）在 <strong>模糊搜索</strong> 右侧的搜索输入框中，输入本实验的 <strong>实验资源</strong> 提供的 <strong>负载均衡</strong> 实例的 <strong>实例ID。</strong></p>
+<p>4）在下端的搜素结果中，点击实例右侧的 <strong>点我开始配置</strong>，进入负载均衡实例的管理页面。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683183591-6N9lGJ" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\3. 通过如下步骤，配置监听规则的<strong>基本信息</strong>：</p>
+<p>1）在弹出的页面中，选择负载均衡协议为<strong>HTTP</strong>，<strong>监听端口</strong>为 <strong>80</strong>；然后点击<strong>高级配置</strong>右侧的<strong>修改</strong>按钮：</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683224137-1jr4Xw" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）在展开的<strong>高级配置</strong>中，查看到默认<strong>会话保持</strong>的状态为<strong>关闭</strong>。不做任何修改，直接点击<strong>下一步；</strong></p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1640683245756-UeojUO" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3）选择<strong>默认服务器</strong>下方的<strong>继续添加</strong>，将两台已创建的ECS实例添加到SLB后端。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034113289-nKBF4q" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4）在弹出的页面中勾选两台已创建的ECS实例，并点击<strong>下一步</strong>；</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034179806-kxeSd9" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5）在弹出的页面点击<strong>添加</strong>；</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034229137-XGOhp5" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>6）选择已添加的ECS实例的端口为 <strong>80</strong>，并点击<strong>下一步</strong>：</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034414783-3vO2Bi" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\4. 在<strong>健康检查</strong> 配置中，不做任何修改，保持健康检查<strong>开启状态</strong>，点击<strong>下一步</strong>。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034615059-z1nEGH" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5.配置完成后，点击<strong>提交</strong>。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034693365-w0VUeR" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>跳转到<strong>实例管理</strong>页面，查看到新创建的监听配置，处于<strong>运行中</strong>状态。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/16cb4667b34a44b79846106d231a75f5/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-16cb4667b34a44b79846106d231a75f5-content-image-1585034901580-L1thla" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h1 id="验证负载均衡工作原理"><a href="#验证负载均衡工作原理" class="headerlink" title="验证负载均衡工作原理"></a>验证负载均衡工作原理</h1><p>本小节主要内容如下：</p>
+<ul>
+<li>**<em>*验证负载均衡的工作原理*<em>；</em></em></li>
+<li>**验证通过配置不同后端服务器权重，将用户的请求按比例分发到不同后端服务器；<br>  **</li>
+<li><strong>验证在一台后端服务器开启会话请求时，请求在会话开启的时间内只会分发到这一台服务器。</strong></li>
+</ul>
+<p>**<br>**</p>
+<p>\1. 此时，两台后端服务器的权重比例相同。通过如下步骤，验证负载均衡服务器是轮询访问后端云服务器ECS实例：</p>
+<p>1）点击左侧 <strong>实例管理</strong> ，在右侧页面中的红框处看到负载均衡的 <strong>服务地址</strong>（也就是 <strong>实验资源</strong> 提供的 <strong>负载均衡</strong> 的 <strong>IP地址</strong>） ；</p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683367512-2FNP18" srcset="/img/loading.gif" lazyload alt="7"></p>
+<p>2）在浏览器中新建页面，并访问 <strong>负载均衡</strong> 的 <strong>服务地址</strong> 。界面显示的 <strong>后端服务器IP</strong> 为 <strong>云服务器ECS-1</strong>（或 <strong>云服务器ECS-2</strong>） 的 <strong>内网地址</strong> 。</p>
+<p><strong>说明</strong>：界面显示的地址为内网地址，这是因为负载均衡访问后端ECS实例，是通过内网访问的。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1482732071055-IvPgyY" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3）<strong>刷新</strong> 浏览页面，显示的 <strong>后端服务器IP</strong> 将发生变化，变为 <strong>云服务器ECS-2</strong>（或 <strong>云服务器ECS-1</strong>）的 <strong>内网地址</strong> ；</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1482732154630-aO6jWM" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4）重复刷新操作，观察 <strong>后端服务器IP</strong> 是在两个云服务器的 <strong>内网地址</strong> 间轮流更换。</p>
+<p>5）如上结果证明：负载均衡会将用户的请求发送到后端不同的服务器进行处理。这样，可以减轻单台服务器的负载压力，从而确保业务的持续性。</p>
+<p>\2. 通过如下步骤，修改后端服务器权重，验证负载均衡向后端服务器发送请求的比例是按照权重的比例调整的。</p>
+<p>1）返回 <strong>实例管理</strong> 页面，点击SLB实例名称进入实例管理页面；</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035180709-zMp3BG" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>2）选中 <strong>默认服务器组</strong> ，在服务器列表中，勾选下方的勾选框 ，然后点击 <strong>修改权重</strong> ；</p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035231762-pfqoQE" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3）弹出对话框中，勾选 <strong>设置不同的权重</strong> 。设置两个实例的 <strong>权重</strong> 分别为 <strong>30</strong> ，<strong>90</strong> 。</p>
+<p><strong>说明</strong>：通过如上的权重配置，用户通过负载均衡访问的时候，1/4的用户请求发送到一台后端服务器中，3/4的请求发送到另一台后端服务器中。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035294839-fLcHIP" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4）完成如上配置后，点击 <strong>确定</strong> ，生效配置信息。可以查看到两台ECS实例的权重分别为<strong>30</strong> 和 <strong>90</strong>，并记录对应的ECS实例<strong>内网地址</strong>和<strong>弹性IP</strong>。</p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585035607477-PB8TUL" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5）浏览器中，刷新多次 <strong>负载均衡</strong> <strong>服务地址</strong> 的页面，并记录页面显示的 <strong>后端服务器IP</strong> 。可以发现：每4次刷新，将有3次访问 <strong>权重</strong> 为 <strong>90</strong> 的ECS实例，1次访问权重为 <strong>30</strong> 的ECS实例。</p>
+<p>6）如上结果证明：用户可以根据实际情况调整负载均衡器的请求分发，一般将配置高的服务器设置的权重调高，配置较低的服务器设置的权重调低。这样可以避免在高并发时，配置较低的服务器因为压力较大服务异常的发生。</p>
+<p>3.执行以下步骤，开启负载均衡的 会话保持 功能。</p>
+<p>1）在<strong>实例管理</strong>页面，点击SLB的实例名称进入实例管理页面；并在<strong>监听</strong>页面点击<strong>修改监听配置。</strong></p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683506946-T0hr13" srcset="/img/loading.gif" lazyload alt="8"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683511274-ucpIdD" srcset="/img/loading.gif" lazyload alt="9">**<br>**</p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img">2）在弹出的页面中，点击<strong>高级配置</strong>右侧的<strong>修改</strong>，设置<strong>开启保持</strong>的状态为<strong>已开启</strong>，然后点击<strong>下一步</strong>和<strong>提交</strong>。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1585038298518-2Xhp7l" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3）提交修改后，点击监听名称，在弹窗中查看到SLB实例的会话保持显示<strong>已开启</strong>的状态 。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683599751-tKqn3v" srcset="/img/loading.gif" lazyload alt="12"></p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/d524a5ca920e4ba08c8d5d6f565d6148/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-d524a5ca920e4ba08c8d5d6f565d6148-content-image-1640683626826-xsZwM3" srcset="/img/loading.gif" lazyload alt="13"></p>
+<p>4.再次在浏览器中输入 负载均衡 的 IP地址 ，多次刷新，发现在会话保持的超时时间内请求只会分发到某一台ECS上（究竟是哪一台ECS没有规定），时间超出后，重新按照权重比例分发。</p>
+<h1 id="验证负载均衡的健康检查"><a href="#验证负载均衡的健康检查" class="headerlink" title="验证负载均衡的健康检查"></a>验证负载均衡的健康检查</h1><p>本小节主要内容：<strong>开启健康检查后，模拟服务器出现故障，关闭某一台服务器，观察负载均衡请求分发情况</strong>。</p>
+<p>1.重复刷新，在超时时间内，请求只会发送到其中一台ECS上。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1500433126572-hpcZTN" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>\2. 我们关闭开启 <strong>会话保持</strong> 的那台ECS 。<strong>后端服务器</strong> 页面，<strong>已添加的服务器</strong> 中 ，选择下图红框对应的目标ECS实例，并点击进入该ECS管理控制台。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1585040072971-0CM0aO" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>3.<strong>实例详情</strong> 页面 ，点击右上角处的 <strong>停止</strong> ，关闭当前ECS。</p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1541419158135-fPaTXP" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>等待1分钟左右，实例的状态变为 <strong>已停止</strong> 。</p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1541419192407-ZZGXKR" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>4.返回负载均衡管理控制台，在 <strong>默认服务器组</strong> 页面中点击左上角的 <strong>刷新</strong>，页面刷新后被停止的ECS的 <strong>状态</strong> 变为 <strong>已停止</strong>。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1585040124356-V5ryXE" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><strong>监听</strong> 页面<strong>，</strong>也出现 <strong>异常</strong> 提示 。注意：由于检测需要时间，一般再1-2分钟后，状态才会变成异常；</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1590395979581-Y24rnF" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://edu.aliyun.com/lab/courses/11bc5c2e31a3429082a2b012fe08034d/detail?purchaseRecordId=6f5873d2cd6240f0a724c8d493b634b3" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>5.再次刷新浏览器中 <strong>负载均衡</strong> 的 <strong>IP地址</strong> ，此时，请求发送到 <strong>健康检查状态</strong> 为 <strong>正常</strong> 的ECS上。</p>
+<p><img src="https://edu.aliyun.com/lab/files/courses/11bc5c2e31a3429082a2b012fe08034d/sections/664beca3153647d5bcaa44ec5732b9e3/content/images/course-11bc5c2e31a3429082a2b012fe08034d-section-664beca3153647d5bcaa44ec5732b9e3-content-image-1500433222221-qIUiLe" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>6.结果证明，当某一台ECS出现异常后，负载均衡会自动将请求发送到健康检查状态正常的ECS上。</p>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><p>问1：将停止的那台ECS重新开启，然后访问负载均衡的IP地址，观察访问的结果。为什么会这样呢？</p>
+<p>答：因为负载均衡中依然开启了会话保持，所以请求会被转发到某一台ECS上（在规定的会话保持时间内）。</p>
+<p>问2：如果两台ECS在不同的可用区，能否加载到负载均衡后端？若在不同地域呢？</p>
+<p>答：负载均衡后端的服务器要求在同一地域，但可以在不同可用区。</p>
+<p>问3： 如果需要对负载均衡后端的某台ECS实例A中的应用服务器进行升级，如何在不影响用户使用的前提下，平滑升级？</p>
+<p>答：将需要升级的ECS的权重修改为0，请求即不会转发到该ECS上，然后进行升级；升级完成后重新修改它的权重。</p>
+<span id="more"></span>
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/Clouder/">Clouder</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/05/ACA-%E4%BA%91%E8%AE%A1%E7%AE%97%E5%9F%BA%E7%A1%80/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ACA-云计算基础</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/04/Clouder-%E4%BD%BF%E7%94%A8%E4%BA%91%E5%82%A8%E5%AD%98OSS%E7%9A%84API%E4%B8%8A%E4%BC%A0%E5%92%8C%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6/">
+                        <span class="hidden-mobile">Clouder-使用云储存OSS的API上传和下载文件</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;TOC</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v"
+                 for="local-search-input">keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+    
+  </main>
+
+  <footer class="text-center mt-5 py-3">
+  <div class="footer-content">
+     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+  </div>
+  
+
+  
+
+  
+</footer>
+
+
+  <!-- SCRIPTS -->
+  
+  <script  src="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nprogress@0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js" ></script>
+<script  src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+<!-- Plugins -->
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+  
+
+
+
+  
+    <script  src="https://cdn.jsdelivr.net/npm/tocbot@4/dist/tocbot.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3/dist/jquery.fancybox.min.js" ></script>
+  
+  
+    <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4/anchor.min.js" ></script>
+  
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js" ></script>
+  
+
+
+
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/typed.js@2/lib/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var title = document.getElementById('subtitle').title;
+      
+        typing(title);
+      
+    })(window, document);
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 主题的启动项 保持在最底部 -->
+<script  src="/js/boot.js" ></script>
+
+
+</body>
+</html>
